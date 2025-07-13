@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "~lib/axios";
+import Navbar from "./components/Navbar";
 
 type skillLevel = ["Beginner, Intermediate", "Advanced"];
 type cateogries = ["Backend", "Frontend", "Other"];
