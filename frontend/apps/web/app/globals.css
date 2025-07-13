@@ -6,23 +6,21 @@
   --primary: #ba1111;
   --secondary: #b6abab;
   --accent: #3a3a3a;
-  --text: #070707;
+  --text: #212427;
   --foreground: var(--text);
   --shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* === DARK MODE (via `.dark` class on <html>) === */
 .dark {
-  --background: #0a0a0a;
-  --primary: #ba1111; /* optional override */
-  --secondary: #3a3a3a;
+  --background: #1a1a1a;
+  --primary: #c04900;
+  --secondary: #2d2d2d;
   --accent: #ededed;
-  --text: #ededed;
+  --text: #f1f1f1;
   --foreground: var(--text);
-  --shadow: 0 4px 4px rgba(255, 255, 255, 0.1);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* === Optional Tailwind Inline Theme Support === */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
