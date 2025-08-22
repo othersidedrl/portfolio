@@ -6,7 +6,7 @@ const Information = () => {
   const name = "asdas";
   const rank = "Junior";
   const title = "Software Engineer";
-  const subtitle = "Informatics Student @Gunadarma";
+  const subtitle = "Computer Science @Gunadarma";
   const resume_link = "sadasd";
   const contact_link = "asdasd";
 
@@ -50,7 +50,7 @@ const Information = () => {
           href={resume_link}
           target="_blank"
           rel="noopener noreferrer"
-          className="col-span-3 flex items-center justify-center gap-2 bg-transparent text-[var(--text)] py-2 px-4 rounded-[15px] border border-[var(--secondary)] font-light text-[16px] leading-normal shadow transition-all duration-200 opacity-75 hover:opacity-100 hover:-translate-y-1 hover:shadow-md"
+          className="col-span-3 flex items-center justify-center gap-2 bg-transparent text-[var(--text)] py-2 px-4 rounded-[15px] border border-[var(--secondary)] font-light text-[16px] leading-normal shadow transition-all duration-200 opacity-75 hover:opacity-100 hover:-translate-y-1 hover:shadow-md backdrop-blur-md"
         >
           <Paperclip
             size={18}
@@ -72,7 +72,7 @@ const Information = () => {
         </a>
       </div>
 
-      <div className="h-[60px] mt-6 w-full max-w-md">
+      <div className="mt-6 w-full max-w-md">
         <CodeSnippet />
       </div>
     </div>

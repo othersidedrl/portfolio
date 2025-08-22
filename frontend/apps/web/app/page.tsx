@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "~lib/axios";
 import Navbar from "./components/Navbar";
+import HeroSection from "./components/hero/Hero";
 
 type skillLevel = ["Beginner, Intermediate", "Advanced"];
 type cateogries = ["Backend", "Frontend", "Other"];
@@ -163,5 +164,7 @@ export default function Portfolio() {
     },
   });
 
-  return null;
+  return (
+    <HeroSection />
+  );
 }
