@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -67,8 +67,11 @@ const AboutForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
-    const checked = type === "checkbox" && "checked" in e.target ? (e.target as HTMLInputElement).checked : undefined;
-    
+    const checked =
+      type === "checkbox" && "checked" in e.target
+        ? (e.target as HTMLInputElement).checked
+        : undefined;
+
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -85,7 +88,9 @@ const AboutForm = () => {
       onSubmit={handleSubmit}
       className="w-full p-4 md:p-8 space-y-8 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl shadow-sm"
     >
-      <h2 className="text-2xl font-bold text-[var(--text-strong)]">About Section</h2>
+      <h2 className="text-2xl font-bold text-[var(--text-strong)]">
+        About Section
+      </h2>
 
       {/* Description */}
       <div className="flex flex-col">
@@ -154,6 +159,89 @@ const AboutForm = () => {
         />
         Available for hire
       </label>
+
+      {/* Cards Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-[var(--text-strong)]">
+          Highlight Cards
+        </h3>
+
+        {form.cards.map((card, index) => (
+          <div
+            key={index}
+            className="grid md:grid-cols-2 gap-4 border border-[var(--border-color)] p-4 rounded-lg bg-[var(--bg-light)] shadow-sm"
+          >
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm text-[var(--text-muted)]">
+                Title
+              </label>
+              <input
+                type="text"
+                name={`card-title-${index}`}
+                value={card.title}
+                onChange={(e) =>
+                  setForm((prev) => {
+                    const updatedCards = [...prev.cards];
+                    updatedCards[index].title = e.target.value;
+                    return { ...prev, cards: updatedCards };
+                  })
+                }
+                className="input"
+                placeholder="e.g. Competitive Programmer"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm text-[var(--text-muted)]">
+                Description
+              </label>
+              <input
+                type="text"
+                name={`card-description-${index}`}
+                value={card.description}
+                onChange={(e) =>
+                  setForm((prev) => {
+                    const updatedCards = [...prev.cards];
+                    updatedCards[index].description = e.target.value;
+                    return { ...prev, cards: updatedCards };
+                  })
+                }
+                className="input"
+                placeholder="e.g. ICPC Asia Qualifier"
+              />
+            </div>
+
+            {/* Remove button */}
+            <div className="col-span-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() =>
+                  setForm((prev) => ({
+                    ...prev,
+                    cards: prev.cards.filter((_, i) => i !== index),
+                  }))
+                }
+                className="text-sm text-red-500 hover:underline mt-2"
+              >
+                Remove Card
+              </button>
+            </div>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={() =>
+            setForm((prev) => ({
+              ...prev,
+              cards: [...prev.cards, { title: "", description: "" }],
+            }))
+          }
+          className="text-sm text-[var(--primary)] hover:underline"
+        >
+          + Add Card
+        </button>
+      </div>
 
       <button
         type="submit"

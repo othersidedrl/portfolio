@@ -6,21 +6,17 @@ import SkillsForm from "./_components/SkillsForm";
 
 const AboutPage = () => {
   return (
-    <div className="relative w-full">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* ABOUT - spans full width (both columns) */}
-        <div className="md:col-span-2">
+    <div className="relative w-full p-4 md:p-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* AboutForm spans 2 rows on medium and up */}
+        <div className="md:row-span-2">
           <AboutForm />
         </div>
 
-        {/* SKILLS - left column */}
-        <div>
-          <SkillsForm />
-        </div>
-
-        {/* CAREER - right column */}
-        <div>
+        {/* Right Column */}
+        <div className="col-span-2 flex flex-col gap-6">
           <CareerForm />
+          <SkillsForm />
         </div>
       </div>
     </div>
