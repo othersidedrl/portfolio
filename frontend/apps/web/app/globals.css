@@ -9,6 +9,7 @@
   --text: #212427;
   --foreground: var(--text);
   --shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  --border-soft: color-mix(in srgb, var(--secondary) 35%, transparent);
 }
 
 .dark {
@@ -19,6 +20,7 @@
   --text: #f1f1f1;
   --foreground: var(--text);
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --border-soft: color-mix(in srgb, var(--secondary) 35%, transparent);
 }
 
 @theme inline {
@@ -28,6 +30,7 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-shadow: var(--shadow);
+  --color-border-soft: var(--border-soft);
 }
 
 body {
