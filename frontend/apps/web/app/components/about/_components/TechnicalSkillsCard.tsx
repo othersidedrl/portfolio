@@ -61,7 +61,7 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
       aria-expanded={expanded}
       onClick={toggleExpanded}
       onKeyDown={handleKeyDown}
-      className={`flex flex-col ${articleLayout} rounded-[20px] border bg-[var(--background)] px-6 py-5 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2`}
+      className={`group flex cursor-pointer flex-col ${articleLayout} rounded-[20px] border bg-[var(--background)] px-6 py-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--primary)]/35 hover:bg-white/95 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2`}
       style={{
         borderColor: "var(--border-soft)",
         boxShadow: "var(--shadow)",
@@ -75,14 +75,18 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
             expanded ? "justify-between" : "justify-center"
           }`}
         >
-          <div className="flex items-center gap-2 text-[var(--text)]">
-            {icon && <span className="text-xl">{icon}</span>}
+          <div className="flex items-center gap-2 text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--primary)]">
+            {icon && (
+              <span className="text-xl transition-transform duration-300 group-hover:scale-110">
+                {icon}
+              </span>
+            )}
             <h4 className="text-lg font-semibold">{name}</h4>
           </div>
 
           {expanded && (
             <span
-              className="rounded-full px-3 py-1 text-xs font-semibold"
+              className="rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all duration-300 group-hover:shadow-md"
               style={{
                 backgroundColor: levelStyle.background,
                 color: levelStyle.color,
@@ -97,7 +101,7 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
 
         {!expanded && (
           <span
-            className="rounded-full px-3 py-1 text-xs font-semibold"
+            className="rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all duration-300 group-hover:shadow-md"
             style={{
               backgroundColor: levelStyle.background,
               color: levelStyle.color,

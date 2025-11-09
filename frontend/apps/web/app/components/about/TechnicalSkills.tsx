@@ -227,22 +227,24 @@ export const TechnicalSkills = () => {
               key={id}
               type="button"
               onClick={() => setActiveCategory(id)}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-[5px] border px-5 py-2 text-sm font-semibold transition-all whitespace-nowrap ${
+              className={`group/tab relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 whitespace-nowrap ${
                 isActive
-                  ? "border-[var(--primary)] bg-[var(--primary)] text-white"
-                  : "border-transparent text-[var(--text)] hover:border-[var(--border-soft)]"
+                  ? "border-[var(--primary)] bg-[var(--primary)] text-white shadow-sm"
+                  : "border-transparent text-[var(--text)] hover:border-[var(--primary)]/35 hover:bg-[var(--primary)]/10 hover:text-[var(--primary)]"
               }`}
               aria-pressed={isActive}
             >
               <Icon
                 size={18}
-                className={
+                className={`transition-all duration-200 ${
                   isActive
-                    ? "text-white transition-colors"
-                    : "text-[var(--text)] transition-colors"
-                }
+                    ? "text-white scale-105"
+                    : "text-[var(--text)] group-hover/tab:scale-110 group-hover/tab:text-[var(--primary)]"
+                }`}
               />
-              <span>{label}</span>
+              <span className="transition-colors duration-200">
+                {label}
+              </span>
             </button>
           );
         })}
@@ -268,9 +270,9 @@ export const TechnicalSkills = () => {
             type="button"
             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
             disabled={!hasPrev}
-            className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 ${
               hasPrev
-                ? "border-[var(--border-soft)] text-[var(--text)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                ? "cursor-pointer border-[var(--border-soft)] text-[var(--text)] hover:-translate-y-0.5 hover:border-[var(--primary)] hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] hover:shadow-md"
                 : "cursor-not-allowed border-transparent text-[var(--text)]/40"
             }`}
           >
@@ -283,9 +285,9 @@ export const TechnicalSkills = () => {
             type="button"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
             disabled={!hasNext}
-            className={`rounded-full border px-5 py-2 text-sm font-semibold transition ${
+            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 ${
               hasNext
-                ? "border-[var(--primary)] bg-[var(--primary)] text-white hover:brightness-95"
+                ? "cursor-pointer border-[var(--primary)] bg-[var(--primary)] text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105"
                 : "cursor-not-allowed border-transparent bg-[var(--text)]/10 text-white/60"
             }`}
           >
