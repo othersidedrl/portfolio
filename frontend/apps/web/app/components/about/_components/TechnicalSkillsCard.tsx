@@ -61,10 +61,9 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
       aria-expanded={expanded}
       onClick={toggleExpanded}
       onKeyDown={handleKeyDown}
-      className={`group flex cursor-pointer flex-col ${articleLayout} rounded-[20px] border bg-[var(--background)] px-6 py-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--primary)]/35 hover:bg-white/95 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2`}
+      className={`group flex cursor-pointer flex-col ${articleLayout} rounded-[20px] border bg-[var(--background)] px-6 py-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--primary)]/35 hover:bg-white/95 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2`}
       style={{
         borderColor: "var(--border-soft)",
-        boxShadow: "var(--shadow)",
       }}
     >
       <div
