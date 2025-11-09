@@ -10,6 +10,30 @@
   --foreground: var(--text);
   --shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   --border-soft: color-mix(in srgb, var(--secondary) 35%, transparent);
+
+  /* Shared design tokens */
+  --bg-dark: var(--background);
+  --bg-mid: color-mix(in srgb, var(--background) 80%, #ffffff 20%);
+  --bg-light: color-mix(in srgb, var(--background) 65%, #ffffff 35%);
+  --text-strong: var(--text);
+  --text-normal: color-mix(in srgb, var(--text) 85%, var(--background) 15%);
+  --text-muted: color-mix(in srgb, var(--text) 65%, var(--background) 35%);
+  --border-color: color-mix(in srgb, #000000 15%, transparent);
+  --highlight: color-mix(in srgb, var(--background) 90%, #ffffff 10%);
+  --shadow-color: rgba(15, 15, 15, 0.08);
+  --shadow-color-strong: rgba(15, 15, 15, 0.18);
+  --color-primary: var(--primary);
+  --color-on-primary: #ffffff;
+  --color-accent: var(--accent);
+
+  --level-beginner-bg: #d6f4e0;
+  --level-beginner-text: #0f5c2a;
+  --level-intermediate-bg: #fff3bf;
+  --level-intermediate-text: #8a6d00;
+  --level-advanced-bg: #f2f2f2;
+  --level-advanced-text: #525252;
+  --level-expert-bg: #d6e4ff;
+  --level-expert-text: #0d3f91;
 }
 
 .dark {
@@ -21,6 +45,29 @@
   --foreground: var(--text);
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
   --border-soft: color-mix(in srgb, var(--secondary) 35%, transparent);
+
+  --bg-dark: var(--background);
+  --bg-mid: color-mix(in srgb, var(--background) 75%, #ffffff 25%);
+  --bg-light: color-mix(in srgb, var(--background) 60%, #ffffff 40%);
+  --text-strong: var(--text);
+  --text-normal: color-mix(in srgb, var(--text) 85%, #ffffff 15%);
+  --text-muted: color-mix(in srgb, var(--text) 65%, #ffffff 35%);
+  --border-color: color-mix(in srgb, #ffffff 20%, transparent);
+  --highlight: color-mix(in srgb, var(--background) 55%, #ffffff 45%);
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --shadow-color-strong: rgba(0, 0, 0, 0.65);
+  --color-primary: var(--primary);
+  --color-on-primary: #111111;
+  --color-accent: var(--accent);
+
+  --level-beginner-bg: color-mix(in srgb, #5af0c8 75%, #0a2016 25%);
+  --level-beginner-text: #072514;
+  --level-intermediate-bg: color-mix(in srgb, #ffe08a 80%, #1a1200 20%);
+  --level-intermediate-text: #201400;
+  --level-advanced-bg: color-mix(in srgb, #fafafa 75%, #111111 25%);
+  --level-advanced-text: #101010;
+  --level-expert-bg: color-mix(in srgb, #a7c3ff 85%, #0a1023 15%);
+  --level-expert-text: #050a1a;
 }
 
 @theme inline {

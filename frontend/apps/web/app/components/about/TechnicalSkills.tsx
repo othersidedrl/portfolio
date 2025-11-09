@@ -34,10 +34,22 @@ const categories: {
 ];
 
 const LevelColors: Record<SkillLevel, { background: string; color: string }> = {
-  Beginner: { background: "#D6F4E0", color: "#0F5C2A" },
-  Intermediate: { background: "#FFF3BF", color: "#8A6D00" },
-  Advanced: { background: "#F2F2F2", color: "#525252" },
-  Expert: { background: "#D6E4FF", color: "#0D3F91" },
+  Beginner: {
+    background: "var(--level-beginner-bg)",
+    color: "var(--level-beginner-text)",
+  },
+  Intermediate: {
+    background: "var(--level-intermediate-bg)",
+    color: "var(--level-intermediate-text)",
+  },
+  Advanced: {
+    background: "var(--level-advanced-bg)",
+    color: "var(--level-advanced-text)",
+  },
+  Expert: {
+    background: "var(--level-expert-bg)",
+    color: "var(--level-expert-text)",
+  },
 };
 
 const SKILLS: Skill[] = [
@@ -219,7 +231,7 @@ export const TechnicalSkills = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex w-full flex-wrap items-center gap-2 rounded-[10px] border border-[var(--border-soft)] p-2 shadow-sm">
+      <div className="flex w-full flex-wrap items-center gap-2 rounded-[10px] border border-[var(--border-color)] bg-[var(--bg-mid)]/60 p-2 shadow-[0_12px_24px_var(--shadow-color)]">
         {categories.map(({ id, label, icon: Icon }) => {
           const isActive = activeCategory === id;
           return (
@@ -227,10 +239,10 @@ export const TechnicalSkills = () => {
               key={id}
               type="button"
               onClick={() => setActiveCategory(id)}
-              className={`group/tab relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 whitespace-nowrap ${
+              className={`group/tab relative flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 whitespace-nowrap ${
                 isActive
-                  ? "border-[var(--primary)] bg-[var(--primary)] text-white shadow-sm"
-                  : "border-transparent text-[var(--text)] hover:border-[var(--primary)]/35 hover:bg-[var(--primary)]/10 hover:text-[var(--primary)]"
+                  ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-sm"
+                  : "border-transparent text-[var(--text-normal)] hover:border-[var(--color-primary)]/35 hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)]"
               }`}
               aria-pressed={isActive}
             >
@@ -238,11 +250,17 @@ export const TechnicalSkills = () => {
                 size={18}
                 className={`transition-all duration-200 ${
                   isActive
-                    ? "text-white scale-105"
-                    : "text-[var(--text)] group-hover/tab:scale-110 group-hover/tab:text-[var(--primary)]"
+                    ? "text-[var(--color-on-primary)] scale-105"
+                    : "text-[var(--text-normal)] group-hover/tab:scale-110 group-hover/tab:text-[var(--color-primary)]"
                 }`}
               />
-              <span className="transition-colors duration-200">
+              <span
+                className={`transition-colors duration-200 ${
+                  isActive
+                    ? "text-[var(--color-on-primary)]"
+                    : "text-[var(--text-normal)] group-hover/tab:text-[var(--color-primary)]"
+                }`}
+              >
                 {label}
               </span>
             </button>
@@ -270,25 +288,25 @@ export const TechnicalSkills = () => {
             type="button"
             onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
             disabled={!hasPrev}
-            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 ${
+            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 ${
               hasPrev
-                ? "cursor-pointer border-[var(--border-soft)] text-[var(--text)] hover:-translate-y-0.5 hover:border-[var(--primary)] hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] hover:shadow-md"
-                : "cursor-not-allowed border-transparent text-[var(--text)]/40"
+                ? "cursor-pointer border-[var(--border-color)] text-[var(--text-normal)] hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] hover:shadow-md"
+                : "cursor-not-allowed border-transparent text-[var(--text-muted)]"
             }`}
           >
             Previous
           </button>
-          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text)]/60">
+          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">
             Page {page + 1} / {totalPages}
           </span>
           <button
             type="button"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
             disabled={!hasNext}
-            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 ${
+            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 ${
               hasNext
-                ? "cursor-pointer border-[var(--primary)] bg-[var(--primary)] text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105"
-                : "cursor-not-allowed border-transparent bg-[var(--text)]/10 text-white/60"
+                ? "cursor-pointer border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-sm hover:-translate-y-0.5 hover:shadow-lg hover:brightness-105"
+                : "cursor-not-allowed border-transparent bg-[var(--bg-mid)] text-[var(--text-muted)]"
             }`}
           >
             Next

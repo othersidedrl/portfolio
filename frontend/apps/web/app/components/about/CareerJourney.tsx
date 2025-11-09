@@ -225,7 +225,7 @@ export const CareerJourney = () => {
           type="button"
           onClick={() => goToStart(activeStart - 1)}
           disabled={!canGoUp}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-soft)] text-[var(--text)] transition hover:bg-[var(--secondary)]/10 hover:text-[var(--secondary)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-normal)] transition hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Show previous experiences"
         >
           <ChevronUp size={18} />
@@ -234,7 +234,7 @@ export const CareerJourney = () => {
           {/* Highlight bar behind active window */}
           <span
             ref={highlightRef}
-            className="pointer-events-none absolute left-1/2 w-10 -translate-x-1/2 rounded-full bg-[var(--primary)]/12 opacity-0 transition-all duration-300 ease-out"
+            className="pointer-events-none absolute left-1/2 w-10 -translate-x-1/2 rounded-full bg-[var(--color-primary)]/12 opacity-0 transition-all duration-300 ease-out"
           />
           {sortedJourney.map((item, idx) => {
             const inWindow =
@@ -252,7 +252,9 @@ export const CareerJourney = () => {
                 }}
                 onClick={() => goToStart(idx)}
                 className={`relative flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300 ${
-                  inWindow ? "text-[var(--primary)]" : "text-[var(--text)]/50"
+                  inWindow
+                    ? "text-[var(--color-primary)]"
+                    : "text-[var(--text-muted)]"
                 }`}
                 aria-label={`Go to ${item.title}`}
               >
@@ -269,7 +271,7 @@ export const CareerJourney = () => {
           type="button"
           onClick={() => goToStart(activeStart + 1)}
           disabled={!canGoDown}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-soft)] text-[var(--text)] transition hover:bg-[var(--secondary)]/10 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-normal)] transition hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Show next experiences"
         >
           <ChevronDown size={18} />
