@@ -65,7 +65,7 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
       </div>
 
       <div
-        className="flex flex-1 flex-col gap-3 rounded-2xl border bg-[var(--bg-mid)] px-5 py-4 shadow-[0_14px_28px_var(--shadow-color)] backdrop-blur transition-all duration-300 ease-out hover:border-[var(--color-primary)]/35 hover:bg-[var(--bg-light)] hover:shadow-[0_18px_36px_var(--shadow-color-strong)]"
+        className="flex flex-1 flex-col gap-3 rounded-2xl border bg-[var(--bg-mid)] px-5 py-4 shadow-sm backdrop-blur transition-all duration-300 ease-out hover:border-[var(--color-primary)]/35 hover:bg-[var(--bg-light)] hover:shadow-md"
         style={{ borderColor: "var(--border-color)" }}
       >
         <div className="flex flex-wrap items-center justify-between text-sm text-[var(--text-normal)]">

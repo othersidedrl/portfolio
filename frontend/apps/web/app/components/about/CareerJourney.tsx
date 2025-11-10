@@ -66,6 +66,7 @@ const JOURNEY: CareerJourneyItem[] = [
 ];
 
 const HIGHLIGHT_SIZE = 3;
+const LIST_HEIGHT_PADDING = 12;
 
 export const CareerJourney = () => {
   const sortedJourney = useMemo(
@@ -203,7 +204,11 @@ export const CareerJourney = () => {
       <div
         ref={listRef}
         className="timeline-scroll flex-1 space-y-6 overflow-y-auto pr-4 md:pr-6"
-        style={listHeight ? { maxHeight: `${listHeight}px` } : undefined}
+        style={
+          listHeight
+            ? { maxHeight: `${listHeight + LIST_HEIGHT_PADDING}px` }
+            : undefined
+        }
       >
         {sortedJourney.map((item, index) => (
           <div
