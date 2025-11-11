@@ -3,6 +3,7 @@
 import Card from "./Card";
 import { TechnicalSkills } from "./TechnicalSkills";
 import { CareerJourney } from "./CareerJourney";
+import { Stats } from "./Stats";
 
 export default function AboutSection() {
     return (
@@ -28,6 +29,7 @@ export default function AboutSection() {
                     <CareerJourney />
                 </div>
             </div>
+            <Stats />
         </section>
     );
 }
