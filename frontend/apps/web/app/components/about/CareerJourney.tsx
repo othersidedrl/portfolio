@@ -66,7 +66,6 @@ const JOURNEY: CareerJourneyItem[] = [
 ];
 
 const HIGHLIGHT_SIZE = 3;
-const LIST_HEIGHT_PADDING = 12;
 
 export const CareerJourney = () => {
   const sortedJourney = useMemo(
@@ -77,40 +76,20 @@ export const CareerJourney = () => {
     []
   );
 
-  const listRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const highlightRef = useRef<HTMLSpanElement | null>(null);
-  const activeStartRef = useRef(0);
   const [activeStart, setActiveStart] = useState(0);
-  const [listHeight, setListHeight] = useState<number | null>(null);
 
   const maxStart = Math.max(0, sortedJourney.length - HIGHLIGHT_SIZE);
 
-  const updateActiveStart = useCallback((value: number) => {
-    activeStartRef.current = value;
-    setActiveStart(value);
-  }, []);
-
-  const scrollToCard = useCallback((idx: number) => {
-    const target = cardRefs.current[idx];
-    const container = listRef.current;
-    if (!target || !container) return;
-
-    const targetRect = target.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    const offset = targetRect.top - containerRect.top + container.scrollTop;
-    container.scrollTo({ top: offset, behavior: "smooth" });
-  }, []);
-
   const goToStart = useCallback(
-    (nextStart: number, { snapOnly = false }: { snapOnly?: boolean } = {}) => {
-      const clamped = Math.max(0, Math.min(nextStart, maxStart));
-      if (clamped === activeStartRef.current) return;
-      updateActiveStart(clamped);
-      if (!snapOnly) scrollToCard(clamped);
+    (nextStart: number) => {
+      setActiveStart((prev) => {
+        const clamped = Math.max(0, Math.min(nextStart, maxStart));
+        return clamped === prev ? prev : clamped;
+      });
     },
-    [maxStart, scrollToCard, updateActiveStart]
+    [maxStart]
   );
 
   const updateHighlight = useCallback(
@@ -126,6 +105,7 @@ export const CareerJourney = () => {
 
       const startBtn = dotRefs.current[startIdx];
       const endBtn = dotRefs.current[endIdx];
+
       if (!startBtn || !endBtn) return;
 
       const top = startBtn.offsetTop;
@@ -140,61 +120,12 @@ export const CareerJourney = () => {
 
   useEffect(() => {
     updateHighlight(activeStart);
-  }, [activeStart, listHeight, sortedJourney.length, updateHighlight]);
+  }, [activeStart, updateHighlight]);
 
-  const computeListHeight = useCallback(() => {
-    const nodes = cardRefs.current.filter(
-      (node): node is HTMLDivElement => Boolean(node)
-    );
-
-    if (!nodes.length) {
-      setListHeight(null);
-      return;
-    }
-
-    const windowSize = Math.min(HIGHLIGHT_SIZE, nodes.length);
-    let maxHeight = 0;
-
-    for (let i = 0; i <= nodes.length - windowSize; i += 1) {
-      const startNode = nodes[i];
-      const endNode = nodes[i + windowSize - 1];
-      const blockHeight =
-        endNode.offsetTop + endNode.offsetHeight - startNode.offsetTop;
-      if (blockHeight > maxHeight) {
-        maxHeight = blockHeight;
-      }
-    }
-
-    setListHeight(maxHeight || null);
-  }, [sortedJourney.length]);
-
-  useEffect(() => {
-    computeListHeight();
-    const handleResize = () => {
-      computeListHeight();
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [computeListHeight]);
-
-  useEffect(() => {
-    const container = listRef.current;
-    if (!container) return;
-
-    const preventScroll = (event: Event) => {
-      event.preventDefault();
-    };
-
-    container.addEventListener("wheel", preventScroll, { passive: false });
-    container.addEventListener("touchmove", preventScroll, { passive: false });
-    return () => {
-      container.removeEventListener("wheel", preventScroll);
-      container.removeEventListener("touchmove", preventScroll);
-    };
-  }, []);
+  const visibleJourney = sortedJourney.slice(
+    activeStart,
+    activeStart + HIGHLIGHT_SIZE
+  );
 
   const canGoUp = activeStart > 0;
   const canGoDown = activeStart < maxStart;
@@ -202,26 +133,15 @@ export const CareerJourney = () => {
   return (
     <section className="flex gap-6">
       <div
-        ref={listRef}
-        className="timeline-scroll flex-1 space-y-6 overflow-y-auto pr-4 md:pr-6"
-        style={
-          listHeight
-            ? { maxHeight: `${listHeight + LIST_HEIGHT_PADDING}px` }
-            : undefined
-        }
+        key={activeStart}
+        className="career-journey-fade flex-1 space-y-6 pr-4 md:pr-6"
       >
-        {sortedJourney.map((item, index) => (
-          <div
+        {visibleJourney.map((item, index) => (
+          <CareerJourneyCard
             key={`${item.title}-${item.startedAt}`}
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
-          >
-            <CareerJourneyCard
-              {...item}
-              isLast={index === sortedJourney.length - 1}
-            />
-          </div>
+            {...item}
+            isLast={activeStart + index === sortedJourney.length - 1}
+          />
         ))}
       </div>
 
@@ -236,7 +156,6 @@ export const CareerJourney = () => {
           <ChevronUp size={18} />
         </button>
         <div className="relative flex flex-col items-center gap-3">
-          {/* Highlight bar behind active window */}
           <span
             ref={highlightRef}
             className="pointer-events-none absolute left-1/2 w-10 -translate-x-1/2 rounded-full bg-[var(--color-primary)]/12 opacity-0 transition-all duration-300 ease-out"

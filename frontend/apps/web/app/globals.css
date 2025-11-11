@@ -95,3 +95,18 @@ body {
 .timeline-scroll::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
+@keyframes career-journey-fade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.career-journey-fade {
+  animation: career-journey-fade 0.35s ease-out;
+}
