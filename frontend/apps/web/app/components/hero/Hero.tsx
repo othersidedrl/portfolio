@@ -6,7 +6,7 @@ import Information from "./Information";
 export default function HeroSection() {
   return (
     <section
-      className="w-full h-screen bg-center bg-no-repeat"
+      className="w-full bg-center bg-no-repeat"
       style={{
         backgroundImage: "url('/hero-bg.svg')",
         backgroundSize: "100% 95vh",

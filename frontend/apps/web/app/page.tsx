@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "~lib/axios";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/hero/Hero";
+import AboutSection from "./components/about/About";
+// import AboutSection from "./components/about/About";
 
 type skillLevel = ["Beginner, Intermediate", "Advanced"];
 type cateogries = ["Backend", "Frontend", "Other"];
@@ -165,6 +167,9 @@ export default function Portfolio() {
   });
 
   return (
-    <HeroSection />
+    <main className="flex flex-col">
+      <HeroSection />
+      <AboutSection />
+    </main>
   );
 }
