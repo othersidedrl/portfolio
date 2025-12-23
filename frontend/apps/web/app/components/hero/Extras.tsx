@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 
 const MusicPlayer = () => {
   const currentTime = 11; // favorite part starts at 0:11
@@ -33,8 +33,11 @@ const MusicPlayer = () => {
   );
 };
 
-const Extras = () => {
-  const hobbies = ["Competitive Programming", "Guitar", "Football", "Coding"];
+interface ExtrasProps {
+  hobbies?: string[];
+}
+
+const Extras: FC<ExtrasProps> = ({ hobbies = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -69,18 +72,22 @@ const Extras = () => {
 
       {/* Right section */}
       <div className="flex-1 flex items-center">
-        <p className="text-[var(--text-muted)] flex items-center gap-2 text-base md:text-[20px] font-light flex-wrap">
-          My hobbies are{" "}
-          <span className="px-4 py-1 rounded-full bg-[var(--accent)] font-semibold">
-            <span
-              className={`text-[var(--background)] transition-opacity duration-500 ${
-                fade ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              {hobbies[currentIndex]}
-            </span>
-          </span>
-        </p>
+        {
+          hobbies && (
+            <p className="text-[var(--text-muted)] flex items-center gap-2 text-base md:text-[20px] font-light flex-wrap">
+              My hobbies are{" "}
+              <span className="px-4 py-1 rounded-full bg-[var(--accent)] font-semibold">
+                <span
+                  className={`text-[var(--background)] transition-opacity duration-500 ${
+                    fade ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  {hobbies[currentIndex]}
+                </span>
+              </span>
+            </p>
+          )
+        }
       </div>
     </div>
   );

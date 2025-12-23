@@ -1,14 +1,25 @@
 import { Paperclip, Send } from "lucide-react";
 import CodeSnippet from "./CodeSnippet";
-import { useTheme } from "next-themes";
+import { FC } from "react";
 
-const Information = () => {
-  const name = "asdas";
-  const rank = "Junior";
-  const title = "Software Engineer";
-  const subtitle = "Computer Science @Gunadarma";
-  const resume_link = "sadasd";
-  const contact_link = "asdasd";
+
+interface InformationProps {
+  name?: string;
+  rank?: string;
+  title?: string;
+  subtitle?: string;
+  resume_link?: string;
+  contact_link?: string;
+}
+
+const Information: FC<InformationProps> = ({
+  name = "Darel",
+  rank = "Junior",
+  title = "Software Engineer",
+  subtitle = "Darel's Portfolio",
+  resume_link = "",
+  contact_link = "",
+}) => {
 
   return (
     <div className="flex flex-col text-[var(--text)] font-poppins">

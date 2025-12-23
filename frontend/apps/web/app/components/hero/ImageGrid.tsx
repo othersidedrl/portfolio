@@ -1,12 +1,25 @@
+import { FC } from "react";
 import Image from "next/image";
 
-const ImageGrid = () => {
+interface ImageGridProps {
+  TopLeft?: string;
+  TopRight?: string;
+  BottomLeft?: string;
+  BottomRight?: string;
+}
+
+const ImageGrid: FC<ImageGridProps> = ({
+  TopLeft = "/temp.jpeg",
+  TopRight = "/temp.jpeg",
+  BottomLeft = "/temp.jpeg",
+  BottomRight = "/temp.jpeg",
+}) => {
   return (
     <div className="relative w-full max-w-[960px] aspect-[960/533] mx-auto">
       {/* Top-left image */}
       <div className="absolute top-0 left-[15%] w-[25%] h-[25.5%]">
         <Image
-          src="/temp.jpeg"
+          src={TopLeft}
           alt="Top Left"
           fill
           className="object-cover rounded-[15px]"
@@ -17,7 +30,7 @@ const ImageGrid = () => {
       {/* Top-right image */}
       <div className="absolute top-[7.5%] right-0 w-[52.8%] h-[52.5%]">
         <Image
-          src="/temp.jpeg"
+          src={TopRight}
           alt="Top Right"
           fill
           className="object-cover rounded-[15px]"
@@ -28,7 +41,7 @@ const ImageGrid = () => {
       {/* Bottom-left image */}
       <div className="absolute bottom-[7.5%] left-0 w-[52.8%] h-[52.5%]">
         <Image
-          src="/temp.jpeg"
+          src={BottomLeft}
           alt="Bottom Left"
           fill
           className="object-cover rounded-[15px]"
@@ -39,7 +52,7 @@ const ImageGrid = () => {
       {/* Bottom-right image */}
       <div className="absolute bottom-0 right-[15%] w-[25%] h-[25.5%]">
         <Image
-          src="/temp.jpeg"
+          src={BottomRight}
           alt="Bottom Right"
           fill
           className="object-cover rounded-[15px]"

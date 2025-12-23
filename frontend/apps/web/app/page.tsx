@@ -11,17 +11,6 @@ import TestimonySection from "./components/testimony/Testimony";
 type skillLevel = ["Beginner, Intermediate", "Advanced"];
 type cateogries = ["Backend", "Frontend", "Other"];
 
-type HeroResponse = {
-  name: string;
-  rank: string;
-  title: string;
-  subtitle: string;
-  resume_link: string;
-  contact_link: string;
-  image_urls: string[];
-  hobbies: string[];
-};
-
 type Card = {
   id: string;
   description: string;
@@ -103,13 +92,6 @@ type ProjectResponse = {
 };
 
 export default function Portfolio() {
-  const { data: HeroData } = useQuery({
-    queryKey: ["hero"],
-    queryFn: async () => {
-      const response = await axios.get("/hero");
-      return response.data as HeroResponse;
-    },
-  });
 
   const { data: AboutData } = useQuery({
     queryKey: ["about"],
