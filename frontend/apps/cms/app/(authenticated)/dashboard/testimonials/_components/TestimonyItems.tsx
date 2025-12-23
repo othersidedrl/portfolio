@@ -71,7 +71,7 @@ const TestimonyItems = () => {
     onError: () => toast.error("Failed to delete testimony."),
   });
 
-  const filteredItems = testimonyItems?.data.filter((item) =>
+  const filteredItems = (testimonyItems?.data || []).filter((item) =>
     activeTab === "Approved" ? item.approved : !item.approved
   );
 
