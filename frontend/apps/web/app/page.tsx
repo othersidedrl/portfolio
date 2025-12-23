@@ -8,25 +8,6 @@ import AboutSection from "./components/about/About";
 import TestimonySection from "./components/testimony/Testimony";
 // import AboutSection from "./components/about/About";
 
-type Testimony = {
-  name: string;
-  profile_url: string;
-  affiliation: string;
-  rating: number;
-  description: string;
-  ai_summary: string;
-};
-
-type TestimonyItemsResponse = {
-  data: Testimony[];
-  length: number;
-};
-
-type TestimonyRepsonse = {
-  title: string;
-  description: string;
-};
-
 type Project = {
   name: string;
   imageUrls: string[];
@@ -49,22 +30,6 @@ type ProjectResponse = {
 };
 
 export default function Portfolio() {
-
-  const { data: TestimonyData } = useQuery({
-    queryKey: ["testimony"],
-    queryFn: async () => {
-      const response = await axios.get("/testimony");
-      return response.data as TestimonyRepsonse;
-    },
-  });
-
-  const { data: TestimonyItems } = useQuery({
-    queryKey: ["testimony-items"],
-    queryFn: async () => {
-      const response = await axios.get("/testimony/items/approved");
-      return response.data as TestimonyItemsResponse;
-    },
-  });
 
   const { data: ProjectData } = useQuery({
     queryKey: ["project"],
