@@ -5,6 +5,7 @@ import axios from "~lib/axios";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/hero/Hero";
 import AboutSection from "./components/about/About";
+import TestimonySection from "./components/testimony/Testimony";
 // import AboutSection from "./components/about/About";
 
 type skillLevel = ["Beginner, Intermediate", "Advanced"];
@@ -170,6 +171,9 @@ export default function Portfolio() {
     <main className="flex flex-col">
       <HeroSection />
       <AboutSection />
+      <div className="mt-12">
+        <TestimonySection />
+      </div>
     </main>
   );
 }
