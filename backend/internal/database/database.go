@@ -59,7 +59,6 @@ func ConnectDB() *gorm.DB {
 	err = db.AutoMigrate(
 		&models.HeroPage{},
 		&models.AboutPage{},
-		&models.AboutCard{},
 		&models.TechnicalSkills{},
 		&models.CareerJourney{},
 		&models.TestimonyPage{},

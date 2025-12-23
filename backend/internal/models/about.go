@@ -15,24 +15,21 @@ import (
 
 type AboutPage struct {
 	gorm.Model
-	ID           uint        `json:"id" gorm:"primaryKey"`
-	Description  string      `json:"description"`
-	Cards        []AboutCard `json:"cards" gorm:"foreignKey:AboutPageID"`
-	GithubLink   string      `json:"github_link"`
-	LinkedinLink string      `json:"linkedin_link"`
-	Available    bool        `json:"available"`
-	UpdatedAt    time.Time   `json:"updated_at"`
-	CreatedAt    time.Time   `json:"created_at"`
-}
-
-type AboutCard struct {
-	gorm.Model
-	ID          uint      `json:"id" gorm:"primaryKey"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	AboutPageID uint      `json:"about_page_id"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	CreatedAt   time.Time `json:"created_at"`
+	ID           uint      `json:"id" gorm:"primaryKey"`
+	Description  string    `json:"description"`
+	Card1Title   string    `json:"card1_title"`
+	Card1Desc    string    `json:"card1_desc"`
+	Card2Title   string    `json:"card2_title"`
+	Card2Desc    string    `json:"card2_desc"`
+	Card3Title   string    `json:"card3_title"`
+	Card3Desc    string    `json:"card3_desc"`
+	Card4Title   string    `json:"card4_title"`
+	Card4Desc    string    `json:"card4_desc"`
+	GithubLink   string    `json:"github_link"`
+	LinkedinLink string    `json:"linkedin_link"`
+	Available    bool      `json:"available"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 // ============================================================================
