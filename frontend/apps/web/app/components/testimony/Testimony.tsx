@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Quote, Sparkles, Star } from "lucide-react";
 import { useState } from "react";
 import { Testimonial } from "./types";
 import { TestimonyCard }from "./TestimonyCard";
+import { TestimonyModal } from "./TestimonyModal";
 
 const dummyTestimonials: Testimonial[] = [
     {
@@ -35,6 +36,7 @@ const dummyTestimonials: Testimonial[] = [
 
 export default function TestimonySection() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleNext = () => {
         setCurrentIndex((prev) => (prev + 1) % dummyTestimonials.length);
@@ -46,6 +48,8 @@ export default function TestimonySection() {
 
     return (
         <section className="w-full text-[var(--text-normal)] py-12">
+            <TestimonyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            
             <div className="mx-auto flex flex-col items-center gap-6 text-center mb-12">
                 <h1 className="text-[36px] font-semibold text-[var(--text-strong)]">Testimonials</h1>
                 <div className="h-[2px] w-[80px] rounded-full bg-[var(--border-color)]" />
@@ -87,7 +91,10 @@ export default function TestimonySection() {
 
                 {/* Send Testimony Button */}
                 <div className="mt-12 flex justify-center">
-                    <button className="px-8 py-3 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-lg font-semibold text-[var(--text-strong)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:-translate-y-1 active:translate-y-0">
+                    <button 
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-8 py-3 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-lg font-semibold text-[var(--text-strong)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:-translate-y-1 active:translate-y-0"
+                    >
                         Send a Testimony
                     </button>
                 </div>
