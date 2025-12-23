@@ -3,8 +3,6 @@ package server
 
 import (
 	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -12,6 +10,7 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/othersidedrl/portfolio/backend/internal/about"
 	"github.com/othersidedrl/portfolio/backend/internal/auth"
+	"github.com/othersidedrl/portfolio/backend/internal/config"
 	"github.com/othersidedrl/portfolio/backend/internal/health"
 	"github.com/othersidedrl/portfolio/backend/internal/hero"
 	"github.com/othersidedrl/portfolio/backend/internal/image"
@@ -22,6 +21,7 @@ import (
 )
 
 func NewRouter(
+	cfg *config.Config,
 	authHandler *auth.Handler,
 	heroHandler *hero.Handler,
 	aboutHandler *about.Handler,
@@ -32,15 +32,8 @@ func NewRouter(
 ) http.Handler {
 	r := chi.NewRouter()
 
-	// Get allowed origins from environment
-	allowedOriginsEnv := os.Getenv("ALLOWED_ORIGINS")
-	var allowedOrigins []string
-	if allowedOriginsEnv != "" {
-		allowedOrigins = strings.Split(allowedOriginsEnv, ",")
-		for i, origin := range allowedOrigins {
-			allowedOrigins[i] = strings.TrimSpace(origin)
-		}
-	} else {
+	allowedOrigins := cfg.AllowedOrigins
+	if len(allowedOrigins) == 0 {
 		allowedOrigins = []string{"http://localhost:3000"}
 	}
 

@@ -7,15 +7,17 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+
+	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
 
 type Service struct {
 	repo TestimonyRepository
+	cfg  *config.Config
 }
 
-func NewService(repo TestimonyRepository) *Service {
-	return &Service{repo}
+func NewService(repo TestimonyRepository, cfg *config.Config) *Service {
+	return &Service{repo, cfg}
 }
 
 func (s *Service) GetTestimonyPage(ctx context.Context) (*TestimonyPageDto, error) {
@@ -71,7 +73,7 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 		return err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("OPENROUTER_APIKEY"))
+	req.Header.Set("Authorization", "Bearer "+s.cfg.OpenRouterAPIKey)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

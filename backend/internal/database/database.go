@@ -3,45 +3,27 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/othersidedrl/portfolio/backend/internal/config"
+	"github.com/othersidedrl/portfolio/backend/internal/logger"
 	"github.com/othersidedrl/portfolio/backend/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func ConnectDB() *gorm.DB {
-	host := os.Getenv("DB_HOST")
-	if host == "" {
-		host = "localhost"
-	}
-	port := os.Getenv("DB_PORT")
-	if port == "" {
-		port = "5432"
-	}
-	username := os.Getenv("POSTGRES_USER")
-	if username == "" {
-		username = "postgres"
-	}
-	password := os.Getenv("POSTGRES_PASSWORD")
-	if password == "" {
-		password = "yourpassword"
-	}
-	psqlDB := os.Getenv("POSTGRES_DB")
-	if psqlDB == "" {
-		psqlDB = "yourdbname"
-	}
-
+func ConnectDB(cfg *config.Config) *gorm.DB {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, port, username, password, psqlDB,
+		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		logger.Error("Failed to connect to DB", "error", err)
 		log.Fatal("Failed to connect to DB:", err)
 	}
 
+	// Create PostgreSQL enum types (must exist before AutoMigrate)
 	enumTypes := []string{
 		`DO $$ BEGIN CREATE TYPE career_type AS ENUM ('Education', 'Job'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
 		`DO $$ BEGIN CREATE TYPE skill_level AS ENUM ('Beginner', 'Intermediate', 'Advanced'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
@@ -51,7 +33,7 @@ func ConnectDB() *gorm.DB {
 	}
 	for _, sql := range enumTypes {
 		if err := db.Exec(sql).Error; err != nil {
-			log.Printf("Warning: Failed to create enum type: %v", err)
+			logger.Warn("Failed to create enum type", "error", err)
 		}
 	}
 
@@ -69,9 +51,10 @@ func ConnectDB() *gorm.DB {
 		// You can add more models here
 	)
 	if err != nil {
+		logger.Error("Auto migration failed", "error", err)
 		log.Fatal("Auto migration failed:", err)
 	}
 
-	log.Println("✅ Connected and migrated DB successfully!")
+	logger.Info("Connected and migrated DB successfully")
 	return db
 }
