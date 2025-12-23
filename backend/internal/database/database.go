@@ -26,7 +26,7 @@ func ConnectDB(cfg *config.Config) *gorm.DB {
 	// Create PostgreSQL enum types (must exist before AutoMigrate)
 	enumTypes := []string{
 		`DO $$ BEGIN CREATE TYPE career_type AS ENUM ('Education', 'Job'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
-		`DO $$ BEGIN CREATE TYPE skill_level AS ENUM ('Beginner', 'Intermediate', 'Advanced'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+		`DO $$ BEGIN CREATE TYPE skill_level AS ENUM ('Beginner', 'Intermediate', 'Advanced', 'Expert'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
 		`DO $$ BEGIN CREATE TYPE category AS ENUM ('Backend', 'Frontend', 'Other'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
 		`DO $$ BEGIN CREATE TYPE project_type AS ENUM ('Web', 'Mobile', 'Machine Learning'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
 		`DO $$ BEGIN CREATE TYPE contribution_type AS ENUM ('Personal', 'Team'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
