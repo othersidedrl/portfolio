@@ -15,6 +15,7 @@ interface TechnicalSkill {
   specialities: string[];
   level: "Beginner" | "Intermediate" | "Advanced" | "Expert";
   category: "Backend" | "Frontend" | "Other";
+  year_of_experience: number;
 }
 
 interface SkillResponse {
@@ -38,6 +39,7 @@ const SkillsForm = () => {
     specialities: [],
     level: "Beginner",
     category: "Backend",
+    year_of_experience: 0,
   });
 
   const resetForm = () => {
@@ -47,6 +49,7 @@ const SkillsForm = () => {
       specialities: [],
       level: "Beginner",
       category: "Backend",
+      year_of_experience: 0,
     });
     setEditId(null);
     setOpen(false);
@@ -143,11 +146,10 @@ const SkillsForm = () => {
               key={cat}
               type="button"
               onClick={() => setActiveCategory(cat)}
-              className={`text-sm px-4 py-1 rounded-full ${
-                activeCategory === cat
-                  ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                  : "bg-transparent text-[var(--text-muted)] hover:text-[var(--text-strong)]"
-              }`}
+              className={`text-sm px-4 py-1 rounded-full ${activeCategory === cat
+                ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                : "bg-transparent text-[var(--text-muted)] hover:text-[var(--text-strong)]"
+                }`}
             >
               {cat}
             </button>
@@ -162,7 +164,7 @@ const SkillsForm = () => {
             >
               <div className="flex justify-between items-center">
                 <p className="font-semibold">
-                  {skill.name} ({skill.level})
+                  {skill.name} ({skill.level}) - {skill.year_of_experience} yrs
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -175,6 +177,7 @@ const SkillsForm = () => {
                         specialities: [...skill.specialities],
                         level: skill.level,
                         category: skill.category,
+                        year_of_experience: skill.year_of_experience,
                       });
                       setOpen(true);
                     }}
@@ -242,6 +245,18 @@ const SkillsForm = () => {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="input"
             />
+
+            <div className="flex gap-2">
+              <label>Years of Experience</label>
+              <input
+                type="number"
+                placeholder="Years of Experience"
+                value={form.year_of_experience}
+                onChange={(e) => setForm({ ...form, year_of_experience: parseInt(e.target.value) || 0 })}
+                className="input"
+                required
+              />
+            </div>
 
             <Dropdown
               label="Skill Level"
@@ -320,4 +335,3 @@ const SkillsForm = () => {
 };
 
 export default SkillsForm;
-    

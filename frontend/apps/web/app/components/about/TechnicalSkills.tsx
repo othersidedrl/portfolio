@@ -138,7 +138,7 @@ export const TechnicalSkills = () => {
             description={skill.description}
             level={skill.level}
             levelStyle={LevelColors[skill.level as SkillLevel]}
-            stats={skill.stats}
+            yearOfExperience={skill.year_of_experience}
             specialities={skill.specialities}
           />
         ))}

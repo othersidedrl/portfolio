@@ -18,7 +18,7 @@ type Skills = {
     description: string;
     specialities: string[];
     level: string;
-    stats: { label: string; value: string }[];
+    year_of_experience: number;
     category: string;
 };
 

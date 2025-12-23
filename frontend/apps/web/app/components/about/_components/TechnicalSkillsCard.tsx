@@ -17,7 +17,7 @@ export type TechnicalSkillsCardProps = {
   level: string;
   levelStyle: LevelStyle;
   icon?: ReactNode;
-  stats?: Stat[];
+  yearOfExperience?: number;
   specialities?: string[];
 };
 
@@ -27,16 +27,16 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
   level,
   levelStyle,
   icon,
-  stats,
+  yearOfExperience,
   specialities,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const hasDetails =
-    (stats && stats.length > 0) || (specialities && specialities.length > 0);
+    (yearOfExperience && yearOfExperience > 0) || (specialities && specialities.length > 0);
   const detailMaxHeight = useMemo(
     () =>
-      (stats?.length ?? 0) * 120 + (specialities?.length ?? 0) * 16 + 120 + "px",
-    [stats, specialities]
+      (specialities?.length ?? 0) * 16 + 120 + "px",
+    [specialities]
   );
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
@@ -71,9 +71,8 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
         className={`flex w-full flex-col ${summaryLayout}`}
       >
         <div
-          className={`flex w-full flex-wrap items-center gap-2 text-[var(--text-normal)] ${
-            expanded ? "justify-between" : "justify-center"
-          }`}
+          className={`flex w-full flex-wrap items-center gap-2 text-[var(--text-normal)] ${expanded ? "justify-between" : "justify-center"
+            }`}
         >
           <div className="flex items-center gap-2 text-[var(--text-normal)] transition-colors duration-300 group-hover:text-[var(--color-primary)]">
             {icon && (
@@ -114,32 +113,27 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
 
       {hasDetails && (
         <div
-          className={`w-full overflow-hidden transition-[max-height] duration-400 ease-in-out ${
-            expanded ? "mt-1 opacity-100" : "-mt-2 max-h-0 opacity-0"
-          }`}
+          className={`w-full overflow-hidden transition-[max-height] duration-400 ease-in-out ${expanded ? "mt-1 opacity-100" : "-mt-2 max-h-0 opacity-0"
+            }`}
           style={{ maxHeight: expanded ? detailMaxHeight : 0 }}
           aria-hidden={!expanded}
         >
           <div
-            className={`flex w-full flex-col gap-4 pt-2 transition-opacity duration-300 ${
-              expanded ? "opacity-100" : "opacity-0"
-            }`}
+            className={`flex w-full flex-col gap-4 pt-2 transition-opacity duration-300 ${expanded ? "opacity-100" : "opacity-0"
+              }`}
           >
-            {stats && stats.length > 0 && (
+            {yearOfExperience && yearOfExperience > 0 && (
               <div className="flex w-full justify-around gap-6 text-[var(--text-normal)]">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="flex flex-col items-center gap-1 text-center"
-                  >
-                    <p className="text-2xl font-semibold text-[var(--text-strong)]">
-                      {stat.value}
-                    </p>
-                    <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
+                <div
+                  className="flex flex-col items-center gap-1 text-center"
+                >
+                  <p className="text-2xl font-semibold text-[var(--text-strong)]">
+                    {yearOfExperience}
+                  </p>
+                  <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
+                    Years of Experience
+                  </p>
+                </div>
               </div>
             )}
 
