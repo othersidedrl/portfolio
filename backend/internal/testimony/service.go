@@ -7,15 +7,17 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+
+	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
 
 type Service struct {
 	repo TestimonyRepository
+	cfg  *config.Config
 }
 
-func NewService(repo TestimonyRepository) *Service {
-	return &Service{repo}
+func NewService(repo TestimonyRepository, cfg *config.Config) *Service {
+	return &Service{repo, cfg}
 }
 
 func (s *Service) GetTestimonyPage(ctx context.Context) (*TestimonyPageDto, error) {
@@ -35,7 +37,22 @@ func (s *Service) GetApprovedTestimonies(ctx context.Context) (*TestimonyDto, er
 }
 
 func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) error {
-	prompt := fmt.Sprintf("You are an assistant summarizing a professional testimonial for a portfolio website. Keep it under 25 words, professional and positive in tone. Emphasize strengths like reliability, problem-solving, or collaboration. Do not quote the original, repeat minor details, or mention names. Return a single sentence with no prefix. Input:'%s'", data.Description)
+	prompt := fmt.Sprintf(
+		`Summarize this testimonial for a developer portfolio in exactly one sentence (max 20 words).
+
+		Rules:
+		- Be professional and positive
+		- Focus on key strengths (e.g., problem-solving, collaboration, technical skill)
+		- Do NOT include names, quotes, or specific project details
+		- Do NOT start with "This testimonial..." or similar phrases
+		- Output ONLY the summary sentence, nothing else
+
+		Example input: "John was amazing to work with. He helped us build our entire e-commerce platform and was always available to help debug issues. Highly recommend!"
+		Example output: A reliable developer who delivers quality solutions and provides excellent technical support.
+
+		Testimonial to summarize: "%s"`,
+		data.Description,
+	)
 
 	// Step 2: Prepare the request payload
 	reqBody := OpenRouterRequest{
@@ -56,7 +73,7 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 		return err
 	}
 
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("OPENROUTER_APIKEY"))
+	req.Header.Set("Authorization", "Bearer "+s.cfg.OpenRouterAPIKey)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}

@@ -9,8 +9,24 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProjectType string
+// ============================================================================
+// Project Page
+// ============================================================================
 
+type ProjectPage struct {
+	gorm.Model
+	ID          uint      `json:"id" gorm:"primaryKey"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+// ============================================================================
+// Project
+// ============================================================================
+
+type ProjectType string
 type ContributionType string
 
 const (
@@ -22,7 +38,6 @@ const (
 	Team     ContributionType = "Team"
 )
 
-// Scanner and Valuer for ProjectType
 func (pt *ProjectType) Scan(value interface{}) error {
 	str, ok := value.(string)
 	if !ok {
@@ -36,7 +51,6 @@ func (pt ProjectType) Value() (driver.Value, error) {
 	return string(pt), nil
 }
 
-// Scanner and Valuer for ContributionType
 func (ct *ContributionType) Scan(value interface{}) error {
 	str, ok := value.(string)
 	if !ok {

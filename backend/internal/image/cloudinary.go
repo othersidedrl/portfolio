@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"mime/multipart"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -12,22 +11,15 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"github.com/cloudinary/cloudinary-go/v2/transformation"
+	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
 
 type CloudinaryProvider struct {
 	cld *cloudinary.Cloudinary
 }
 
-func NewCloudinaryProvider() (*CloudinaryProvider, error) {
-	cloudName := os.Getenv("CLOUDINARY_NAME")
-	apiKey := os.Getenv("CLOUDINARY_APIKEY")
-	apiSecret := os.Getenv("CLOUDINARY_APISECRET")
-
-	if cloudName == "" || apiKey == "" || apiSecret == "" {
-		return nil, fmt.Errorf("missing required Cloudinary environment variables")
-	}
-
-	cld, err := cloudinary.NewFromParams(cloudName, apiKey, apiSecret)
+func NewCloudinaryProvider(cfg *config.Config) (*CloudinaryProvider, error) {
+	cld, err := cloudinary.NewFromParams(cfg.CloudinaryName, cfg.CloudinaryAPIKey, cfg.CloudinaryAPISecret)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize Cloudinary: %w", err)
 	}

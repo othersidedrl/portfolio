@@ -2,9 +2,11 @@ package utils
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 
+	"github.com/othersidedrl/portfolio/backend/internal/config"
+	"github.com/othersidedrl/portfolio/backend/internal/logger"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -13,15 +15,16 @@ var (
 	RedisCtx    = context.Background()
 )
 
-func InitRedis() {
+func InitRedis(cfg *config.Config) {
 	RedisClient = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT"),
-		Password: os.Getenv("REDIS_PASSWORD"),
+		Addr:     fmt.Sprintf("%s:%s", cfg.RedisHost, cfg.RedisPort),
+		Password: cfg.RedisPassword,
 		DB:       0,
 	})
 
 	if err := RedisClient.Ping(RedisCtx).Err(); err != nil {
-		log.Fatalf("❌ Failed to connect to Redis: %v", err)
+		logger.Error("Failed to connect to Redis", "error", err)
+		os.Exit(1)
 	}
-	log.Println("✅ Redis connected")
+	logger.Info("Redis connected")
 }

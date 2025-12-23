@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"mime/multipart"
 	"strings"
+
+	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
 
 type Service struct {
 	provider ImageProvider
 }
 
-func NewService() (*Service, error) {
-	provider, err := NewCloudinaryProvider()
+func NewService(cfg *config.Config) (*Service, error) {
+	provider, err := NewCloudinaryProvider(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create image provider: %w", err)
 	}
