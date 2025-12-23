@@ -11,7 +11,7 @@ import axios from "~lib/axios";
 export default function TestimonySection() {
 
     const { data: TestimonyData } = useQuery({
-        queryKey: ["testimony"],
+        queryKey: ["testimony-page"],
         queryFn: async () => {
             const response = await axios.get("/testimony");
             return response.data as TestimonyRepsonse;
