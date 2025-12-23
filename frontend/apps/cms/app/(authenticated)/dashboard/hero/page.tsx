@@ -13,7 +13,10 @@ type HeroData = {
   subtitle: string;
   resume_link: string;
   contact_link: string;
-  image_urls: string[];
+  image_url_1: string;
+  image_url_2: string;
+  image_url_3: string;
+  image_url_4: string;
   hobbies: string[];
 };
 
@@ -48,10 +51,12 @@ export default function HeroForm() {
         subtitle: data.subtitle || "",
         resumeLink: data.resume_link || "",
         contactLink: data.contact_link || "",
-        imageUrls:
-          data.image_urls && data.image_urls.length > 0
-            ? data.image_urls
-            : [""],
+        imageUrls: [
+          data.image_url_1 || "",
+          data.image_url_2 || "",
+          data.image_url_3 || "",
+          data.image_url_4 || "",
+        ],
         hobbies: data.hobbies && data.hobbies.length > 0 ? data.hobbies : [""],
       });
     }
@@ -121,7 +126,10 @@ export default function HeroForm() {
         subtitle: formData.subtitle,
         resume_link: formData.resumeLink,
         contact_link: formData.contactLink,
-        image_urls: formData.imageUrls.filter((url) => url),
+        image_url_1: formData.imageUrls[0] || "",
+        image_url_2: formData.imageUrls[1] || "",
+        image_url_3: formData.imageUrls[2] || "",
+        image_url_4: formData.imageUrls[3] || "",
         hobbies: formData.hobbies.filter((h) => h),
       };
       const res = await axios.patch("/admin/hero", payload);

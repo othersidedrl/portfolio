@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -17,9 +16,9 @@ type JWTService struct {
 	secret []byte
 }
 
-func NewJWTService() *JWTService {
+func NewJWTService(secret string) *JWTService {
 	return &JWTService{
-		secret: []byte(os.Getenv("JWT_SECRET")),
+		secret: []byte(secret),
 	}
 }
 

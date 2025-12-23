@@ -32,20 +32,30 @@ func NewGormAboutRepository(db *gorm.DB) *GormAboutRepository {
 func (r *GormAboutRepository) Find(ctx context.Context) (*AboutPageDto, error) {
 	var about models.AboutPage
 
-	// Load AboutPage along with its related AboutCards
+	// Load AboutPage (cards are now embedded)
 	if err := r.db.WithContext(ctx).
-		Preload("Cards"). // This loads the []AboutCard slice
 		First(&about).Error; err != nil {
 		return nil, err
 	}
 
 	// Map to DTO
-	cards := make([]CardDto, len(about.Cards))
-	for i, c := range about.Cards {
-		cards[i] = CardDto{
-			Title:       c.Title,
-			Description: c.Description,
-		}
+	cards := []CardDto{
+		{
+			Title:       about.Card1Title,
+			Description: about.Card1Desc,
+		},
+		{
+			Title:       about.Card2Title,
+			Description: about.Card2Desc,
+		},
+		{
+			Title:       about.Card3Title,
+			Description: about.Card3Desc,
+		},
+		{
+			Title:       about.Card4Title,
+			Description: about.Card4Desc,
+		},
 	}
 
 	dto := &AboutPageDto{
@@ -62,50 +72,64 @@ func (r *GormAboutRepository) Find(ctx context.Context) (*AboutPageDto, error) {
 func (r *GormAboutRepository) Update(ctx context.Context, data *AboutPageDto) error {
 	var existing models.AboutPage
 
-	err := r.db.WithContext(ctx).Preload("Cards").First(&existing).Error
+	err := r.db.WithContext(ctx).First(&existing).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			cards := make([]models.AboutCard, len(data.Cards))
-			for i, c := range cards {
-				cards[i] = models.AboutCard{
-					Title:       c.Title,
-					Description: c.Description,
-				}
-			}
-
+			// Create new record with embedded cards
 			aboutPage := models.AboutPage{
 				Description:  data.Description,
 				GithubLink:   data.GithubLink,
 				LinkedinLink: data.LinkedinLink,
 				Available:    data.Available,
-				Cards:        cards,
 			}
+
+			// Map cards from DTO (up to 4)
+			if len(data.Cards) > 0 {
+				aboutPage.Card1Title = data.Cards[0].Title
+				aboutPage.Card1Desc = data.Cards[0].Description
+			}
+			if len(data.Cards) > 1 {
+				aboutPage.Card2Title = data.Cards[1].Title
+				aboutPage.Card2Desc = data.Cards[1].Description
+			}
+			if len(data.Cards) > 2 {
+				aboutPage.Card3Title = data.Cards[2].Title
+				aboutPage.Card3Desc = data.Cards[2].Description
+			}
+			if len(data.Cards) > 3 {
+				aboutPage.Card4Title = data.Cards[3].Title
+				aboutPage.Card4Desc = data.Cards[3].Description
+			}
+
 			return r.db.WithContext(ctx).Create(&aboutPage).Error
 		}
 		return err
 	}
 
+	// Update existing record
 	existing.Description = data.Description
 	existing.GithubLink = data.GithubLink
 	existing.LinkedinLink = data.LinkedinLink
 	existing.Available = data.Available
 
-	// Delete old cards and insert new ones (simplest approach)
-	if err := r.db.WithContext(ctx).Unscoped().Where("about_page_id = ?", existing.ID).Delete(&models.AboutCard{}).Error; err != nil {
-		return err
+	// Update embedded cards
+	if len(data.Cards) > 0 {
+		existing.Card1Title = data.Cards[0].Title
+		existing.Card1Desc = data.Cards[0].Description
+	}
+	if len(data.Cards) > 1 {
+		existing.Card2Title = data.Cards[1].Title
+		existing.Card2Desc = data.Cards[1].Description
+	}
+	if len(data.Cards) > 2 {
+		existing.Card3Title = data.Cards[2].Title
+		existing.Card3Desc = data.Cards[2].Description
+	}
+	if len(data.Cards) > 3 {
+		existing.Card4Title = data.Cards[3].Title
+		existing.Card4Desc = data.Cards[3].Description
 	}
 
-	cards := make([]models.AboutCard, len(data.Cards))
-	for i, c := range data.Cards {
-		cards[i] = models.AboutCard{
-			Title:       c.Title,
-			Description: c.Description,
-		}
-	}
-
-	existing.Cards = cards
-
-	// Save changes
 	return r.db.WithContext(ctx).Save(&existing).Error
 }
 
