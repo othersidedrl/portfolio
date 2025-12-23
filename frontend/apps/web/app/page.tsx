@@ -8,49 +8,6 @@ import AboutSection from "./components/about/About";
 import TestimonySection from "./components/testimony/Testimony";
 // import AboutSection from "./components/about/About";
 
-type skillLevel = ["Beginner, Intermediate", "Advanced"];
-type cateogries = ["Backend", "Frontend", "Other"];
-
-type Card = {
-  id: string;
-  description: string;
-};
-
-type AboutResponse = {
-  description: string;
-  cards: Card[];
-  github_link: string;
-  linkedin_link: string;
-  available: boolean;
-};
-
-type Skills = {
-  name: string;
-  description: string;
-  specialities: string[];
-  level: skillLevel;
-  category: cateogries;
-};
-
-type SkillsResponse = {
-  data: Skills[];
-  length: number;
-};
-
-type Careers = {
-  startedAt: string;
-  endedAt: string;
-  title: string;
-  affiliation: string;
-  description: string;
-  location: string;
-};
-
-type CareersRepsonse = {
-  data: Careers[];
-  length: number;
-};
-
 type Testimony = {
   name: string;
   profile_url: string;
@@ -92,30 +49,6 @@ type ProjectResponse = {
 };
 
 export default function Portfolio() {
-
-  const { data: AboutData } = useQuery({
-    queryKey: ["about"],
-    queryFn: async () => {
-      const response = await axios.get("/about");
-      return response.data as AboutResponse;
-    },
-  });
-
-  const { data: SkillsData } = useQuery({
-    queryKey: ["skills"],
-    queryFn: async () => {
-      const response = await axios.get("/about/skills");
-      return response.data as SkillsResponse;
-    },
-  });
-
-  const { data: CareerData } = useQuery({
-    queryKey: ["careers"],
-    queryFn: async () => {
-      const response = await axios.get("/about/careers");
-      return response.data as CareersRepsonse;
-    },
-  });
 
   const { data: TestimonyData } = useQuery({
     queryKey: ["testimony"],

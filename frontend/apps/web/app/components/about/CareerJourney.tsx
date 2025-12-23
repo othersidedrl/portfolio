@@ -3,77 +3,27 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CareerJourneyCard from "./_components/CareerJourneyCard";
-
-type CareerJourneyItem = {
-  title: string;
-  affiliation: string;
-  description: string;
-  location: string;
-  type: string;
-  startedAt: string;
-  endedAt: string;
-};
-
-const JOURNEY: CareerJourneyItem[] = [
-  {
-    title: "Software Engineer",
-    affiliation: "Zellify",
-    description: "Developing frontend and backend using NestJS and Next.js.",
-    location: "Remote, Sweden",
-    type: "Job",
-    startedAt: "2024-08-04",
-    endedAt: "Present",
-  },
-  {
-    title: "Software Engineer Intern",
-    affiliation: "Ministry of Public Works",
-    description:
-      "Delivered microservices in Go, Next.js dashboards, and automated deployments on GCP.",
-    location: "Jakarta, Indonesia",
-    type: "Job",
-    startedAt: "2023-03-01",
-    endedAt: "2023-08-31",
-  },
-  {
-    title: "Computer Science Student",
-    affiliation: "Universitas Gunadarma",
-    description:
-      "Focused on backend engineering, competitive programming, and distributed systems.",
-    location: "Depok, Indonesia",
-    type: "Education",
-    startedAt: "2022-09-23",
-    endedAt: "2026-06-22",
-  },
-  {
-    title: "Freelance Developer",
-    affiliation: "Self-employed",
-    description:
-      "Built marketing websites and lightweight dashboards for startups using Next.js.",
-    location: "Remote",
-    type: "Job",
-    startedAt: "2021-01-01",
-    endedAt: "2022-07-01",
-  },
-  {
-    title: "Programming Mentor",
-    affiliation: "Local Community",
-    description: "Mentored junior engineers on algorithms and clean architecture.",
-    location: "Jakarta, Indonesia",
-    type: "Job",
-    startedAt: "2020-06-01",
-    endedAt: "2020-12-01",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import axios from "~lib/axios";
+import { CareersRepsonse } from "./types";
 
 const HIGHLIGHT_SIZE = 3;
 
 export const CareerJourney = () => {
+  const { data: CareerData } = useQuery({
+    queryKey: ["careers"],
+    queryFn: async () => {
+      const response = await axios.get("/about/careers");
+      return response.data as CareersRepsonse;
+    },
+  });
+
   const sortedJourney = useMemo(
     () =>
-      [...JOURNEY].sort(
-        (a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+      [...CareerData?.data || []].sort(
+        (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
       ),
-    []
+    [CareerData?.data]
   );
 
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -138,7 +88,7 @@ export const CareerJourney = () => {
       >
         {visibleJourney.map((item, index) => (
           <CareerJourneyCard
-            key={`${item.title}-${item.startedAt}`}
+            key={`${item.title}-${item.started_at}`}
             {...item}
             isLast={activeStart + index === sortedJourney.length - 1}
           />
@@ -175,17 +125,15 @@ export const CareerJourney = () => {
                   dotRefs.current[idx] = el;
                 }}
                 onClick={() => goToStart(idx)}
-                className={`relative flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300 ${
-                  inWindow
-                    ? "text-[var(--color-primary)]"
-                    : "text-[var(--text-muted)]"
-                }`}
+                className={`relative flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300 ${inWindow
+                  ? "text-[var(--color-primary)]"
+                  : "text-[var(--text-muted)]"
+                  }`}
                 aria-label={`Go to ${item.title}`}
               >
                 <span
-                  className={`block h-2.5 w-2.5 rounded-full border border-current transition-colors duration-300 ease-out ${
-                    inWindow ? "bg-current" : "bg-transparent"
-                  }`}
+                  className={`block h-2.5 w-2.5 rounded-full border border-current transition-colors duration-300 ease-out ${inWindow ? "bg-current" : "bg-transparent"
+                    }`}
                 />
               </button>
             );

@@ -1,14 +1,8 @@
 import { GraduationCap, Info, Laptop } from "lucide-react";
 import type { FC } from "react";
+import type { Careers } from "../types";
 
-interface CareerJourneyCardProps {
-  title: string;
-  affiliation: string;
-  description: string;
-  location: string;
-  type: string;
-  startedAt: string;
-  endedAt: string;
+interface CareerJourneyCardProps extends Careers {
   isLast?: boolean;
 }
 
@@ -47,8 +41,8 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
   description,
   location,
   type,
-  startedAt,
-  endedAt,
+  started_at,
+  ended_at,
   isLast = false,
 }) => {
   const Icon = type === "Education" ? GraduationCap : Laptop;
@@ -70,7 +64,7 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
       >
         <div className="flex flex-wrap items-center justify-between text-sm text-[var(--text-normal)]">
           <p className="text-sm font-semibold">
-            {formatDate(startedAt)} - {formatDate(endedAt)}
+            {formatDate(started_at)} - {formatDate(ended_at)}
           </p>
           <p className="text-sm text-[var(--text-muted)]">{location}</p>
         </div>
