@@ -55,6 +55,73 @@ func ConnectDB(cfg *config.Config) *gorm.DB {
 		log.Fatal("Auto migration failed:", err)
 	}
 
+	// Seed database with initial data
+	seedDatabase(db)
+
 	logger.Info("Connected and migrated DB successfully")
 	return db
+}
+
+func seedDatabase(db *gorm.DB) {
+	// Seed Hero Page
+	var hero models.HeroPage
+	if err := db.First(&hero).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			db.Create(&models.HeroPage{
+				Name:        "Hero Name",
+				Title:       "Hero Title",
+				Subtitle:    "Hero Subtitle",
+				Rank:        "Hero Rank",
+				ResumeLink:  "",
+				ContactLink: "",
+			})
+			logger.Info("Seeded Hero Page")
+		}
+	}
+
+	// Seed About Page
+	var about models.AboutPage
+	if err := db.First(&about).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			db.Create(&models.AboutPage{
+				Description:  "About Description",
+				Card1Title:   "Card 1",
+				Card1Desc:    "Description",
+				Card2Title:   "Card 2",
+				Card2Desc:    "Description",
+				Card3Title:   "Card 3",
+				Card3Desc:    "Description",
+				Card4Title:   "Card 4",
+				Card4Desc:    "Description",
+				GithubLink:   "",
+				LinkedinLink: "",
+				Available:    true,
+			})
+			logger.Info("Seeded About Page")
+		}
+	}
+
+	// Seed Project Page
+	var project models.ProjectPage
+	if err := db.First(&project).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			db.Create(&models.ProjectPage{
+				Title:       "Projects",
+				Description: "My Projects",
+			})
+			logger.Info("Seeded Project Page")
+		}
+	}
+
+	// Seed Testimony Page
+	var testimony models.TestimonyPage
+	if err := db.First(&testimony).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			db.Create(&models.TestimonyPage{
+				Title:       "Testimonials",
+				Description: "What people say",
+			})
+			logger.Info("Seeded Testimony Page")
+		}
+	}
 }
