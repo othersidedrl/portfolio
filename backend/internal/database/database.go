@@ -42,6 +42,19 @@ func ConnectDB() *gorm.DB {
 		log.Fatal("Failed to connect to DB:", err)
 	}
 
+	enumTypes := []string{
+		`DO $$ BEGIN CREATE TYPE career_type AS ENUM ('Education', 'Job'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+		`DO $$ BEGIN CREATE TYPE skill_level AS ENUM ('Beginner', 'Intermediate', 'Advanced'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+		`DO $$ BEGIN CREATE TYPE category AS ENUM ('Backend', 'Frontend', 'Other'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+		`DO $$ BEGIN CREATE TYPE project_type AS ENUM ('Web', 'Mobile', 'Machine Learning'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+		`DO $$ BEGIN CREATE TYPE contribution_type AS ENUM ('Personal', 'Team'); EXCEPTION WHEN duplicate_object THEN null; END $$;`,
+	}
+	for _, sql := range enumTypes {
+		if err := db.Exec(sql).Error; err != nil {
+			log.Printf("Warning: Failed to create enum type: %v", err)
+		}
+	}
+
 	// Auto-migrate tables
 	err = db.AutoMigrate(
 		&models.HeroPage{},
