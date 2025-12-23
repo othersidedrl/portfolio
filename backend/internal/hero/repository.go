@@ -38,7 +38,10 @@ func (r *GormHeroRepository) Find(ctx context.Context) (*HeroPageDto, error) {
 		Subtitle:    hero.Subtitle,
 		ResumeLink:  hero.ResumeLink,
 		ContactLink: hero.ContactLink,
-		ImageUrls:   hero.ImageURLs,
+		ImageUrl1:   hero.ImageURL1,
+		ImageUrl2:   hero.ImageURL2,
+		ImageUrl3:   hero.ImageURL3,
+		ImageUrl4:   hero.ImageURL4,
 		Hobbies:     hero.Hobbies,
 	}
 
@@ -58,7 +61,10 @@ func (r *GormHeroRepository) Update(ctx context.Context, data *HeroPageDto) erro
 				Subtitle:    data.Subtitle,
 				ResumeLink:  data.ResumeLink,
 				ContactLink: data.ContactLink,
-				ImageURLs:   data.ImageUrls,
+				ImageURL1:   data.ImageUrl1,
+				ImageURL2:   data.ImageUrl2,
+				ImageURL3:   data.ImageUrl3,
+				ImageURL4:   data.ImageUrl4,
 				Hobbies:     data.Hobbies,
 			}
 			return r.db.WithContext(ctx).Create(newHero).Error
@@ -72,7 +78,10 @@ func (r *GormHeroRepository) Update(ctx context.Context, data *HeroPageDto) erro
 	existing.Subtitle = data.Subtitle
 	existing.ResumeLink = data.ResumeLink
 	existing.ContactLink = data.ContactLink
-	existing.ImageURLs = data.ImageUrls
+	existing.ImageURL1 = data.ImageUrl1
+	existing.ImageURL2 = data.ImageUrl2
+	existing.ImageURL3 = data.ImageUrl3
+	existing.ImageURL4 = data.ImageUrl4
 	existing.Hobbies = data.Hobbies
 
 	return r.db.WithContext(ctx).Save(&existing).Error

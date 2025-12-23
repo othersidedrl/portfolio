@@ -16,7 +16,10 @@ type HeroPage struct {
 	Subtitle    string         `json:"subtitle"`
 	ResumeLink  string         `json:"resume_link"`
 	ContactLink string         `json:"contact_link"`
-	ImageURLs   pq.StringArray `json:"image_urls" gorm:"type:text[]"`
+	ImageURL1   string         `json:"image_url_1"`
+	ImageURL2   string         `json:"image_url_2"`
+	ImageURL3   string         `json:"image_url_3"`
+	ImageURL4   string         `json:"image_url_4"`
 	Hobbies     pq.StringArray `json:"hobbies" gorm:"type:text[]"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	CreatedAt   time.Time      `json:"created_at"`

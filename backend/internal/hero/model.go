@@ -7,6 +7,9 @@ type HeroPageDto struct {
 	Subtitle    string   `json:"subtitle"`
 	ResumeLink  string   `json:"resume_link"`
 	ContactLink string   `json:"contact_link"`
-	ImageUrls   []string `json:"image_urls"`
+	ImageUrl1   string   `json:"image_url_1"`
+	ImageUrl2   string   `json:"image_url_2"`
+	ImageUrl3   string   `json:"image_url_3"`
+	ImageUrl4   string   `json:"image_url_4"`
 	Hobbies     []string `json:"hobbies"`
 }
