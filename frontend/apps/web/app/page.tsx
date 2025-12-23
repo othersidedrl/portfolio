@@ -1,59 +1,53 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import axios from "~lib/axios";
-import Navbar from "./components/Navbar";
 import HeroSection from "./components/hero/Hero";
 import AboutSection from "./components/about/About";
 import TestimonySection from "./components/testimony/Testimony";
-// import AboutSection from "./components/about/About";
+import { getQueryClient } from "./get-query-client";
 
-type Project = {
-  name: string;
-  imageUrls: string[];
-  description: string;
-  techStack: string[];
-  githubLink: string;
-  type: string;
-  contribution: string;
-  projectLink: string;
-};
+export default async function Portfolio() {
+  const queryClient = getQueryClient();
 
-type ProjectItemsResponse = {
-  data: Project[];
-  length: number;
-};
-
-type ProjectResponse = {
-  title: string;
-  description: string;
-};
-
-export default function Portfolio() {
-
-  const { data: ProjectData } = useQuery({
-    queryKey: ["project"],
-    queryFn: async () => {
-      const response = await axios.get("/testimony");
-      return response.data as ProjectResponse;
-    },
-  });
-
-  const { data: ProjectItems } = useQuery({
-    queryKey: ["project-items"],
-    queryFn: async () => {
-      const response = await axios.get("/project/items");
-      return response.data as ProjectItemsResponse;
-    },
-  });
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["hero"],
+      queryFn: async () => {
+        const response = await axios.get("/hero");
+        return response.data;
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["about"],
+      queryFn: async () => {
+        const response = await axios.get("/about");
+        return response.data;
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["testimony-page"],
+      queryFn: async () => {
+        const response = await axios.get("/testimony");
+        return response.data;
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["project-page"],
+      queryFn: async () => {
+        const response = await axios.get("/project");
+        return response.data;
+      },
+    }),
+  ]);
 
   return (
-    <main className="flex flex-col">
-      <HeroSection />
-      <AboutSection />
-      <div className="mt-12">
-        <TestimonySection />
-      </div>
-    </main>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <main className="flex flex-col">
+        <HeroSection />
+        <AboutSection />
+        <div className="mt-12">
+          <TestimonySection />
+        </div>
+      </main>
+    </HydrationBoundary>
   );
 }
