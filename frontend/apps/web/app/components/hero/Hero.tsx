@@ -38,7 +38,7 @@ export default function HeroSection() {
         backgroundSize: "100% 95vh",
       }}
     >
-      <div className="flex flex-col py-16 space-y-12">
+      <div className="flex flex-col pt-32 pb-16 space-y-12">
         {/* Centered Responsive Grid */}
         <div className="flex justify-center w-full">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start w-full px-4">
