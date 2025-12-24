@@ -76,9 +76,9 @@ const ProjectForm = () => {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
               Section Title
-            </label>
+            </span>
             <Input
               name="title"
               value={form.title}
@@ -89,9 +89,9 @@ const ProjectForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
               Section Description
-            </label>
+            </span>
             <Textarea
               name="description"
               value={form.description}

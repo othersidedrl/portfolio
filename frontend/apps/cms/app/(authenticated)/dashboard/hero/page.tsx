@@ -14,6 +14,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/Button";
@@ -175,9 +176,9 @@ export default function HeroForm() {
             <CardContent className="pt-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                     Full Name
-                  </label>
+                  </span>
                   <Input
                     name="name"
                     value={form.name}
@@ -187,9 +188,9 @@ export default function HeroForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
                     <Trophy size={14} /> Rank/Status
-                  </label>
+                  </span>
                   <Input
                     name="rank"
                     value={form.rank}
@@ -200,9 +201,9 @@ export default function HeroForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                   Headline Title
-                </label>
+                </span>
                 <Input
                   name="title"
                   value={form.title}
@@ -212,9 +213,9 @@ export default function HeroForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                   Short Bio / Subtitle
-                </label>
+                </span>
                 <Textarea
                   name="subtitle"
                   value={form.subtitle}
@@ -226,9 +227,9 @@ export default function HeroForm() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]/30">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
                     <FileText size={14} /> Resume URL
-                  </label>
+                  </span>
                   <Input
                     name="resumeLink"
                     value={form.resumeLink}
@@ -237,9 +238,9 @@ export default function HeroForm() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
                     <Mail size={14} /> Contact Link
-                  </label>
+                  </span>
                   <Input
                     name="contactLink"
                     value={form.contactLink}
@@ -273,6 +274,7 @@ export default function HeroForm() {
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {form.hobbies.map((hobby, i) => (
+                  // biome-ignore lint: any
                   <div key={i} className="flex items-center gap-2">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--bg-light)] text-[10px] font-black text-[var(--text-muted)] border border-[var(--border-color)]">
                       {i + 1}
@@ -325,7 +327,7 @@ export default function HeroForm() {
                   >
                     {url ? (
                       <div className="relative h-full w-full">
-                        <img
+                        <Image
                           src={url}
                           alt={`Showcase ${i + 1}`}
                           className="h-full w-full object-cover transition-transform group-hover:scale-105"

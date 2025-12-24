@@ -125,6 +125,7 @@ export default function DashboardPage() {
                     icon: Clock,
                   },
                 ].map((log, i) => (
+                  // biome-ignore lint: false positive
                   <div key={i} className="flex items-center justify-between group cursor-pointer">
                     <div className="flex items-center gap-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-light)] border border-[var(--border-color)] group-hover:bg-[var(--color-primary)]/10 group-hover:text-[var(--color-primary)] transition-colors">
@@ -155,6 +156,7 @@ export default function DashboardPage() {
           </h3>
           <div className="space-y-3">
             {quickActions.map((action, i) => (
+              // biome-ignore lint: any
               <Link key={i} href={action.href}>
                 <div className="flex items-center justify-between p-4 rounded-2xl bg-[var(--bg-mid)] border border-[var(--border-color)] hover:border-[var(--color-primary)]/30 hover:shadow-md transition-all group">
                   <div className="flex items-center gap-4">

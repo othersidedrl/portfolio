@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, MessageCircle, Sparkles, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/Button";
@@ -31,11 +32,7 @@ const TestimonyItems = () => {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Approved");
 
-  const {
-    data: testimonyItems,
-    isLoading,
-    isError,
-  } = useQuery<TestimonyItemsResponse>({
+  const { data: testimonyItems, isLoading } = useQuery<TestimonyItemsResponse>({
     queryKey: ["testimony-items"],
     queryFn: async () => {
       const res = await axios.get("/admin/testimony/items");
@@ -130,7 +127,7 @@ const TestimonyItems = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
                     <div className="relative h-12 w-12 flex-shrink-0">
-                      <img
+                      <Image
                         src={
                           item.profile_url ||
                           `https://api.dicebear.com/7.x/initials/svg?seed=${item.name}`

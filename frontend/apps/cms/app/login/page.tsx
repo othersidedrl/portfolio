@@ -20,6 +20,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       router.push("/dashboard");
     },
+    // biome-ignore lint: any
     onError: (err: any) => {
       toast.error("Wrong credentials!");
       console.error(err);

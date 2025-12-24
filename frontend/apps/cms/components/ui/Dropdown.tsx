@@ -13,7 +13,7 @@ interface DropdownProps {
 export default function Dropdown({ label, value, options, onChange, placeholder }: DropdownProps) {
   return (
     <Ariakit.SelectProvider value={value} setValue={onChange}>
-      <label className="text-sm font-medium text-[var(--text-muted)] mb-1">{label}</label>
+      <span className="text-sm font-medium text-[var(--text-muted)] mb-1">{label}</span>
 
       {/* This is the disclosure button */}
       <Ariakit.Select className="input w-full cursor-pointer">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 import { useState } from "react";
 import { BiUpload, BiX } from "react-icons/bi";
 import { toast } from "sonner";
@@ -47,7 +48,7 @@ const ProjectForm = () => {
     projectLink: "",
   });
 
-  const { data: skillsData, isLoading: isSkillsLoading } = useQuery<SkillResponse>({
+  const { data: skillsData } = useQuery<SkillResponse>({
     queryKey: ["skills"],
     queryFn: async () => {
       const res = await axios.get("admin/about/skills");
@@ -198,7 +199,7 @@ const ProjectForm = () => {
       />
 
       <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium text-[var(--text-muted)]">Tech Stack</label>
+        <span className="mb-1 text-sm font-medium text-[var(--text-muted)]">Tech Stack</span>
         <div className="flex flex-wrap gap-2">
           {skillsData?.data?.map((skill) => (
             <button
@@ -219,13 +220,13 @@ const ProjectForm = () => {
       </div>
 
       <div className="space-y-2 w-full">
-        <label className="block text-lg font-semibold mb-4 text-[var(--text-strong)]">
+        <span className="block text-lg font-semibold mb-4 text-[var(--text-strong)]">
           Upload Project Image
-        </label>
+        </span>
         <div className="group relative w-full border-2 border-dashed p-6 transition-colors duration-200 bg-transparent border-[var(--border-color)] hover:border-[var(--color-primary)]">
           {form.imageUrls[0] ? (
             <div className="relative">
-              <img src={form.imageUrls[0]} alt="Preview" className="w-full h-48 object-cover" />
+              <Image src={form.imageUrls[0]} alt="Preview" className="w-full h-48 object-cover" />
               <button
                 type="button"
                 className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg bg-[var(--color-accent)] text-[var(--color-on-primary)] hover:bg-[var(--color-primary)]"

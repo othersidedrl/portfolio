@@ -71,6 +71,7 @@ const CareerForm = () => {
       toast.success("Career entry added!");
       resetForm();
     },
+    // biome-ignore lint: any
     onError: (e: any) => toast.error(e?.response?.data?.error || "Failed to create entry."),
   });
 
@@ -82,6 +83,7 @@ const CareerForm = () => {
       toast.success("Career entry updated!");
       resetForm();
     },
+    // biome-ignore lint: any
     onError: (e: any) => toast.error(e?.response?.data?.error || "Failed to update entry."),
   });
 
@@ -91,6 +93,7 @@ const CareerForm = () => {
       queryClient.invalidateQueries({ queryKey: ["career"] });
       toast.success("Career entry removed.");
     },
+    // biome-ignore lint: any
     onError: (e: any) => toast.error(e?.response?.data?.error || "Failed to delete entry."),
   });
 
@@ -239,9 +242,9 @@ const CareerForm = () => {
             <CardContent className="space-y-6 pt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                     Start Date
-                  </label>
+                  </span>
                   <Input
                     type="date"
                     value={form.started_at}
@@ -251,9 +254,9 @@ const CareerForm = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                       End Date
-                    </label>
+                    </span>
                     <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--color-primary)] cursor-pointer">
                       <input
                         type="checkbox"
@@ -277,9 +280,9 @@ const CareerForm = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                     Title
-                  </label>
+                  </span>
                   <Input
                     placeholder="e.g. Software Engineer"
                     value={form.title}
@@ -288,9 +291,9 @@ const CareerForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                     Affiliation
-                  </label>
+                  </span>
                   <Input
                     placeholder="e.g. Google"
                     value={form.affiliation}
@@ -302,9 +305,9 @@ const CareerForm = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                     Location
-                  </label>
+                  </span>
                   <Input
                     placeholder="e.g. Jakarta, Indonesia"
                     value={form.location}
@@ -323,9 +326,9 @@ const CareerForm = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                   Description
-                </label>
+                </span>
                 <Textarea
                   placeholder="Describe your role or studies..."
                   value={form.description}
