@@ -4,6 +4,7 @@ import HeroSection from "./components/hero/Hero";
 import AboutSection from "./components/about/About";
 import TestimonySection from "./components/testimony/Testimony";
 import { getQueryClient } from "./get-query-client";
+import ProjectSection from "./components/project/Project";
 
 export default async function Portfolio() {
   const queryClient = getQueryClient();
@@ -46,6 +47,9 @@ export default async function Portfolio() {
         <AboutSection />
         <div className="mt-12">
           <TestimonySection />
+        </div>
+        <div className="mt-12">
+          <ProjectSection />
         </div>
       </main>
     </HydrationBoundary>
