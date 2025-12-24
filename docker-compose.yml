@@ -15,6 +15,7 @@ services:
 
   # 2. Go Backend
   backend:
+    image: ${DOCKERHUB_USERNAME}/portfolio-backend:latest
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -31,6 +32,7 @@ services:
 
   # 3. Next.js Web Frontend
   web:
+    image: ${DOCKERHUB_USERNAME}/portfolio-web:latest
     build:
       context: .
       dockerfile: frontend/apps/web/Dockerfile
@@ -43,6 +45,7 @@ services:
 
   # 4. Next.js CMS Frontend
   cms:
+    image: ${DOCKERHUB_USERNAME}/portfolio-cms:latest
     build:
       context: .
       dockerfile: frontend/apps/cms/Dockerfile

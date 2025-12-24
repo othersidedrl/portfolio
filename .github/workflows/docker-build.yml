@@ -51,3 +51,40 @@ jobs:
           tags: |
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:latest
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:${{ github.sha }}
+
+  deploy:
+    name: Deploy to VM
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose and nginx config to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml,nginx/nginx.conf"
+          target: "~/portfolio"
+
+      - name: Execute remote commands via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/portfolio
+            # Login to Docker Hub on the VM (optional if images are public)
+            # echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            
+            # Pull the latest images and restart
+            docker compose pull
+            docker compose up -d
+            
+            # Cleanup old images to save disk space
+            docker image prune -f
