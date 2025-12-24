@@ -117,12 +117,13 @@ func (sl Cateogry) Value() (driver.Value, error) {
 
 type TechnicalSkills struct {
 	gorm.Model
-	ID           uint           `json:"id" gorm:"primaryKey"`
-	Name         string         `json:"name"`
-	Description  string         `json:"description"`
-	Specialities pq.StringArray `json:"specialities" gorm:"type:text[]"`
-	Level        SkillLevel     `json:"level" gorm:"type:skill_level"`
-	Category     Cateogry       `json:"category" gorm:"type:category"`
-	UpdatedAt    time.Time      `json:"updated_at"`
-	CreatedAt    time.Time      `json:"created_at"`
+	ID               uint           `json:"id" gorm:"primaryKey"`
+	Name             string         `json:"name"`
+	Description      string         `json:"description"`
+	Specialities     pq.StringArray `json:"specialities" gorm:"type:text[]"`
+	Level            SkillLevel     `json:"level" gorm:"type:skill_level"`
+	Category         Cateogry       `json:"category" gorm:"type:category"`
+	YearOfExperience int            `json:"year_of_experience"`
+	UpdatedAt        time.Time      `json:"updated_at"`
+	CreatedAt        time.Time      `json:"created_at"`
 }

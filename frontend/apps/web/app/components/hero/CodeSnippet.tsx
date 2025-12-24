@@ -2,15 +2,17 @@ import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
 import { codeToHtml } from 'shiki';
 
-const code = `#include <iostream>
+const code = `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
-  string name = "Darel";
-  if (name == "Darel")
-    cout << "Certified cool." << endl; // true
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+
+  cout << "Problem solved." << endl;
   return 0;
 }`;
+
 
 const CodeSnippet = () => {
   const [html, setHtml] = useState('');

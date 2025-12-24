@@ -2,14 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TbLogout2 } from "react-icons/tb";
+import {
+  TbLogout2,
+  TbSmartHome,
+  TbUserCircle,
+  TbQuote,
+  TbBriefcase,
+  TbExternalLink,
+  TbRocket
+} from "react-icons/tb";
+import { LayoutDashboard, User, MessageCircle, Briefcase, PlusCircle, LogOut } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 const navItems = [
-  { label: "Hero", subpath: "/dashboard/hero" },
-  { label: "About", subpath: "/dashboard/about" },
-  { label: "Testimonials", subpath: "/dashboard/testimonials" },
-  { label: "Projects", subpath: "/dashboard/projects" },
-  { label: "Portfolio+", subpath: "/dashboard/portfolio-plus" },
+  { label: "Hero", href: "/dashboard/hero", icon: TbRocket },
+  { label: "About", href: "/dashboard/about", icon: User },
+  { label: "Testimonials", href: "/dashboard/testimonials", icon: MessageCircle },
+  { label: "Projects", href: "/dashboard/projects", icon: Briefcase },
+  { label: "Portfolio+", href: "/dashboard/portfolio-plus", icon: PlusCircle },
 ];
 
 export default function Sidebar() {
@@ -22,43 +32,65 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="w-64 h-screen fixed px-6 py-8 flex flex-col justify-between border-r border-[var(--border-color)] shadow-[4px_0_12px_var(--shadow-color)]"
-      style={{
-        backgroundColor: "var(--bg-mid)",
-        color: "var(--text-strong)",
-      }}
+      className="w-64 h-screen fixed px-4 py-8 flex flex-col justify-between border-r border-[var(--border-color)] bg-[var(--bg-mid)] shadow-lg z-40"
     >
-      <div>
-        <a href="/dashboard"><h2 className="text-2xl font-bold mb-8 tracking-tight">My Portfolio</h2></a>
+      <div className="space-y-8">
+        <div className="px-4">
+          <Link href="/dashboard" className="group flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-lg transition-transform group-hover:scale-105">
+              <LayoutDashboard size={20} />
+            </div>
+            <div>
+              <h2 className="text-lg font-black tracking-tight text-[var(--text-strong)] leading-none">CMS</h2>
+              <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Admin Panel</p>
+            </div>
+          </Link>
+        </div>
 
-        <nav className="space-y-2">
+        <nav className="space-y-1.5 px-2">
           {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.subpath);
+            const isActive = pathname.startsWith(item.href);
+            const Icon = item.icon;
+
             return (
               <Link
-                key={item.subpath}
-                href={item.subpath}
-                className={`block px-4 py-2 rounded-md font-medium transition-all duration-200 ${
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300",
                   isActive
-                    ? "bg-[var(--highlight)] text-[var(--color-primary)] shadow-inner"
-                    : "hover:bg-[var(--highlight)] hover:text-[var(--color-accent)] text-[var(--text-muted)]"
-                }`}
+                    ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)] shadow-sm"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-light)] hover:text-[var(--text-strong)]"
+                )}
               >
-                {item.label.toUpperCase()}
+                <Icon size={18} className={cn(isActive && "animate-pulse")} />
+                {item.label}
               </Link>
             );
           })}
         </nav>
       </div>
 
-      <button
-        onClick={handleLogout}
-        className="cursor-pointer mt-4 px-4 py-2 text-sm rounded bg-[var(--bg-light)] text-[var(--text-muted)] hover:text-[var(--color-accent)] transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          <TbLogout2 /> Logout
+      <div className="px-2">
+        <div className="mb-4 px-4 py-3 rounded-xl bg-[var(--bg-light)]/50 border border-[var(--border-color)]/50">
+          <a
+            href="/"
+            target="_blank"
+            className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors"
+          >
+            View Portfolio
+            <TbExternalLink size={14} />
+          </a>
         </div>
-      </button>
+
+        <button
+          onClick={handleLogout}
+          className="group flex w-full items-center gap-3 px-4 py-2.5 text-sm font-bold rounded-xl text-red-500 hover:bg-red-500/10 transition-all duration-300"
+        >
+          <LogOut size={18} className="transition-transform group-hover:-translate-x-1" />
+          Logout
+        </button>
+      </div>
     </aside>
   );
 }

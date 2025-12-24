@@ -1,6 +1,6 @@
 import { ArrowUpRight, CheckCircle2, Clock3 } from "lucide-react";
 import { SiGithub, SiLinkedin } from "react-icons/si";
-import type { ComponentType } from "react";
+import type { ComponentType, FC } from "react";
 
 type StatsProps = {
   linkedin?: string;
@@ -17,7 +17,7 @@ type SocialLink = {
 
 const hasLink = (link?: string) => Boolean(link && link.trim().length > 0);
 
-export const Stats = ({
+export const Stats: FC<StatsProps> = ({
   linkedin = "https://www.linkedin.com/in/grapheel-darel-pandey",
   github = "https://github.com/othersidedrl",
   available = true,
@@ -39,19 +39,19 @@ export const Stats = ({
 
   const statusCopy = available
     ? {
-        title: "Currently available",
-        description: "Open to remote-friendly collaborations and roles.",
-        badge: "Online",
-        accent: "text-[var(--color-primary)]",
-        icon: CheckCircle2,
-      }
+      title: "Currently available",
+      description: "Open to remote-friendly collaborations and roles.",
+      badge: "Online",
+      accent: "text-[var(--color-primary)]",
+      icon: CheckCircle2,
+    }
     : {
-        title: "Booked at the moment",
-        description: "Reach out to discuss future availability.",
-        badge: "Heads up",
-        accent: "text-[var(--text-muted)]",
-        icon: Clock3,
-      };
+      title: "Booked at the moment",
+      description: "Reach out to discuss future availability.",
+      badge: "Heads up",
+      accent: "text-[var(--text-muted)]",
+      icon: Clock3,
+    };
 
   const StatusIcon = statusCopy.icon;
 
@@ -126,11 +126,10 @@ export const Stats = ({
                   rel="noreferrer"
                   aria-disabled={!hasLink(href)}
                   tabIndex={hasLink(href) ? 0 : -1}
-                  className={`mt-6 inline-flex items-center gap-2 text-sm font-semibold transition-all ${
-                    hasLink(href)
+                  className={`mt-6 inline-flex items-center gap-2 text-sm font-semibold transition-all ${hasLink(href)
                       ? "text-[var(--color-primary)] hover:gap-3"
                       : "cursor-not-allowed text-[var(--text-muted)]"
-                  }`}
+                    }`}
                 >
                   Visit profile
                   <ArrowUpRight className="h-4 w-4" />

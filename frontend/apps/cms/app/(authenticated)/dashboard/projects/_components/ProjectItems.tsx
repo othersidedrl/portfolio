@@ -4,19 +4,29 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "~lib/axios";
 import {
-  BiExport,
-  BiLink,
-  BiLinkExternal,
-  BiLogoGithub,
-  BiPencil,
-  BiPlus,
-  BiTrash,
-  BiUpload,
-  BiX,
-} from "react-icons/bi";
+  ExternalLink,
+  Github,
+  Pencil,
+  Plus,
+  Trash2,
+  Upload,
+  X,
+  Code2,
+  Package,
+  Cpu,
+  Globe,
+  Smartphone,
+  CheckCircle2,
+  ImageIcon
+} from "lucide-react";
 import * as Ariakit from "@ariakit/react";
 import { useState } from "react";
 import Dropdown from "~/components/ui/Dropdown";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import { Button } from "~/components/ui/Button";
+import { Input } from "~/components/ui/Input";
+import { Textarea } from "~/components/ui/Textarea";
+import { cn } from "~/lib/utils";
 
 interface ProjectItem {
   id: number;
@@ -77,16 +87,13 @@ const ProjectItems = () => {
     projectLink: "",
   });
 
-  const { data: skillsData, isLoading: isSkillsLoading } =
-    useQuery<SkillResponse>({
-      queryKey: ["skills"],
-      queryFn: async () => {
-        const res = await axios.get("admin/about/skills");
-        return res.data;
-      },
-    });
-
-  console.log(skillsData);
+  const { data: skillsData } = useQuery<SkillResponse>({
+    queryKey: ["skills"],
+    queryFn: async () => {
+      const res = await axios.get("admin/about/skills");
+      return res.data;
+    },
+  });
 
   const uploadImageMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -99,7 +106,10 @@ const ProjectItems = () => {
       });
       return res.data;
     },
-    onSuccess: () => toast.success("Image uploaded!"),
+    onSuccess: (data) => {
+      setForm((prev) => ({ ...prev, imageUrls: [data.url] }));
+      toast.success("Project image uploaded!");
+    },
     onError: () => toast.error("Failed to upload image."),
   });
 
@@ -109,9 +119,9 @@ const ProjectItems = () => {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Project created!");
+      toast.success("Project created successfully!");
       queryClient.invalidateQueries({ queryKey: ["project-items"] });
-      setOpen(false); // Close modal on success
+      setOpen(false);
       resetForm();
     },
     onError: () => toast.error("Failed to create project."),
@@ -119,19 +129,25 @@ const ProjectItems = () => {
 
   const updateMutation = useMutation({
     mutationFn: async (payload: ProjectItem) => {
-      const res = await axios.put(
-        `/admin/project/items/${payload.id}`,
-        payload
-      );
+      const res = await axios.put(`/admin/project/items/${payload.id}`, payload);
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Project updated!");
+      toast.success("Project updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["project-items"] });
       setOpen(false);
       resetForm();
     },
     onError: () => toast.error("Failed to update project."),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => axios.delete(`/admin/project/items/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["project-items"] });
+      toast.success("Project deleted.");
+    },
+    onError: () => toast.error("Failed to delete project."),
   });
 
   const resetForm = () => {
@@ -151,17 +167,10 @@ const ProjectItems = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    uploadImageMutation.mutate(file, {
-      onSuccess: (data) => {
-        setForm((prev) => ({ ...prev, imageUrls: [data.url] }));
-      },
-    });
+    if (file) uploadImageMutation.mutate(file);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -190,359 +199,198 @@ const ProjectItems = () => {
     setOpen(true);
   };
 
-  const handleOpenModal = () => {
-    resetForm();
-    setOpen(true);
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "Web": return <Globe size={14} />;
+      case "Mobile": return <Smartphone size={14} />;
+      case "Machine Learning": return <Cpu size={14} />;
+      default: return <Package size={14} />;
+    }
   };
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) =>
-      axios.delete(`/admin/project/items/${id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["project-items"] });
-      toast.success("Project deleted!");
-    },
-    onError: () => toast.error("Failed to delete project."),
-  });
+  if (isLoading) return <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{[1, 2, 3, 4].map(i => <div key={i} className="h-64 animate-pulse rounded-2xl bg-[var(--bg-mid)]" />)}</div>;
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
-        <h2 className="text-2xl font-bold text-[var(--text-strong)]">
-          Projects
-        </h2>
-        <Ariakit.Button onClick={handleOpenModal} className="button">
-          <BiPlus size={16} />
-        </Ariakit.Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-mid)] border border-[var(--border-color)] text-[var(--color-primary)]">
+            <Package size={20} />
+          </div>
+          <h2 className="text-xl font-black text-[var(--text-strong)] uppercase tracking-tight">Project Items</h2>
+        </div>
+        <Button onClick={() => { resetForm(); setOpen(true); }} className="font-bold">
+          <Plus size={18} className="mr-2" /> New Project
+        </Button>
       </div>
 
-      <Ariakit.Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false);
-          resetForm();
-        }}
-        className="dialog fixed inset-0 z-50 flex items-center justify-center bg-opacity-40 backdrop-blur-sm"
-      >
-        <div className="max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl">
-          <div className="flex justify-between items-center p-6 border-b border-[var(--border-color)]">
-            <Ariakit.DialogHeading className="text-xl font-bold text-[var(--text-strong)]">
-              {isEditing ? "Edit Project" : "Add Project"}
-            </Ariakit.DialogHeading>
-            <Ariakit.DialogDismiss className="text-[var(--text-muted)] hover:text-[var(--text-strong)]">
-              <BiX size={24} />
-            </Ariakit.DialogDismiss>
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6"
-          >
-            {/* Left column */}
-            <div className="flex flex-col gap-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Project Name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Project Name"
-                  className="input w-full"
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="githubLink"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  GitHub Link
-                </label>
-                <input
-                  id="githubLink"
-                  name="githubLink"
-                  value={form.githubLink}
-                  onChange={handleChange}
-                  placeholder="GitHub Link"
-                  className="input w-full"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="projectLink"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Project Link
-                </label>
-                <input
-                  id="projectLink"
-                  name="projectLink"
-                  value={form.projectLink}
-                  onChange={handleChange}
-                  placeholder="Project Link"
-                  className="input w-full"
-                />
-              </div>
-
-              <Dropdown
-                label="Type"
-                value={form.type}
-                options={["Web", "Mobile", "Machine Learning"]}
-                onChange={(value) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    type: value as ProjectItem["type"],
-                  }))
-                }
-              />
-
-              <Dropdown
-                label="Contribution"
-                value={form.contribution}
-                options={["Personal", "Team"]}
-                onChange={(value) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    contribution: value as ProjectItem["contribution"],
-                  }))
-                }
-              />
-            </div>
-
-            {/* Right column */}
-            <div className="flex flex-col gap-4">
-              <div>
-                <label
-                  htmlFor="description"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={form.description}
-                  onChange={handleChange}
-                  placeholder="Description"
-                  className="input w-full h-32"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 text-sm font-medium text-[var(--text-muted)]">
-                  Tech Stack
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {skillsData?.data?.map((skill) => (
-                    <button
-                      key={skill.name}
-                      type="button"
-                      onClick={() => toggleTech(skill.name)}
-                      className={`px-3 py-1 rounded-full text-sm border transition-colors duration-200
-                ${
-                  form.techStack.includes(skill.name)
-                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
-                    : "bg-[var(--bg-light)] text-[var(--text-normal)] border-[var(--border-color)] hover:border-[var(--color-primary)]"
-                }`}
-                    >
-                      {skill.name}
-                    </button>
-                  ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projectItems?.data?.map((item) => (
+          <Card key={item.id} className="group overflow-hidden border-2 border-transparent hover:border-[var(--color-primary)]/20 transition-all duration-300 shadow-md">
+            <div className="relative h-48 w-full overflow-hidden bg-[var(--bg-dark)]">
+              {item.imageUrls[0] ? (
+                <img src={item.imageUrls[0]} alt={item.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-[var(--text-muted)] opacity-20">
+                  <ImageIcon size={48} />
                 </div>
+              )}
+              <div className="absolute top-4 right-4 flex gap-2 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                <Button variant="secondary" size="icon" className="h-9 w-9 backdrop-blur-md bg-white/10 border-white/20 text-white hover:bg-white/20" onClick={() => handleEdit(item)}>
+                  <Pencil size={16} />
+                </Button>
+                <Button variant="danger" size="icon" className="h-9 w-9 bg-red-600/80 backdrop-blur-md border-red-400/20 text-white" onClick={() => deleteMutation.mutate(item.id)}>
+                  <Trash2 size={16} />
+                </Button>
               </div>
-
-              <div className="space-y-2 w-full">
-                <label className="block text-sm font-medium text-[var(--text-muted)]">
-                  Upload Project Image
-                </label>
-                <div className="group relative w-full border-2 border-dashed p-4 transition-colors duration-200 bg-transparent border-[var(--border-color)] hover:border-[var(--color-primary)]">
-                  {form.imageUrls[0] ? (
-                    <div className="relative">
-                      <img
-                        src={form.imageUrls[0]}
-                        alt="Preview"
-                        className="w-full h-48 object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setForm((prev) => ({ ...prev, imageUrls: [""] }))
-                        }
-                        className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg bg-[var(--color-accent)] text-[var(--color-on-primary)] hover:bg-[var(--color-primary)]"
-                      >
-                        <BiX size={16} />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <div className="flex flex-col items-center justify-center h-48">
-                        <BiUpload className="w-12 h-12 mb-4 text-[var(--border-color)]" />
-                        <p className="font-medium mb-2 text-[var(--text-muted)]">
-                          Click to upload
-                        </p>
-                        <p className="text-sm text-[var(--text-muted)]">
-                          Image 1
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                  <label htmlFor="image-upload" className="sr-only">
-                    Upload Image
-                  </label>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                </div>
+              <div className="absolute bottom-4 left-4 flex gap-2">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-primary)] text-[10px] font-black uppercase tracking-widest text-[var(--color-on-primary)] shadow-lg">
+                  {getTypeIcon(item.type)} {item.type}
+                </span>
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+                  {item.contribution}
+                </span>
               </div>
             </div>
 
-            {/* Submit / Cancel buttons – full width */}
-            <div className="md:col-span-2 flex gap-4 pt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  resetForm();
-                }}
-                className="flex-1 py-2 px-4 border border-[var(--border-color)] rounded hover:bg-[var(--bg-light)] transition text-[var(--text-normal)]"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={createMutation.isPending || updateMutation.isPending}
-                className="flex-1 py-2 px-4 bg-[var(--color-primary)] text-[var(--color-on-primary)] font-semibold rounded hover:opacity-90 transition disabled:opacity-50"
-              >
-                {createMutation.isPending || updateMutation.isPending
-                  ? isEditing
-                    ? "Updating..."
-                    : "Creating..."
-                  : isEditing
-                  ? "Update Project"
-                  : "Create Project"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </Ariakit.Dialog>
-
-      {isLoading ? (
-        <p className="text-[var(--text-muted)]">Loading...</p>
-      ) : isError ? (
-        <p className="text-red-500">Failed to load projects.</p>
-      ) : projectItems?.data?.length === 0 ? (
-        <p className="text-[var(--text-muted)]">No projects yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {projectItems?.data?.map((item) => (
-            <div
-              key={item.id}
-              className="p-4 border border-[var(--border-color)] bg-[var(--bg-mid)] rounded-xl shadow-sm space-y-2"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-semibold text-[var(--text-strong)]">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-[var(--text-muted)]">
-                    {item.type} • {item.contribution}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    className="text-blue-600 hover:text-blue-700"
-                    onClick={() => handleEdit(item)}
-                    title="Edit"
-                  >
-                    <BiPencil size={18} />
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-600"
-                    onClick={() => deleteMutation.mutate(item.id)}
-                    title="Delete"
-                  >
-                    <BiTrash size={18} />
-                  </button>
-                </div>
+            <CardContent className="p-6 space-y-4">
+              <div>
+                <CardTitle className="text-lg group-hover:text-[var(--color-primary)] transition-colors">{item.name}</CardTitle>
+                <p className="text-xs font-medium text-[var(--text-muted)] line-clamp-2 mt-2 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
 
-              <div className="text-sm text-[var(--text-normal)] whitespace-pre-wrap">
-                {item.description}
-              </div>
-
-              <div className="flex flex-wrap gap-2 text-xs text-[var(--text-muted)]">
+              <div className="flex flex-wrap gap-1.5 pt-2">
                 {item.techStack.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 bg-[var(--bg-light)] border border-[var(--border-color)] rounded"
-                  >
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-[var(--bg-light)] text-[9px] font-bold text-[var(--text-muted)] border border-[var(--border-color)] group-hover:border-[var(--color-primary)]/30 transition-colors">
                     {tech}
                   </span>
                 ))}
               </div>
 
-              <div className="flex gap-4 text-sm">
+              <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-color)]/20">
                 {item.githubLink && (
-                  <a
-                    href={item.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[var(--color-primary)] hover:underline hover:text-[var(--color-accent)] transition-colors"
-                  >
-                    <span className="flex items-center gap-1 group">
-                      <BiLogoGithub
-                        size={16}
-                        className="transition-colors"
-                      />{" "}
-                      GitHub
-                    </span>
+                  <a href={item.githubLink} target="_blank" rel="noopener" className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-strong)] transition-colors">
+                    <Github size={14} /> GitHub
                   </a>
                 )}
                 {item.projectLink && (
-                  <a
-                    href={item.projectLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[var(--color-primary)] hover:underline hover:text-[var(--color-accent)] transition-colors"
-                  >
-                    <span className="flex items-center gap-1 group">
-                      Live Site{" "}
-                      <BiLinkExternal
-                        size={16}
-                        className="transition-colors"
-                      />
-                    </span>
+                  <a href={item.projectLink} target="_blank" rel="noopener" className="flex items-center gap-2 text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors">
+                    <ExternalLink size={14} /> Live Demo
                   </a>
                 )}
               </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-2">
-                {item.imageUrls.map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    alt={`Project ${item.name} ${i}`}
-                    className="w-full h-32 object-cover rounded"
-                  />
-                ))}
+      <Ariakit.Dialog
+        open={open}
+        onClose={() => { setOpen(false); resetForm(); }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all"
+      >
+        <Card className="w-full max-w-4xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-200">
+          <CardHeader className="flex flex-row items-center justify-between flex-shrink-0">
+            <div>
+              <CardTitle>{isEditing ? "Edit Project" : "Add Project"}</CardTitle>
+              <CardDescription>Fill in the project details and upload creative assets.</CardDescription>
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => { setOpen(false); resetForm(); }}>
+              <X size={20} />
+            </Button>
+          </CardHeader>
+
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column: Core Info */}
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Project Name</label>
+                  <Input name="name" value={form.name} onChange={handleChange} placeholder="What did you build?" required />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Description</label>
+                  <Textarea name="description" value={form.description} onChange={handleChange} placeholder="Explain the project scope and challenges..." className="min-h-[120px]" required />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Dropdown label="Platform/Type" value={form.type} options={["Web", "Mobile", "Machine Learning"]} onChange={(v) => setForm(p => ({ ...p, type: v as any }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Dropdown label="Contribution" value={form.contribution} options={["Personal", "Team"]} onChange={(v) => setForm(p => ({ ...p, contribution: v as any }))} />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-[var(--border-color)]/30">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Github size={14} /> Repository URL</label>
+                    <Input name="githubLink" value={form.githubLink} onChange={handleChange} placeholder="https://github.com/..." />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><ExternalLink size={14} /> Live Deployment</label>
+                    <Input name="projectLink" value={form.projectLink} onChange={handleChange} placeholder="https://project.com" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Imagery & Tech */}
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Visual Assets</label>
+                  <div className="group relative h-48 w-full border-2 border-dashed border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-[var(--color-primary)] transition-all">
+                    {form.imageUrls[0] ? (
+                      <div className="relative h-full w-full">
+                        <img src={form.imageUrls[0]} alt="Preview" className="h-full w-full object-cover" />
+                        <button type="button" onClick={() => setForm(p => ({ ...p, imageUrls: [""] }))} className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={14} /></button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-center p-6 text-[var(--text-muted)]">
+                        <Upload size={32} className="mb-2 opacity-20" />
+                        <p className="text-sm font-bold">Standard Preview</p>
+                        <p className="text-[10px] uppercase opacity-40">16:9 Image Recommended</p>
+                      </div>
+                    )}
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Code2 size={14} /> Tech Stack Integration</label>
+                  <div className="flex flex-wrap gap-2 p-4 rounded-2xl bg-[var(--bg-light)]/40 border border-[var(--border-color)] max-h-[160px] overflow-y-auto custom-scrollbar">
+                    {skillsData?.data?.map(skill => (
+                      <button
+                        key={skill.id}
+                        type="button"
+                        onClick={() => toggleTech(skill.name)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all",
+                          form.techStack.includes(skill.name)
+                            ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent shadow-md"
+                            : "bg-[var(--bg-mid)] text-[var(--text-muted)] border-[var(--border-color)] hover:border-[var(--color-primary)]"
+                        )}
+                      >
+                        {skill.name}
+                      </button>
+                    ))}
+                    {!skillsData?.data?.length && <p className="text-[10px] text-center w-full py-4 text-[var(--text-muted)] italic">Populate skills first to tag them here.</p>}
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+
+            <div className="flex gap-4 p-6 border-t border-[var(--border-color)]/30 bg-[var(--bg-light)]/20 animate-in slide-in-from-bottom-2">
+              <Button type="button" variant="secondary" onClick={() => { setOpen(false); resetForm(); }} className="flex-1 font-bold">Cancel</Button>
+              <Button type="submit" className="flex-1 font-bold" disabled={createMutation.isPending || updateMutation.isPending}>
+                {createMutation.isPending || updateMutation.isPending ? "Processing..." : isEditing ? "Update Project" : "Launch Project"}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </Ariakit.Dialog>
     </div>
   );
 };

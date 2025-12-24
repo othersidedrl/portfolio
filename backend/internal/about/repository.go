@@ -144,12 +144,13 @@ func (r *GormAboutRepository) GetTechnicalSkills(ctx context.Context) (*Technica
 	var dtoSkills []SkillItemDto
 	for _, skill := range skills {
 		dtoSkills = append(dtoSkills, SkillItemDto{
-			ID:           skill.ID,
-			Name:         skill.Name,
-			Description:  skill.Description,
-			Specialities: skill.Specialities,
-			Level:        string(skill.Level),
-			Category:     string(skill.Category),
+			ID:               skill.ID,
+			Name:             skill.Name,
+			Description:      skill.Description,
+			Specialities:     skill.Specialities,
+			Level:            string(skill.Level),
+			Category:         string(skill.Category),
+			YearOfExperience: skill.YearOfExperience,
 		})
 	}
 
@@ -160,11 +161,12 @@ func (r *GormAboutRepository) GetTechnicalSkills(ctx context.Context) (*Technica
 
 func (r *GormAboutRepository) CreateTechnicalSkill(ctx context.Context, data *SkillItemDto) error {
 	skill := models.TechnicalSkills{
-		Name:         data.Name,
-		Description:  data.Description,
-		Specialities: data.Specialities,
-		Level:        models.SkillLevel(data.Level),
-		Category:     models.Cateogry(data.Category),
+		Name:             data.Name,
+		Description:      data.Description,
+		Specialities:     data.Specialities,
+		Level:            models.SkillLevel(data.Level),
+		Category:         models.Cateogry(data.Category),
+		YearOfExperience: data.YearOfExperience,
 	}
 
 	return r.db.WithContext(ctx).Create(&skill).Error
@@ -173,11 +175,12 @@ func (r *GormAboutRepository) CreateTechnicalSkill(ctx context.Context, data *Sk
 func (r *GormAboutRepository) UpdateTechnicalSkill(ctx context.Context, data *SkillItemDto, id uint) error {
 	return r.db.WithContext(ctx).Where("id = ?", id).Updates(
 		models.TechnicalSkills{
-			Name:         data.Name,
-			Description:  data.Description,
-			Specialities: data.Specialities,
-			Level:        models.SkillLevel(data.Level),
-			Category:     models.Cateogry(data.Category),
+			Name:             data.Name,
+			Description:      data.Description,
+			Specialities:     data.Specialities,
+			Level:            models.SkillLevel(data.Level),
+			Category:         models.Cateogry(data.Category),
+			YearOfExperience: data.YearOfExperience,
 		}).Error
 }
 

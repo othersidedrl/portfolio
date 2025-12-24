@@ -1,14 +1,11 @@
-import { useMemo, useState } from "react";
+import React, { useState } from "react";
 import type { FC, KeyboardEvent, ReactNode } from "react";
+import { FileCode } from "lucide-react";
+import { iconMap } from "./IconMap";
 
 type LevelStyle = {
   background: string;
   color: string;
-};
-
-type Stat = {
-  label: string;
-  value: string;
 };
 
 export type TechnicalSkillsCardProps = {
@@ -17,8 +14,21 @@ export type TechnicalSkillsCardProps = {
   level: string;
   levelStyle: LevelStyle;
   icon?: ReactNode;
-  stats?: Stat[];
+  yearOfExperience?: number;
   specialities?: string[];
+};
+
+const getSkillIcon = (name: string): ReactNode => {
+  const lowerName = name.toLowerCase();
+
+  for (const mapping of iconMap) {
+    if (mapping.keywords.some(keyword => lowerName.includes(keyword))) {
+      const Icon = mapping.icon;
+      return <Icon size={20} className="text-[var(--color-primary)]" />;
+    }
+  }
+
+  return <FileCode size={20} className="text-[var(--color-primary)] opacity-60" />;
 };
 
 const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
@@ -27,17 +37,13 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
   level,
   levelStyle,
   icon,
-  stats,
+  yearOfExperience,
   specialities,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const hasDetails =
-    (stats && stats.length > 0) || (specialities && specialities.length > 0);
-  const detailMaxHeight = useMemo(
-    () =>
-      (stats?.length ?? 0) * 120 + (specialities?.length ?? 0) * 16 + 120 + "px",
-    [stats, specialities]
-  );
+  const hasDetails = (yearOfExperience && yearOfExperience > 0) || (specialities && specialities.length > 0);
+
+  const skillIcon = icon || getSkillIcon(name);
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
@@ -47,13 +53,6 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
     }
   };
 
-  const articleLayout = expanded
-    ? "items-start text-left gap-4 justify-start"
-    : "items-center text-center gap-3 justify-center";
-  const summaryLayout = expanded
-    ? "items-start text-left gap-3"
-    : "items-center text-center gap-2";
-
   return (
     <article
       role="button"
@@ -61,35 +60,31 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
       aria-expanded={expanded}
       onClick={toggleExpanded}
       onKeyDown={handleKeyDown}
-      className={`group flex cursor-pointer flex-col ${articleLayout} rounded-[20px] border bg-[var(--bg-mid)] px-6 py-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[var(--color-primary)]/35 hover:bg-[var(--bg-light)] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2`}
-      style={{
-        borderColor: "var(--border-color)",
-        boxShadow: "0 16px 28px var(--shadow-color)",
-      }}
+      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-6 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:bg-[var(--bg-mid)]/80 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] backdrop-blur-sm`}
     >
-      <div
-        className={`flex w-full flex-col ${summaryLayout}`}
-      >
-        <div
-          className={`flex w-full flex-wrap items-center gap-2 text-[var(--text-normal)] ${
-            expanded ? "justify-between" : "justify-center"
-          }`}
-        >
-          <div className="flex items-center gap-2 text-[var(--text-normal)] transition-colors duration-300 group-hover:text-[var(--color-primary)]">
-            {icon && (
-              <span className="text-xl transition-transform duration-300 group-hover:scale-110">
-                {icon}
+      {/* Background Glow */}
+      <div className="absolute -top-12 -left-12 h-24 w-24 rounded-full bg-[var(--color-primary)]/5 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
+
+      {/* Main Content */}
+      <div className={`flex flex-col gap-3 transition-all duration-500 ${expanded ? "items-start text-left" : "items-center text-center"}`}>
+        <div className={`flex w-full items-center gap-3 ${expanded ? "justify-between" : "justify-center"}`}>
+          <div className="flex items-center gap-2.5 transition-colors duration-300 group-hover:text-[var(--color-primary)]">
+            {skillIcon && (
+              <span className="transition-transform duration-500 group-hover:scale-110">
+                {skillIcon}
               </span>
             )}
-            <h4 className="text-lg font-semibold">{name}</h4>
+            <h4 className="text-lg font-black tracking-tight">{name}</h4>
           </div>
 
           {expanded && (
             <span
-              className="rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all duration-300 group-hover:shadow-md"
+              className="rounded-full px-3 py-1 text-[10px] uppercase tracking-widest font-bold shadow-sm transition-all duration-300 ring-1 ring-inset"
               style={{
-                backgroundColor: levelStyle.background,
+                backgroundColor: `${levelStyle.background}20`,
                 color: levelStyle.color,
+                boxShadow: `inset 0 0 10px ${levelStyle.background}40`,
+                border: `1px solid ${levelStyle.background}40`
               }}
             >
               {level}
@@ -97,14 +92,17 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
           )}
         </div>
 
-        <p className="text-sm text-[var(--text-muted)]">{description}</p>
+        <p className="text-sm font-medium leading-relaxed text-[var(--text-muted)] max-w-[280px]">
+          {description}
+        </p>
 
         {!expanded && (
           <span
-            className="rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all duration-300 group-hover:shadow-md"
+            className="mt-1 rounded-full px-3 py-1 text-[10px] uppercase tracking-widest font-bold shadow-sm transition-all duration-300"
             style={{
-              backgroundColor: levelStyle.background,
+              backgroundColor: `${levelStyle.background}20`,
               color: levelStyle.color,
+              border: `1px solid ${levelStyle.background}40`
             }}
           >
             {level}
@@ -112,59 +110,58 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
         )}
       </div>
 
+      {/* Expandable Details */}
       {hasDetails && (
         <div
-          className={`w-full overflow-hidden transition-[max-height] duration-400 ease-in-out ${
-            expanded ? "mt-1 opacity-100" : "-mt-2 max-h-0 opacity-0"
-          }`}
-          style={{ maxHeight: expanded ? detailMaxHeight : 0 }}
-          aria-hidden={!expanded}
+          className={`grid transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${expanded ? "mt-6 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
         >
-          <div
-            className={`flex w-full flex-col gap-4 pt-2 transition-opacity duration-300 ${
-              expanded ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {stats && stats.length > 0 && (
-              <div className="flex w-full justify-around gap-6 text-[var(--text-normal)]">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="flex flex-col items-center gap-1 text-center"
-                  >
-                    <p className="text-2xl font-semibold text-[var(--text-strong)]">
-                      {stat.value}
+          <div className="overflow-hidden">
+            <div className="flex flex-col gap-5 pt-2">
+              {/* Stats Section */}
+              {yearOfExperience && yearOfExperience > 0 && (
+                <div className="flex gap-8 border-t border-[var(--border-color)]/30 pt-4">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-2xl font-black text-[var(--text-strong)] leading-none">
+                      {yearOfExperience}+
                     </p>
-                    <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
-                      {stat.label}
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-[var(--text-muted)]">
+                      Years Exp.
                     </p>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {specialities && specialities.length > 0 && (
-              <div className="flex w-full flex-col gap-3">
-                <hr className="w-full border-t border-[var(--border-color)]/60" />
-                <p className="text-sm font-semibold text-[var(--text-normal)]">
-                  Key Specialities
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {specialities.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border bg-[var(--bg-light)]/60 px-3 py-1 text-xs font-medium text-[var(--text-normal)]"
-                      style={{ borderColor: "var(--border-color)" }}
-                    >
-                      {item}
-                    </span>
-                  ))}
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* Specialities Section with Horizontal Slider */}
+              {specialities && specialities.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-[var(--text-muted)]">
+                      Key Specialities
+                    </p>
+                    <span className="text-[10px] text-[var(--text-muted)] opacity-40 animate-pulse">Scroll →</span>
+                  </div>
+
+                  <div className="group/slider relative">
+                    <div className="no-scrollbar mask-fade-right flex w-full gap-2 overflow-x-auto pb-2 focus:outline-none">
+                      {specialities.map((item) => (
+                        <span
+                          key={item}
+                          className="flex-shrink-0 rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)] px-4 py-2 text-xs font-bold text-[var(--text-normal)] transition-colors hover:border-[var(--color-primary)]/40 hover:bg-[var(--bg-light)]"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+      {/* Shine Effect Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
     </article>
   );
 };

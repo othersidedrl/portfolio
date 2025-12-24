@@ -3,8 +3,25 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "~lib/axios";
 import { useState, useEffect } from "react";
-import { BiLoaderAlt, BiPlus, BiUpload, BiX } from "react-icons/bi";
+import {
+  Loader2,
+  Plus,
+  Upload,
+  X,
+  User,
+  Trophy,
+  FileText,
+  Mail,
+  Sparkles,
+  ImageIcon,
+  Save
+} from "lucide-react";
 import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import { Button } from "~/components/ui/Button";
+import { Input } from "~/components/ui/Input";
+import { Textarea } from "~/components/ui/Textarea";
+import { cn } from "~/lib/utils";
 
 type HeroData = {
   name: string;
@@ -23,7 +40,7 @@ type HeroData = {
 export default function HeroForm() {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
+  const { data, isLoading: isQueryLoading } = useQuery({
     queryKey: ["hero"],
     queryFn: async () => {
       const response = await axios.get("/admin/hero");
@@ -38,7 +55,7 @@ export default function HeroForm() {
     subtitle: "",
     resumeLink: "",
     contactLink: "",
-    imageUrls: [""],
+    imageUrls: ["", "", "", ""],
     hobbies: [""],
   });
 
@@ -62,59 +79,33 @@ export default function HeroForm() {
     }
   }, [data]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleArrayChange = (
-    field: "imageUrls" | "hobbies",
-    index: number,
-    value: string
-  ) => {
+  const handleArrayChange = (field: "imageUrls" | "hobbies", index: number, value: string) => {
     const updated = [...form[field]];
     updated[index] = value;
-    setForm((prev) => ({
-      ...prev,
-      [field]: updated,
-    }));
-  };
-
-  const addToArray = (field: "imageUrls" | "hobbies") => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: [...prev[field], ""],
-    }));
+    setForm((prev) => ({ ...prev, [field]: updated }));
   };
 
   const uploadImageMutation = useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async ({ file, index }: { file: File; index: number }) => {
       const formData = new FormData();
       formData.append("file", file);
-
       const res = await axios.post("/admin/hero/image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      return res.data;
+      return { url: res.data.url, index };
     },
-    onSuccess: () => {
-      toast.success("Image successfuly uploaded!");
+    onSuccess: (data) => {
+      const updated = [...form.imageUrls];
+      updated[data.index] = data.url;
+      setForm((prev) => ({ ...prev, imageUrls: updated }));
+      toast.success(`Image ${data.index + 1} updated!`);
     },
-    onError: (error: any) => {
-      toast.error("Failed to upload hero section image.");
-      if (error?.response?.data?.message) {
-        toast.error(error.response.data.message);
-      }
-      console.error("Error uploading image:", error);
-    },
+    onError: () => toast.error("Failed to upload image."),
   });
 
   const savePageMutation = useMutation({
@@ -132,278 +123,193 @@ export default function HeroForm() {
         image_url_4: formData.imageUrls[3] || "",
         hobbies: formData.hobbies.filter((h) => h),
       };
-      const res = await axios.patch("/admin/hero", payload);
-      return res.data;
+      return (await axios.patch("/admin/hero", payload)).data;
     },
     onSuccess: () => {
-      toast.success("Hero section updated!");
+      toast.success("Hero section updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["hero"] });
     },
-    onError: (error: any) => {
-      toast.error("Failed to update hero section.");
-      if (error?.response?.data?.message) {
-        toast.error(error.response.data.message);
-      }
-      console.error("Error updating hero section:", error);
-    },
+    onError: () => toast.error("Failed to update hero section."),
   });
 
-  const handleFileChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    uploadImageMutation.mutate(file, {
-      onSuccess: (data) => {
-        const updated = [...form.imageUrls];
-        updated[index] = data.url;
-        setForm((prev) => ({ ...prev, imageUrls: updated }));
-      },
-      onError: (error) => {
-        console.error("Image upload failed", error);
-        alert("Upload failed. Please try again.");
-      },
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    savePageMutation.mutate(form);
-  };
+  if (isQueryLoading) return <div className="h-96 animate-pulse rounded-2xl bg-[var(--bg-mid)]" />;
 
   return (
-    <div className="relative w-full">
-      {uploadImageMutation.isPending && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-40 backdrop-blur-sm">
-          <div className="bg-[var(--bg-mid)] rounded-xl shadow-2xl p-6 flex flex-col items-center gap-4 border border-[var(--border-color)]">
-            <BiLoaderAlt
-              className="animate-spin text-[var(--color-primary)]"
-              size={32}
-            />
-            <span className="text-md font-medium text-[var(--text-strong)]">
-              Uploading image... 📸
-            </span>
-          </div>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-[var(--text-strong)]">Hero Section</h1>
+          <p className="text-[var(--text-muted)] font-medium mt-1">Configure your entry point, branding, and hero showcase.</p>
         </div>
-      )}
-      <form onSubmit={handleSubmit} className="w-full p-4 md:p-8 space-y-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-[var(--text-strong)]">
-            Hero Section
-          </h2>
-          <button
-            type="submit"
-            className="max-w-[200px] w-full cursor-pointer py-2 bg-[var(--color-primary)] text-[var(--color-on-primary)] font-semibold rounded hover:opacity-90 transition"
-          >
-            Save
-          </button>
-        </div>
+        <Button
+          size="lg"
+          onClick={() => savePageMutation.mutate(form)}
+          disabled={savePageMutation.isPending}
+          className="shadow-xl shadow-[var(--color-primary)]/20"
+        >
+          {savePageMutation.isPending ? <Loader2 className="mr-2 animate-spin" /> : <Save className="mr-2" size={18} />}
+          {savePageMutation.isPending ? "Saving..." : "Save Changes"}
+        </Button>
+      </div>
 
-        {/* Basic Fields */}
-        <div className="grid md:grid-cols-2 gap-6 w-full">
-          {/* Left column: All fields */}
-          <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <label
-                  htmlFor="name"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  placeholder="Name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="input w-full"
-                  required
-                />
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Information */}
+        <div className="xl:col-span-7 space-y-8">
+          <Card className="shadow-lg">
+            <CardHeader className="flex flex-row items-center gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+                <User size={20} />
               </div>
-              <div className="flex flex-col">
-                <label
-                  htmlFor="rank"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Rank
-                </label>
-                <input
-                  id="rank"
-                  name="rank"
-                  placeholder="Rank"
-                  value={form.rank}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
+              <div>
+                <CardTitle>Branding & Identity</CardTitle>
+                <CardDescription>How you present yourself at first glance.</CardDescription>
               </div>
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="title"
-                className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-              >
-                Title
-              </label>
-              <input
-                id="title"
-                name="title"
-                placeholder="Title"
-                value={form.title}
-                onChange={handleChange}
-                className="input w-full"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="subtitle"
-                className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-              >
-                Subtitle
-              </label>
-              <textarea
-                id="subtitle"
-                name="subtitle"
-                placeholder="Subtitle"
-                value={form.subtitle}
-                onChange={handleChange}
-                className="input w-full"
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <label
-                  htmlFor="resumeLink"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Resume Link
-                </label>
-                <input
-                  id="resumeLink"
-                  name="resumeLink"
-                  placeholder="Resume Link"
-                  value={form.resumeLink}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Full Name</label>
+                  <Input name="name" value={form.name} onChange={handleChange} placeholder="Darel Panel" required />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Trophy size={14} /> Rank/Status</label>
+                  <Input name="rank" value={form.rank} onChange={handleChange} placeholder="e.g. #1 Ranked Developer" />
+                </div>
               </div>
-              <div className="flex flex-col">
-                <label
-                  htmlFor="contactLink"
-                  className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-                >
-                  Contact Link
-                </label>
-                <input
-                  id="contactLink"
-                  name="contactLink"
-                  placeholder="Contact Link"
-                  value={form.contactLink}
-                  onChange={handleChange}
-                  className="input w-full"
-                />
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Headline Title</label>
+                <Input name="title" value={form.title} onChange={handleChange} placeholder="e.g. Fullstack Engineer" />
               </div>
-            </div>
-            {/* Hobbies */}
-            <div className="w-full">
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-[var(--text-muted)]">
-                  Hobbies
-                </label>
-                <button
-                  type="button"
-                  onClick={() => addToArray("hobbies")}
-                  className="text-xs text-[var(--color-accent)] hover:underline"
-                >
-                  + Add Hobby
-                </button>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Short Bio / Subtitle</label>
+                <Textarea name="subtitle" value={form.subtitle} onChange={handleChange} placeholder="A punchy one-liner about you..." className="min-h-[100px]" />
               </div>
-              <div className="w-full max-h-37 overflow-y-auto space-y-[6px] pr-1 custom-scrollbar">
-                {form.hobbies.map((hobby: string, i: number) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 bg-[var(--bg-muted)] rounded-md px-2 py-[3px] transition focus-within:ring-1 focus-within:ring-[var(--color-accent)]"
-                  >
-                    <span className="text-xs text-[var(--text-muted)] w-4 shrink-0 text-center">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]/30">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><FileText size={14} /> Resume URL</label>
+                  <Input name="resumeLink" value={form.resumeLink} onChange={handleChange} placeholder="https://drive.google.com/..." />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Mail size={14} /> Contact Link</label>
+                  <Input name="contactLink" value={form.contactLink} onChange={handleChange} placeholder="mailto:you@example.com" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500">
+                  <Sparkles size={20} />
+                </div>
+                <div>
+                  <CardTitle>Hobbies & Interests</CardTitle>
+                  <CardDescription>Personal touches to your profile.</CardDescription>
+                </div>
+              </div>
+              <Button variant="secondary" size="sm" onClick={() => setForm(prev => ({ ...prev, hobbies: [...prev.hobbies, ""] }))}>
+                <Plus size={14} className="mr-2" /> Add Hobby
+              </Button>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {form.hobbies.map((hobby, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--bg-light)] text-[10px] font-black text-[var(--text-muted)] border border-[var(--border-color)]">
                       {i + 1}
-                    </span>
-                    <input
-                      id={`hobby-${i}`}
+                    </div>
+                    <Input
                       value={hobby}
-                      placeholder="Coding..."
-                      onChange={(e) =>
-                        handleArrayChange("hobbies", i, e.target.value)
-                      }
-                      className="text-sm bg-transparent w-full focus:outline-none text-[var(--text-strong)] placeholder:text-[var(--text-muted)]"
+                      onChange={(e) => handleArrayChange("hobbies", i, e.target.value)}
+                      placeholder="e.g. Traveling"
+                      className="h-9 flex-1"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setForm(prev => ({ ...prev, hobbies: prev.hobbies.filter((_, j) => j !== i) }))}
+                      className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-          {/* Right column: Image Uploads */}
-          <div className="space-y-4 w-full">
-            <label className="block text-lg font-semibold mb-4 text-[var(--text-strong)]">
-              Upload Images (4 max)
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-              {Array.from({ length: 4 }).map((_, i) => {
-                const url = form.imageUrls[i] || "";
-                return (
-                  <div key={i} className="group relative w-full">
-                    <div className="border-2 border-dashed p-6 transition-colors duration-200 bg-transparent border-[var(--border-color)] hover:border-[var(--color-primary)]">
-                      {url ? (
-                        <div className="relative">
-                          <img
-                            src={url}
-                            alt={`Preview ${i + 1}`}
-                            className="w-full h-48 object-cover"
-                          />
-                          <button
-                            type="button"
-                            // onClick={() => removeImage(i)}
-                            className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg bg-[var(--color-accent)] text-[var(--color-on-primary)] hover:bg-[var(--color-primary)]"
-                          >
-                            <BiX size={16} />
-                          </button>
-                          <div className="absolute bottom-2 left-2 px-2 py-1 rounded text-xs bg-black bg-opacity-50 text-[var(--text-normal)]">
-                            Image {i + 1}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          <div className="flex flex-col items-center justify-center h-48">
-                            <BiUpload className="w-12 h-12 mb-4 text-[var(--border-color)]" />
-                            <p className="font-medium mb-2 text-[var(--text-muted)]">
-                              Click to upload
-                            </p>
-                            <p className="text-sm text-[var(--text-muted)]">
-                              Image {i + 1}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+            </CardContent>
+          </Card>
+        </div>
 
-                      <label htmlFor={`image-upload-${i}`} className="sr-only">
-                        Upload Image {i + 1}
-                      </label>
-                      <input
-                        id={`image-upload-${i}`}
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleFileChange(i, e)}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                    </div>
+        {/* Right Column: Visual Showcase */}
+        <div className="xl:col-span-5 space-y-8">
+          <Card className="shadow-lg border-2 border-[var(--color-primary)]/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <ImageIcon size={20} className="text-[var(--color-primary)]" />
+                Visual Showcase
+              </CardTitle>
+              <CardDescription>Upload up to 4 images for your hero carousel.</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 grid grid-cols-2 gap-4">
+              {[0, 1, 2, 3].map((i) => {
+                const url = form.imageUrls[i];
+                const isPending = uploadImageMutation.isPending && uploadImageMutation.variables?.index === i;
+
+                return (
+                  <div key={i} className="group relative aspect-square rounded-2xl border-2 border-dashed border-[var(--border-color)] overflow-hidden hover:border-[var(--color-primary)] transition-all">
+                    {url ? (
+                      <div className="relative h-full w-full">
+                        <img src={url} alt={`Showcase ${i + 1}`} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <label className="cursor-pointer p-2 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors">
+                            <Upload size={14} />
+                            <input type="file" accept="image/*" onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) uploadImageMutation.mutate({ file, index: i });
+                            }} className="hidden" />
+                          </label>
+                          <button type="button" onClick={() => handleArrayChange("imageUrls", i, "")} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            <X size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full text-center p-4 text-[var(--text-muted)] cursor-pointer hover:bg-[var(--bg-light)]/40 transition-colors relative">
+                        {isPending ? <Loader2 size={24} className="animate-spin text-[var(--color-primary)]" /> : (
+                          <>
+                            <Plus size={24} className="mb-2 opacity-20" />
+                            <p className="text-[10px] font-black uppercase tracking-widest">Image {i + 1}</p>
+                          </>
+                        )}
+                        <input type="file" accept="image/*" onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) uploadImageMutation.mutate({ file, index: i });
+                        }} className="absolute inset-0 opacity-0 cursor-pointer" />
+                      </div>
+                    )}
+                    {url && (
+                      <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-green-500 text-white text-[8px] font-black uppercase tracking-widest">
+                        Active
+                      </div>
+                    )}
                   </div>
                 );
               })}
-            </div>
+            </CardContent>
+          </Card>
+
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent border border-[var(--color-primary)]/10">
+            <h4 className="flex items-center gap-2 text-sm font-black text-[var(--text-strong)] uppercase tracking-tight">
+              <Sparkles size={16} className="text-amber-500" /> Professional Tip
+            </h4>
+            <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
+              Use high-quality PNGs with transparent backgrounds or consistent studio lighting for the best visual impact on your landing page.
+            </p>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
