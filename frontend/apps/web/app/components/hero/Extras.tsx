@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect, FC } from "react";
+import { type FC, useEffect, useState } from "react";
 
 const MusicPlayer = () => {
   const currentTime = 11; // favorite part starts at 0:11
@@ -13,13 +13,18 @@ const MusicPlayer = () => {
     <div className="flex flex-col gap-2 w-full max-w-[240px] group/music cursor-default">
       <div className="flex justify-between items-end">
         <div>
-          <p className="text-sm font-bold text-[var(--text-strong)] group-hover/music:text-[var(--color-primary)] transition-colors">Iris</p>
-          <p className="text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wider">The Goo Goo Dolls</p>
+          <p className="text-sm font-bold text-[var(--text-strong)] group-hover/music:text-[var(--color-primary)] transition-colors">
+            Iris
+          </p>
+          <p className="text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wider">
+            The Goo Goo Dolls
+          </p>
         </div>
         <div className="flex gap-[2px] items-end h-3 mb-1 ml-4">
           {[0.6, 0.8, 0.4, 1, 0.7].map((h, i) => (
             <div
-              key={i}
+              // biome-ignore lint/suspicious/noArrayIndexKey: false positive
+              key={`pulse-${h}-${i}`}
               className="w-[2px] bg-[var(--color-primary)] animate-pulse"
               style={{ height: `${h * 100}%`, animationDelay: `${i * 0.1}s` }}
             />
@@ -48,7 +53,7 @@ interface ExtrasProps {
 
 const Extras: FC<ExtrasProps> = ({ hobbies = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<'up' | 'down'>('up');
+  const [_direction, _setDirection] = useState<"up" | "down">("up");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
@@ -96,8 +101,9 @@ const Extras: FC<ExtrasProps> = ({ hobbies = [] }) => {
             {hobbies.length > 0 && (
               <div
                 key={currentIndex}
-                className={`absolute inset-0 flex items-center animate-in fade-in duration-500 ${isTransitioning ? "slide-out-to-top-4 fade-out" : "slide-in-from-bottom-4"
-                  }`}
+                className={`absolute inset-0 flex items-center animate-in fade-in duration-500 ${
+                  isTransitioning ? "slide-out-to-top-4 fade-out" : "slide-in-from-bottom-4"
+                }`}
               >
                 <span className="px-3 py-1 rounded-lg bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)] font-bold text-sm md:text-base tracking-tight whitespace-nowrap shadow-sm">
                   {hobbies[currentIndex]}

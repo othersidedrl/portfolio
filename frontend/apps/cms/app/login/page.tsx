@@ -1,35 +1,36 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useMutation } from '@tanstack/react-query'
-import axios from '~lib/axios'
-import { toast } from 'sonner'
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import axios from "~lib/axios";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      const res = await axios.post('/auth/login', { email, password })
-      return res.data
+      const res = await axios.post("/auth/login", { email, password });
+      return res.data;
     },
     onSuccess: (data) => {
-      localStorage.setItem('token', data.token)
-      router.push('/dashboard')
+      localStorage.setItem("token", data.token);
+      router.push("/dashboard");
     },
+    // biome-ignore lint: any
     onError: (err: any) => {
-      toast.error("Wrong credentials!")
-      console.error(err)
+      toast.error("Wrong credentials!");
+      console.error(err);
     },
-  })
+  });
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    loginMutation.mutate()
-  }
+    e.preventDefault();
+    loginMutation.mutate();
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[var(--bg-dark)] text-[var(--text-strong)] px-4">
@@ -72,9 +73,9 @@ export default function LoginPage() {
           className="w-full py-2 bg-[var(--color-primary)] text-[var(--color-on-primary)] font-medium rounded hover:opacity-90 transition"
           disabled={loginMutation.isPending}
         >
-          {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
+          {loginMutation.isPending ? "Signing In..." : "Sign In"}
         </button>
       </form>
     </main>
-  )
+  );
 }

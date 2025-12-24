@@ -1,27 +1,27 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "~lib/axios";
-import { useState, useEffect } from "react";
 import {
-  Loader2,
-  Plus,
-  Upload,
-  X,
-  User,
-  Trophy,
   FileText,
-  Mail,
-  Sparkles,
   ImageIcon,
-  Save
+  Loader2,
+  Mail,
+  Plus,
+  Save,
+  Sparkles,
+  Trophy,
+  Upload,
+  User,
+  X,
 } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Input } from "~/components/ui/Input";
 import { Textarea } from "~/components/ui/Textarea";
-import { cn } from "~/lib/utils";
+import axios from "~lib/axios";
 
 type HeroData = {
   name: string;
@@ -138,8 +138,12 @@ export default function HeroForm() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-[var(--text-strong)]">Hero Section</h1>
-          <p className="text-[var(--text-muted)] font-medium mt-1">Configure your entry point, branding, and hero showcase.</p>
+          <h1 className="text-3xl font-black tracking-tight text-[var(--text-strong)]">
+            Hero Section
+          </h1>
+          <p className="text-[var(--text-muted)] font-medium mt-1">
+            Configure your entry point, branding, and hero showcase.
+          </p>
         </div>
         <Button
           size="lg"
@@ -147,7 +151,11 @@ export default function HeroForm() {
           disabled={savePageMutation.isPending}
           className="shadow-xl shadow-[var(--color-primary)]/20"
         >
-          {savePageMutation.isPending ? <Loader2 className="mr-2 animate-spin" /> : <Save className="mr-2" size={18} />}
+          {savePageMutation.isPending ? (
+            <Loader2 className="mr-2 animate-spin" />
+          ) : (
+            <Save className="mr-2" size={18} />
+          )}
           {savePageMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
@@ -168,33 +176,77 @@ export default function HeroForm() {
             <CardContent className="pt-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Full Name</label>
-                  <Input name="name" value={form.name} onChange={handleChange} placeholder="Darel Panel" required />
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                    Full Name
+                  </span>
+                  <Input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Darel Panel"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Trophy size={14} /> Rank/Status</label>
-                  <Input name="rank" value={form.rank} onChange={handleChange} placeholder="e.g. #1 Ranked Developer" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                    <Trophy size={14} /> Rank/Status
+                  </span>
+                  <Input
+                    name="rank"
+                    value={form.rank}
+                    onChange={handleChange}
+                    placeholder="e.g. #1 Ranked Developer"
+                  />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Headline Title</label>
-                <Input name="title" value={form.title} onChange={handleChange} placeholder="e.g. Fullstack Engineer" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Headline Title
+                </span>
+                <Input
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  placeholder="e.g. Fullstack Engineer"
+                />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Short Bio / Subtitle</label>
-                <Textarea name="subtitle" value={form.subtitle} onChange={handleChange} placeholder="A punchy one-liner about you..." className="min-h-[100px]" />
+                <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Short Bio / Subtitle
+                </span>
+                <Textarea
+                  name="subtitle"
+                  value={form.subtitle}
+                  onChange={handleChange}
+                  placeholder="A punchy one-liner about you..."
+                  className="min-h-[100px]"
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]/30">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><FileText size={14} /> Resume URL</label>
-                  <Input name="resumeLink" value={form.resumeLink} onChange={handleChange} placeholder="https://drive.google.com/..." />
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                    <FileText size={14} /> Resume URL
+                  </span>
+                  <Input
+                    name="resumeLink"
+                    value={form.resumeLink}
+                    onChange={handleChange}
+                    placeholder="https://drive.google.com/..."
+                  />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2"><Mail size={14} /> Contact Link</label>
-                  <Input name="contactLink" value={form.contactLink} onChange={handleChange} placeholder="mailto:you@example.com" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                    <Mail size={14} /> Contact Link
+                  </span>
+                  <Input
+                    name="contactLink"
+                    value={form.contactLink}
+                    onChange={handleChange}
+                    placeholder="mailto:you@example.com"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -211,13 +263,18 @@ export default function HeroForm() {
                   <CardDescription>Personal touches to your profile.</CardDescription>
                 </div>
               </div>
-              <Button variant="secondary" size="sm" onClick={() => setForm(prev => ({ ...prev, hobbies: [...prev.hobbies, ""] }))}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setForm((prev) => ({ ...prev, hobbies: [...prev.hobbies, ""] }))}
+              >
                 <Plus size={14} className="mr-2" /> Add Hobby
               </Button>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {form.hobbies.map((hobby, i) => (
+                  // biome-ignore lint: any
                   <div key={i} className="flex items-center gap-2">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--bg-light)] text-[10px] font-black text-[var(--text-muted)] border border-[var(--border-color)]">
                       {i + 1}
@@ -230,7 +287,12 @@ export default function HeroForm() {
                     />
                     <button
                       type="button"
-                      onClick={() => setForm(prev => ({ ...prev, hobbies: prev.hobbies.filter((_, j) => j !== i) }))}
+                      onClick={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          hobbies: prev.hobbies.filter((_, j) => j !== i),
+                        }))
+                      }
                       className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                     >
                       <X size={14} />
@@ -255,38 +317,64 @@ export default function HeroForm() {
             <CardContent className="pt-6 grid grid-cols-2 gap-4">
               {[0, 1, 2, 3].map((i) => {
                 const url = form.imageUrls[i];
-                const isPending = uploadImageMutation.isPending && uploadImageMutation.variables?.index === i;
+                const isPending =
+                  uploadImageMutation.isPending && uploadImageMutation.variables?.index === i;
 
                 return (
-                  <div key={i} className="group relative aspect-square rounded-2xl border-2 border-dashed border-[var(--border-color)] overflow-hidden hover:border-[var(--color-primary)] transition-all">
+                  <div
+                    key={i}
+                    className="group relative aspect-square rounded-2xl border-2 border-dashed border-[var(--border-color)] overflow-hidden hover:border-[var(--color-primary)] transition-all"
+                  >
                     {url ? (
                       <div className="relative h-full w-full">
-                        <img src={url} alt={`Showcase ${i + 1}`} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                        <Image
+                          src={url}
+                          alt={`Showcase ${i + 1}`}
+                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                        />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <label className="cursor-pointer p-2 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors">
                             <Upload size={14} />
-                            <input type="file" accept="image/*" onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) uploadImageMutation.mutate({ file, index: i });
-                            }} className="hidden" />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) uploadImageMutation.mutate({ file, index: i });
+                              }}
+                              className="hidden"
+                            />
                           </label>
-                          <button type="button" onClick={() => handleArrayChange("imageUrls", i, "")} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                          <button
+                            type="button"
+                            onClick={() => handleArrayChange("imageUrls", i, "")}
+                            className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                          >
                             <X size={14} />
                           </button>
                         </div>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center h-full text-center p-4 text-[var(--text-muted)] cursor-pointer hover:bg-[var(--bg-light)]/40 transition-colors relative">
-                        {isPending ? <Loader2 size={24} className="animate-spin text-[var(--color-primary)]" /> : (
+                        {isPending ? (
+                          <Loader2 size={24} className="animate-spin text-[var(--color-primary)]" />
+                        ) : (
                           <>
                             <Plus size={24} className="mb-2 opacity-20" />
-                            <p className="text-[10px] font-black uppercase tracking-widest">Image {i + 1}</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest">
+                              Image {i + 1}
+                            </p>
                           </>
                         )}
-                        <input type="file" accept="image/*" onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) uploadImageMutation.mutate({ file, index: i });
-                        }} className="absolute inset-0 opacity-0 cursor-pointer" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadImageMutation.mutate({ file, index: i });
+                          }}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
                       </div>
                     )}
                     {url && (
@@ -305,7 +393,8 @@ export default function HeroForm() {
               <Sparkles size={16} className="text-amber-500" /> Professional Tip
             </h4>
             <p className="text-xs text-[var(--text-muted)] mt-2 leading-relaxed">
-              Use high-quality PNGs with transparent backgrounds or consistent studio lighting for the best visual impact on your landing page.
+              Use high-quality PNGs with transparent backgrounds or consistent studio lighting for
+              the best visual impact on your landing page.
             </p>
           </div>
         </div>

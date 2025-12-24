@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
+import axios from "~lib/axios";
 import Extras from "./Extras";
 import ImageGrid from "./ImageGrid";
 import Information from "./Information";
-import axios from "~lib/axios";
 
 type HeroResponse = {
   name: string;
@@ -21,7 +21,6 @@ type HeroResponse = {
 };
 
 export default function HeroSection() {
-
   const { data: HeroData } = useQuery({
     queryKey: ["hero"],
     queryFn: async () => {

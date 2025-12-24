@@ -36,11 +36,12 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
     <article className="group flex gap-4 transition-all duration-500">
       {/* Timeline Section */}
       <div className="flex flex-col items-center">
-        <div
-          className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)]/60 text-[var(--text-strong)] shadow-sm backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:border-[var(--color-primary)]/50 group-hover:text-[var(--color-primary)]"
-        >
+        <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)]/60 text-[var(--text-strong)] shadow-sm backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:border-[var(--color-primary)]/50 group-hover:text-[var(--color-primary)]">
           <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <Icon size={18} className="relative z-10 transition-transform duration-500 group-hover:scale-110" />
+          <Icon
+            size={18}
+            className="relative z-10 transition-transform duration-500 group-hover:scale-110"
+          />
         </div>
 
         {!isLast && (
@@ -49,9 +50,7 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
       </div>
 
       {/* Card Content */}
-      <div
-        className="relative flex-1 flex flex-col gap-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-4 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[var(--color-primary)]/30 hover:bg-[var(--bg-mid)]/70 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden"
-      >
+      <div className="relative flex-1 flex flex-col gap-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-4 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[var(--color-primary)]/30 hover:bg-[var(--bg-mid)]/70 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden">
         {/* Shine Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
@@ -70,9 +69,7 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
           <h3 className="text-base font-black tracking-tight text-[var(--text-strong)] group-hover:text-[var(--color-primary)] transition-colors duration-300">
             {title}
           </h3>
-          <p className="text-xs font-bold text-[var(--text-muted)] tracking-wide">
-            {affiliation}
-          </p>
+          <p className="text-xs font-bold text-[var(--text-muted)] tracking-wide">{affiliation}</p>
         </div>
 
         {/* Description */}

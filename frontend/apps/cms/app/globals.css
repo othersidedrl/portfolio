@@ -5,13 +5,13 @@
   --saturation: 0%;
 
   /* Light Mode */
-  --bg-dark: hsl(var(--hue), var(--saturation), 100%);   /* background */
-  --bg-mid:  hsl(var(--hue), var(--saturation), 96%);    /* surfaces */
-  --bg-light: hsl(var(--hue), var(--saturation), 92%);   /* raised elements */
-  
+  --bg-dark: hsl(var(--hue), var(--saturation), 100%); /* background */
+  --bg-mid: hsl(var(--hue), var(--saturation), 96%); /* surfaces */
+  --bg-light: hsl(var(--hue), var(--saturation), 92%); /* raised elements */
+
   --text-strong: hsl(var(--hue), var(--saturation), 10%);
   --text-normal: hsl(var(--hue), var(--saturation), 25%);
-  --text-muted:  hsl(var(--hue), var(--saturation), 40%);
+  --text-muted: hsl(var(--hue), var(--saturation), 40%);
 
   --border-color: hsl(var(--hue), var(--saturation), 85%);
   --highlight: hsl(var(--hue), var(--saturation), 100%);
@@ -25,13 +25,13 @@
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-dark: hsl(var(--hue), var(--saturation), 0%);    /* background */
-    --bg-mid:  hsl(var(--hue), var(--saturation), 5%);    /* card/surface */
-    --bg-light: hsl(var(--hue), var(--saturation), 10%);  /* elevated */
+    --bg-dark: hsl(var(--hue), var(--saturation), 0%); /* background */
+    --bg-mid: hsl(var(--hue), var(--saturation), 5%); /* card/surface */
+    --bg-light: hsl(var(--hue), var(--saturation), 10%); /* elevated */
 
     --text-strong: hsl(var(--hue), var(--saturation), 95%);
     --text-normal: hsl(var(--hue), var(--saturation), 90%);
-    --text-muted:  hsl(var(--hue), var(--saturation), 60%);
+    --text-muted: hsl(var(--hue), var(--saturation), 60%);
 
     --border-color: hsl(var(--hue), var(--saturation), 20%);
     --highlight: hsl(var(--hue), var(--saturation), 15%);
@@ -61,7 +61,9 @@ body {
   color: var(--text-normal);
   border: 1px solid var(--border-color);
   outline: none;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
 .input:focus,

@@ -1,6 +1,6 @@
-import { useTheme } from 'next-themes';
-import React, { useEffect, useState } from 'react';
-import { codeToHtml } from 'shiki';
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { codeToHtml } from "shiki";
 
 const code = `#include <bits/stdc++.h>
 using namespace std;
@@ -13,9 +13,8 @@ int main() {
   return 0;
 }`;
 
-
 const CodeSnippet = () => {
-  const [html, setHtml] = useState('');
+  const [html, setHtml] = useState("");
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -26,11 +25,11 @@ const CodeSnippet = () => {
   useEffect(() => {
     if (!mounted || !resolvedTheme) return;
 
-    const theme = resolvedTheme === 'dark' ? 'dracula' : 'vitesse-dark';
+    const theme = resolvedTheme === "dark" ? "dracula" : "vitesse-dark";
 
     codeToHtml(code, {
-      lang: 'cpp',
-      theme
+      lang: "cpp",
+      theme,
     }).then(setHtml);
   }, [resolvedTheme, mounted]);
 
@@ -40,8 +39,9 @@ const CodeSnippet = () => {
     <div
       className="rounded-md p-4 overflow-auto font-mono text-sm shadow-[var(--shadow)]"
       style={{
-        background: resolvedTheme === 'dark' ? '#282A36' : '#121212',
+        background: resolvedTheme === "dark" ? "#282A36" : "#121212",
       }}
+      // biome-ignore lint: false positive
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
