@@ -10,7 +10,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy the monorepo files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml ../pnpm-workspace.yaml ./
 COPY frontend/apps/cms/package.json ./apps/cms/
 
 # Install dependencies
