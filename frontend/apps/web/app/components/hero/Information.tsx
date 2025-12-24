@@ -1,7 +1,7 @@
-import { Paperclip, Send, Sparkles } from "lucide-react";
-import CodeSnippet from "./CodeSnippet";
-import { FC } from "react";
+import { Paperclip, Send } from "lucide-react";
+import type { FC } from "react";
 import StatusChip from "../ui/StatusChip";
+import CodeSnippet from "./CodeSnippet";
 
 interface InformationProps {
   name?: string;
@@ -33,15 +33,13 @@ const Information: FC<InformationProps> = ({
           style={{
             WebkitTextStrokeWidth: "1px",
             WebkitTextStrokeColor: "var(--color-primary)",
-            textShadow: "0 0 20px var(--color-primary-light)/20"
+            textShadow: "0 0 20px var(--color-primary-light)/20",
           }}
         >
           Hello, I'm <span className="text-[var(--text-strong)] stroke-none">{name}</span>
         </h1>
 
-        <h2
-          className="text-2xl md:text-3xl font-bold leading-tight flex items-center gap-3 animate-in fade-in duration-700 delay-200"
-        >
+        <h2 className="text-2xl md:text-3xl font-bold leading-tight flex items-center gap-3 animate-in fade-in duration-700 delay-200">
           <span className="text-[var(--text-normal)] opacity-80">{rank}</span>
           <span className="bg-gradient-to-r from-[var(--color-primary)] to-purple-500 bg-clip-text text-transparent animate-gradient-x">
             {title}

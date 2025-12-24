@@ -1,17 +1,9 @@
 "use client";
 
+import { Briefcase, LayoutDashboard, LogOut, MessageCircle, PlusCircle, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  TbLogout2,
-  TbSmartHome,
-  TbUserCircle,
-  TbQuote,
-  TbBriefcase,
-  TbExternalLink,
-  TbRocket
-} from "react-icons/tb";
-import { LayoutDashboard, User, MessageCircle, Briefcase, PlusCircle, LogOut } from "lucide-react";
+import { TbExternalLink, TbRocket } from "react-icons/tb";
 import { cn } from "~/lib/utils";
 
 const navItems = [
@@ -31,9 +23,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside
-      className="w-64 h-screen fixed px-4 py-8 flex flex-col justify-between border-r border-[var(--border-color)] bg-[var(--bg-mid)] shadow-lg z-40"
-    >
+    <aside className="w-64 h-screen fixed px-4 py-8 flex flex-col justify-between border-r border-[var(--border-color)] bg-[var(--bg-mid)] shadow-lg z-40">
       <div className="space-y-8">
         <div className="px-4">
           <Link href="/dashboard" className="group flex items-center gap-3">
@@ -41,8 +31,12 @@ export default function Sidebar() {
               <LayoutDashboard size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight text-[var(--text-strong)] leading-none">CMS</h2>
-              <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">Admin Panel</p>
+              <h2 className="text-lg font-black tracking-tight text-[var(--text-strong)] leading-none">
+                CMS
+              </h2>
+              <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">
+                Admin Panel
+              </p>
             </div>
           </Link>
         </div>
@@ -60,7 +54,7 @@ export default function Sidebar() {
                   "flex items-center gap-3 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300",
                   isActive
                     ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:bg-[var(--bg-light)] hover:text-[var(--text-strong)]"
+                    : "text-[var(--text-muted)] hover:bg-[var(--bg-light)] hover:text-[var(--text-strong)]",
                 )}
               >
                 <Icon size={18} className={cn(isActive && "animate-pulse")} />
@@ -77,6 +71,7 @@ export default function Sidebar() {
             href="/"
             target="_blank"
             className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--color-primary)] transition-colors"
+            rel="noopener"
           >
             View Portfolio
             <TbExternalLink size={14} />

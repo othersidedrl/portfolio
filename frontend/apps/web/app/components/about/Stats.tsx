@@ -1,6 +1,6 @@
 import { ArrowUpRight, CheckCircle2, Clock3 } from "lucide-react";
-import { SiGithub, SiLinkedin } from "react-icons/si";
 import type { ComponentType, FC } from "react";
+import { SiGithub, SiLinkedin } from "react-icons/si";
 
 type StatsProps = {
   linkedin?: string;
@@ -39,19 +39,19 @@ export const Stats: FC<StatsProps> = ({
 
   const statusCopy = available
     ? {
-      title: "Currently available",
-      description: "Open to remote-friendly collaborations and roles.",
-      badge: "Online",
-      accent: "text-[var(--color-primary)]",
-      icon: CheckCircle2,
-    }
+        title: "Currently available",
+        description: "Open to remote-friendly collaborations and roles.",
+        badge: "Online",
+        accent: "text-[var(--color-primary)]",
+        icon: CheckCircle2,
+      }
     : {
-      title: "Booked at the moment",
-      description: "Reach out to discuss future availability.",
-      badge: "Heads up",
-      accent: "text-[var(--text-muted)]",
-      icon: Clock3,
-    };
+        title: "Booked at the moment",
+        description: "Reach out to discuss future availability.",
+        badge: "Heads up",
+        accent: "text-[var(--text-muted)]",
+        icon: Clock3,
+      };
 
   const StatusIcon = statusCopy.icon;
 
@@ -87,7 +87,10 @@ export const Stats: FC<StatsProps> = ({
           <div className="grid gap-5 lg:grid-cols-3">
             <article className="flex flex-col gap-4 rounded-[22px] border border-[var(--border-color)] bg-[var(--bg-light)] p-6 shadow-[0_15px_35px_var(--shadow-color)]">
               <div className="flex items-center gap-3 text-[var(--text-strong)]">
-                <StatusIcon size={20} className={`text-[var(--color-primary)] ${statusCopy.accent}`} />
+                <StatusIcon
+                  size={20}
+                  className={`text-[var(--color-primary)] ${statusCopy.accent}`}
+                />
                 <span className="text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                   Status
                 </span>
@@ -98,7 +101,9 @@ export const Stats: FC<StatsProps> = ({
                 </p>
                 <p className="mt-2 text-[var(--text-normal)]">{statusCopy.description}</p>
               </div>
-              <span className={`inline-flex items-center gap-2 text-sm font-medium ${statusCopy.accent}`}>
+              <span
+                className={`inline-flex items-center gap-2 text-sm font-medium ${statusCopy.accent}`}
+              >
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {statusCopy.badge}
               </span>
@@ -126,10 +131,11 @@ export const Stats: FC<StatsProps> = ({
                   rel="noreferrer"
                   aria-disabled={!hasLink(href)}
                   tabIndex={hasLink(href) ? 0 : -1}
-                  className={`mt-6 inline-flex items-center gap-2 text-sm font-semibold transition-all ${hasLink(href)
+                  className={`mt-6 inline-flex items-center gap-2 text-sm font-semibold transition-all ${
+                    hasLink(href)
                       ? "text-[var(--color-primary)] hover:gap-3"
                       : "cursor-not-allowed text-[var(--text-muted)]"
-                    }`}
+                  }`}
                 >
                   Visit profile
                   <ArrowUpRight className="h-4 w-4" />

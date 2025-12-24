@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import type { FC, KeyboardEvent, ReactNode } from "react";
 import { FileCode } from "lucide-react";
+import type { FC, KeyboardEvent, ReactNode } from "react";
+import { useState } from "react";
 import { iconMap } from "./IconMap";
 
 type LevelStyle = {
@@ -22,7 +22,7 @@ const getSkillIcon = (name: string): ReactNode => {
   const lowerName = name.toLowerCase();
 
   for (const mapping of iconMap) {
-    if (mapping.keywords.some(keyword => lowerName.includes(keyword))) {
+    if (mapping.keywords.some((keyword) => lowerName.includes(keyword))) {
       const Icon = mapping.icon;
       return <Icon size={20} className="text-[var(--color-primary)]" />;
     }
@@ -41,7 +41,8 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
   specialities,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const hasDetails = (yearOfExperience && yearOfExperience > 0) || (specialities && specialities.length > 0);
+  const hasDetails =
+    (yearOfExperience && yearOfExperience > 0) || (specialities && specialities.length > 0);
 
   const skillIcon = icon || getSkillIcon(name);
 
@@ -54,20 +55,23 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
   };
 
   return (
-    <article
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       aria-expanded={expanded}
       onClick={toggleExpanded}
       onKeyDown={handleKeyDown}
-      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-6 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:bg-[var(--bg-mid)]/80 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] backdrop-blur-sm`}
+      className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-3xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-6 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:bg-[var(--bg-mid)]/80 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] backdrop-blur-sm text-left`}
     >
       {/* Background Glow */}
       <div className="absolute -top-12 -left-12 h-24 w-24 rounded-full bg-[var(--color-primary)]/5 blur-2xl transition-opacity opacity-0 group-hover:opacity-100" />
 
       {/* Main Content */}
-      <div className={`flex flex-col gap-3 transition-all duration-500 ${expanded ? "items-start text-left" : "items-center text-center"}`}>
-        <div className={`flex w-full items-center gap-3 ${expanded ? "justify-between" : "justify-center"}`}>
+      <div
+        className={`flex flex-col gap-3 transition-all duration-500 ${expanded ? "items-start text-left" : "items-center text-center"}`}
+      >
+        <div
+          className={`flex w-full items-center gap-3 ${expanded ? "justify-between" : "justify-center"}`}
+        >
           <div className="flex items-center gap-2.5 transition-colors duration-300 group-hover:text-[var(--color-primary)]">
             {skillIcon && (
               <span className="transition-transform duration-500 group-hover:scale-110">
@@ -84,7 +88,7 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
                 backgroundColor: `${levelStyle.background}20`,
                 color: levelStyle.color,
                 boxShadow: `inset 0 0 10px ${levelStyle.background}40`,
-                border: `1px solid ${levelStyle.background}40`
+                border: `1px solid ${levelStyle.background}40`,
               }}
             >
               {level}
@@ -102,7 +106,7 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
             style={{
               backgroundColor: `${levelStyle.background}20`,
               color: levelStyle.color,
-              border: `1px solid ${levelStyle.background}40`
+              border: `1px solid ${levelStyle.background}40`,
             }}
           >
             {level}
@@ -138,7 +142,9 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
                     <p className="text-[10px] uppercase tracking-widest font-bold text-[var(--text-muted)]">
                       Key Specialities
                     </p>
-                    <span className="text-[10px] text-[var(--text-muted)] opacity-40 animate-pulse">Scroll →</span>
+                    <span className="text-[10px] text-[var(--text-muted)] opacity-40 animate-pulse">
+                      Scroll →
+                    </span>
                   </div>
 
                   <div className="group/slider relative">
@@ -162,7 +168,7 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
 
       {/* Shine Effect Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-    </article>
+    </button>
   );
 };
 

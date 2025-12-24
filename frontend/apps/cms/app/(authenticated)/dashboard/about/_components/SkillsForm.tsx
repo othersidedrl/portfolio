@@ -1,27 +1,17 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Dropdown from "~/components/ui/Dropdown";
-import { toast } from "sonner";
-import axios from "~lib/axios";
-import { useState } from "react";
-import {
-  Trash2,
-  Pencil,
-  Plus,
-  X,
-  Search,
-  Code2,
-  Sparkles,
-  Clock,
-  Layers
-} from "lucide-react";
 import * as Ariakit from "@ariakit/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Code2, Pencil, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import Dropdown from "~/components/ui/Dropdown";
 import { Input } from "~/components/ui/Input";
 import { Textarea } from "~/components/ui/Textarea";
 import { cn } from "~/lib/utils";
+import axios from "~lib/axios";
 
 interface TechnicalSkill {
   id: string;
@@ -131,7 +121,7 @@ const SkillsForm = () => {
   };
 
   const filteredSkills = skills?.data?.filter((s) =>
-    activeCategory === "All" ? true : s.category === activeCategory
+    activeCategory === "All" ? true : s.category === activeCategory,
   );
 
   if (isLoading) return <div className="h-64 animate-pulse rounded-xl bg-[var(--bg-mid)]" />;
@@ -143,7 +133,14 @@ const SkillsForm = () => {
           <CardTitle>Technical Skills</CardTitle>
           <CardDescription>Manage your stack and expertise levels.</CardDescription>
         </div>
-        <Button onClick={() => { resetForm(); setOpen(true); }} size="sm" className="font-bold">
+        <Button
+          onClick={() => {
+            resetForm();
+            setOpen(true);
+          }}
+          size="sm"
+          className="font-bold"
+        >
           <Plus size={16} className="mr-2" /> Add Skill
         </Button>
       </CardHeader>
@@ -161,7 +158,7 @@ const SkillsForm = () => {
                   "flex-1 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
                   isActive
                     ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md translate-y-[-1px]"
-                    : "text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--bg-light)]"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--bg-light)]",
                 )}
               >
                 {cat}
@@ -192,21 +189,31 @@ const SkillsForm = () => {
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => {
-                      setEditId(skill.id);
-                      setForm({
-                        name: skill.name,
-                        description: skill.description,
-                        specialities: [...skill.specialities],
-                        level: skill.level,
-                        category: skill.category,
-                        year_of_experience: skill.year_of_experience,
-                      });
-                      setOpen(true);
-                    }}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => {
+                        setEditId(skill.id);
+                        setForm({
+                          name: skill.name,
+                          description: skill.description,
+                          specialities: [...skill.specialities],
+                          level: skill.level,
+                          category: skill.category,
+                          year_of_experience: skill.year_of_experience,
+                        });
+                        setOpen(true);
+                      }}
+                    >
                       <Pencil size={12} />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-500/10" onClick={() => deleteSkillMutation.mutate(skill.id)}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                      onClick={() => deleteSkillMutation.mutate(skill.id)}
+                    >
                       <Trash2 size={12} />
                     </Button>
                   </div>
@@ -219,7 +226,10 @@ const SkillsForm = () => {
                 {skill.specialities.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-auto pt-2 border-t border-[var(--border-color)]/20">
                     {skill.specialities.map((spec, j) => (
-                      <span key={j} className="px-2 py-0.5 rounded-md bg-[var(--bg-light)] text-[9px] font-bold text-[var(--text-muted)] border border-[var(--border-color)]/50">
+                      <span
+                        key={j}
+                        className="px-2 py-0.5 rounded-md bg-[var(--bg-light)] text-[9px] font-bold text-[var(--text-muted)] border border-[var(--border-color)]/50"
+                      >
                         {spec}
                       </span>
                     ))}
@@ -255,7 +265,9 @@ const SkillsForm = () => {
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6 pt-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Skill Name</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Skill Name
+                </label>
                 <Input
                   placeholder="e.g. Golang, React, Docker"
                   value={form.name}
@@ -265,7 +277,9 @@ const SkillsForm = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Description</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Description
+                </label>
                 <Textarea
                   placeholder="What makes you proficient in this skill?"
                   value={form.description}
@@ -287,7 +301,9 @@ const SkillsForm = () => {
                   <Dropdown
                     label="Category"
                     value={form.category}
-                    onChange={(val) => setForm({ ...form, category: val as TechnicalSkill["category"] })}
+                    onChange={(val) =>
+                      setForm({ ...form, category: val as TechnicalSkill["category"] })
+                    }
                     options={["Backend", "Frontend", "Other"]}
                     placeholder="Select category"
                   />
@@ -295,12 +311,16 @@ const SkillsForm = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Years of Experience</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                  Years of Experience
+                </label>
                 <div className="flex items-center gap-4">
                   <Input
                     type="number"
                     value={form.year_of_experience}
-                    onChange={(e) => setForm({ ...form, year_of_experience: parseInt(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setForm({ ...form, year_of_experience: parseInt(e.target.value, 10) || 0 })
+                    }
                     className="max-w-[120px]"
                     required
                   />
@@ -322,7 +342,9 @@ const SkillsForm = () => {
                     type="button"
                     variant="secondary"
                     size="sm"
-                    onClick={() => setForm(prev => ({ ...prev, specialities: [...prev.specialities, ""] }))}
+                    onClick={() =>
+                      setForm((prev) => ({ ...prev, specialities: [...prev.specialities, ""] }))
+                    }
                   >
                     <Plus size={14} className="mr-2" /> Add Specialty
                   </Button>
@@ -330,7 +352,10 @@ const SkillsForm = () => {
 
                 <div className="grid grid-cols-1 gap-2">
                   {form.specialities.map((spec, i) => (
-                    <div key={i} className="group flex items-center gap-2 animate-in slide-in-from-left-2 duration-200">
+                    <div
+                      key={i}
+                      className="group flex items-center gap-2 animate-in slide-in-from-left-2 duration-200"
+                    >
                       <Input
                         value={spec}
                         onChange={(e) => {
@@ -343,7 +368,12 @@ const SkillsForm = () => {
                       />
                       <button
                         type="button"
-                        onClick={() => setForm(prev => ({ ...prev, specialities: prev.specialities.filter((_, j) => j !== i) }))}
+                        onClick={() =>
+                          setForm((prev) => ({
+                            ...prev,
+                            specialities: prev.specialities.filter((_, j) => j !== i),
+                          }))
+                        }
                         className="flex h-9 w-9 items-center justify-center rounded-xl text-red-500 opacity-40 hover:opacity-100 hover:bg-red-500/10 transition-all"
                       >
                         <Trash2 size={16} />
@@ -351,17 +381,28 @@ const SkillsForm = () => {
                     </div>
                   ))}
                   {form.specialities.length === 0 && (
-                    <p className="text-[10px] text-center text-[var(--text-muted)] italic py-2">No specialties added. These help define your niche.</p>
+                    <p className="text-[10px] text-center text-[var(--text-muted)] italic py-2">
+                      No specialties added. These help define your niche.
+                    </p>
                   )}
                 </div>
               </div>
             </CardContent>
 
             <div className="flex gap-3 p-6 border-t border-[var(--border-color)]/30 bg-[var(--bg-light)]/20">
-              <Button type="button" variant="secondary" onClick={resetForm} className="flex-1 font-bold">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={resetForm}
+                className="flex-1 font-bold"
+              >
                 Cancel
               </Button>
-              <Button type="submit" className="flex-1 font-bold" disabled={createSkillMutation.isPending || updateSkillMutation.isPending}>
+              <Button
+                type="submit"
+                className="flex-1 font-bold"
+                disabled={createSkillMutation.isPending || updateSkillMutation.isPending}
+              >
                 {editId ? "Update Skill" : "Save Skill"}
               </Button>
             </div>

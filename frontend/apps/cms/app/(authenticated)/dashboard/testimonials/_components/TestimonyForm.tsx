@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { MessageSquareText } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import axios from "~lib/axios";
+import { Button } from "~/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Input } from "~/components/ui/Input";
 import { Textarea } from "~/components/ui/Textarea";
-import { Button } from "~/components/ui/Button";
-import { MessageSquareText } from "lucide-react";
+import axios from "~lib/axios";
 
 interface TestimonyPage {
   title: string;
@@ -23,10 +23,7 @@ const TestimonyForm = () => {
     description: "",
   });
 
-  const {
-    data: testimony,
-    isLoading,
-  } = useQuery<TestimonyPage>({
+  const { data: testimony, isLoading } = useQuery<TestimonyPage>({
     queryKey: ["testimony"],
     queryFn: async () => {
       const res = await axios.get("/admin/testimony");
@@ -79,7 +76,9 @@ const TestimonyForm = () => {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Title</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              Section Title
+            </label>
             <Input
               name="title"
               value={form.title}
@@ -90,7 +89,9 @@ const TestimonyForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Description</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              Section Description
+            </label>
             <Textarea
               name="description"
               value={form.description}

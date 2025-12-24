@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import * as Ariakit from '@ariakit/react';
+import * as Ariakit from "@ariakit/react";
 
 interface DropdownProps {
   label: string;
@@ -10,22 +10,14 @@ interface DropdownProps {
   placeholder?: string;
 }
 
-export default function Dropdown({
-  label,
-  value,
-  options,
-  onChange,
-  placeholder,
-}: DropdownProps) {
+export default function Dropdown({ label, value, options, onChange, placeholder }: DropdownProps) {
   return (
     <Ariakit.SelectProvider value={value} setValue={onChange}>
-      <label className="text-sm font-medium text-[var(--text-muted)] mb-1">
-        {label}
-      </label>
+      <label className="text-sm font-medium text-[var(--text-muted)] mb-1">{label}</label>
 
       {/* This is the disclosure button */}
       <Ariakit.Select className="input w-full cursor-pointer">
-        {value || placeholder || 'Select'}
+        {value || placeholder || "Select"}
       </Ariakit.Select>
 
       {/* Dropdown items */}

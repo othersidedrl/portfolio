@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useUser } from '~/hooks/useUser'
-import LoadingScreen from '~/components/LoadingScreen'
-import Sidebar from '~/components/Sidebar'
-import DashboardHeader from '~/components/DashboardHeader'
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import DashboardHeader from "~/components/DashboardHeader";
+import LoadingScreen from "~/components/LoadingScreen";
+import Sidebar from "~/components/Sidebar";
+import { useUser } from "~/hooks/useUser";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const { data: user, isLoading, isError } = useUser()
+  const router = useRouter();
+  const { data: user, isLoading, isError } = useUser();
 
   useEffect(() => {
     if (isError) {
-      router.replace('/login')
+      router.replace("/login");
     }
-  }, [isError, router])
+  }, [isError, router]);
 
-  if (isLoading || isError || !user) return <LoadingScreen />
+  if (isLoading || isError || !user) return <LoadingScreen />;
 
   return (
     <div className="flex min-h-screen bg-[var(--bg-dark)] text-[var(--text-strong)] font-[family-name:var(--font-poppins)]">
@@ -27,5 +27,5 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1 p-8 max-w-7xl mx-auto w-full">{children}</main>
       </div>
     </div>
-  )
+  );
 }

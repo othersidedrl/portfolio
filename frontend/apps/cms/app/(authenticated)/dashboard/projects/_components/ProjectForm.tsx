@@ -2,10 +2,10 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { BiUpload, BiX } from "react-icons/bi";
 import { toast } from "sonner";
-import axios from "~lib/axios";
-import { BiLoaderAlt, BiUpload, BiX } from "react-icons/bi";
 import Dropdown from "~/components/ui/Dropdown";
+import axios from "~lib/axios";
 
 interface ProjectItem {
   id: number;
@@ -20,13 +20,13 @@ interface ProjectItem {
 }
 
 interface TechnicalSkill {
-    id: string;
-    name: string;
-    description: string;
-    specialities: string[];
-    level: "Beginner" | "Intermediate" | "Advanced" | "Expert";
-    category: "Backend" | "Frontend" | "Other";
-  }
+  id: string;
+  name: string;
+  description: string;
+  specialities: string[];
+  level: "Beginner" | "Intermediate" | "Advanced" | "Expert";
+  category: "Backend" | "Frontend" | "Other";
+}
 
 interface SkillResponse {
   data: TechnicalSkill[];
@@ -55,7 +55,7 @@ const ProjectForm = () => {
     },
   });
 
-  console.log(skillsData)
+  console.log(skillsData);
 
   const uploadImageMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -94,9 +94,7 @@ const ProjectForm = () => {
     });
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -120,15 +118,10 @@ const ProjectForm = () => {
       onSubmit={handleSubmit}
       className="space-y-6 p-6 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl"
     >
-      <h2 className="text-xl font-bold text-[var(--text-strong)]">
-        Add Project
-      </h2>
+      <h2 className="text-xl font-bold text-[var(--text-strong)]">Add Project</h2>
 
       <div className="flex flex-col">
-        <label
-          htmlFor="name"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
+        <label htmlFor="name" className="mb-1 text-sm font-medium text-[var(--text-muted)]">
           Project Name
         </label>
         <input
@@ -143,10 +136,7 @@ const ProjectForm = () => {
       </div>
 
       <div className="flex flex-col">
-        <label
-          htmlFor="description"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
+        <label htmlFor="description" className="mb-1 text-sm font-medium text-[var(--text-muted)]">
           Description
         </label>
         <textarea
@@ -161,10 +151,7 @@ const ProjectForm = () => {
       </div>
 
       <div className="flex flex-col">
-        <label
-          htmlFor="githubLink"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
+        <label htmlFor="githubLink" className="mb-1 text-sm font-medium text-[var(--text-muted)]">
           GitHub Link
         </label>
         <input
@@ -178,10 +165,7 @@ const ProjectForm = () => {
       </div>
 
       <div className="flex flex-col">
-        <label
-          htmlFor="projectLink"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
+        <label htmlFor="projectLink" className="mb-1 text-sm font-medium text-[var(--text-muted)]">
           Project Link
         </label>
         <input
@@ -198,9 +182,7 @@ const ProjectForm = () => {
         label="Type"
         value={form.type}
         options={["Web", "Mobile", "Machine Learning"]}
-        onChange={(value) =>
-          setForm((prev) => ({ ...prev, type: value as ProjectItem["type"] }))
-        }
+        onChange={(value) => setForm((prev) => ({ ...prev, type: value as ProjectItem["type"] }))}
       />
 
       <Dropdown
@@ -216,9 +198,7 @@ const ProjectForm = () => {
       />
 
       <div className="flex flex-col">
-        <label className="mb-1 text-sm font-medium text-[var(--text-muted)]">
-          Tech Stack
-        </label>
+        <label className="mb-1 text-sm font-medium text-[var(--text-muted)]">Tech Stack</label>
         <div className="flex flex-wrap gap-2">
           {skillsData?.data?.map((skill) => (
             <button
@@ -226,9 +206,11 @@ const ProjectForm = () => {
               type="button"
               onClick={() => toggleTech(skill.name)}
               className={`px-3 py-1 rounded-full text-sm border transition-colors duration-200
-                ${form.techStack.includes(skill.name)
-                  ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
-                  : "bg-[var(--bg-light)] text-[var(--text-normal)] border-[var(--border-color)] hover:border-[var(--color-primary)]"}`}
+                ${
+                  form.techStack.includes(skill.name)
+                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-transparent"
+                    : "bg-[var(--bg-light)] text-[var(--text-normal)] border-[var(--border-color)] hover:border-[var(--color-primary)]"
+                }`}
             >
               {skill.name}
             </button>
@@ -243,11 +225,7 @@ const ProjectForm = () => {
         <div className="group relative w-full border-2 border-dashed p-6 transition-colors duration-200 bg-transparent border-[var(--border-color)] hover:border-[var(--color-primary)]">
           {form.imageUrls[0] ? (
             <div className="relative">
-              <img
-                src={form.imageUrls[0]}
-                alt="Preview"
-                className="w-full h-48 object-cover"
-              />
+              <img src={form.imageUrls[0]} alt="Preview" className="w-full h-48 object-cover" />
               <button
                 type="button"
                 className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg bg-[var(--color-accent)] text-[var(--color-on-primary)] hover:bg-[var(--color-primary)]"
@@ -262,9 +240,7 @@ const ProjectForm = () => {
             <div className="text-center">
               <div className="flex flex-col items-center justify-center h-48">
                 <BiUpload className="w-12 h-12 mb-4 text-[var(--border-color)]" />
-                <p className="font-medium mb-2 text-[var(--text-muted)]">
-                  Click to upload
-                </p>
+                <p className="font-medium mb-2 text-[var(--text-muted)]">Click to upload</p>
                 <p className="text-sm text-[var(--text-muted)]">Image 1</p>
               </div>
             </div>

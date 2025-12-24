@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Github, Linkedin, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import axios from "~lib/axios";
+import { Button } from "~/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Input } from "~/components/ui/Input";
 import { Textarea } from "~/components/ui/Textarea";
-import { Button } from "~/components/ui/Button";
-import { Plus, Trash2, Github, Linkedin, CheckCircle2 } from "lucide-react";
+import axios from "~lib/axios";
 
 interface AboutCard {
   title: string;
@@ -48,9 +48,7 @@ const AboutForm = () => {
       toast.success("About section updated successfully!");
     },
     onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.error || "Failed to update about section."
-      );
+      toast.error(error?.response?.data?.error || "Failed to update about section.");
     },
   });
 
@@ -68,9 +66,7 @@ const AboutForm = () => {
     }
   }, [about]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     // Checkbox handling
     if (type === "checkbox") {
@@ -99,16 +95,22 @@ const AboutForm = () => {
           <CardTitle>Biography</CardTitle>
           <CardDescription>Manage your personal bio and availability.</CardDescription>
         </div>
-        <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${form.available ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-          <div className={`w-1.5 h-1.5 rounded-full ${form.available ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-          {form.available ? 'Available' : 'Unavailable'}
+        <div
+          className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${form.available ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"}`}
+        >
+          <div
+            className={`w-1.5 h-1.5 rounded-full ${form.available ? "bg-green-500 animate-pulse" : "bg-red-500"}`}
+          />
+          {form.available ? "Available" : "Unavailable"}
         </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">About Me</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              About Me
+            </label>
             <Textarea
               name="description"
               value={form.description}
@@ -155,20 +157,30 @@ const AboutForm = () => {
               checked={form.available}
               onChange={handleChange}
             />
-            <label htmlFor="available-check" className="text-sm font-bold text-[var(--text-strong)] cursor-pointer select-none">
+            <label
+              htmlFor="available-check"
+              className="text-sm font-bold text-[var(--text-strong)] cursor-pointer select-none"
+            >
               Mark as open to new opportunities
             </label>
           </div>
 
           <div className="space-y-4 pt-4 border-t border-[var(--border-color)]/30">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-black uppercase tracking-widest text-[var(--text-strong)]">Highlight Cards</h4>
+              <h4 className="text-sm font-black uppercase tracking-widest text-[var(--text-strong)]">
+                Highlight Cards
+              </h4>
               {form.cards.length < 4 && (
                 <Button
                   type="button"
                   variant="secondary"
                   size="sm"
-                  onClick={() => setForm(prev => ({ ...prev, cards: [...prev.cards, { title: "", description: "" }] }))}
+                  onClick={() =>
+                    setForm((prev) => ({
+                      ...prev,
+                      cards: [...prev.cards, { title: "", description: "" }],
+                    }))
+                  }
                 >
                   <Plus size={14} className="mr-2" /> Add Card
                 </Button>
@@ -177,32 +189,44 @@ const AboutForm = () => {
 
             <div className="space-y-3">
               {form.cards.map((card, index) => (
-                <div key={index} className="group relative flex gap-3 p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-dark)]/50 transition-all hover:bg-[var(--bg-light)]/30">
+                <div
+                  key={index}
+                  className="group relative flex gap-3 p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-dark)]/50 transition-all hover:bg-[var(--bg-light)]/30"
+                >
                   <div className="flex-1 space-y-3">
                     <Input
                       value={card.title}
-                      onChange={(e) => setForm(prev => {
-                        const next = [...prev.cards];
-                        next[index].title = e.target.value;
-                        return { ...prev, cards: next };
-                      })}
+                      onChange={(e) =>
+                        setForm((prev) => {
+                          const next = [...prev.cards];
+                          next[index].title = e.target.value;
+                          return { ...prev, cards: next };
+                        })
+                      }
                       placeholder="Title (e.g. Competitive Programmer)"
                       className="h-8 font-bold"
                     />
                     <Input
                       value={card.description}
-                      onChange={(e) => setForm(prev => {
-                        const next = [...prev.cards];
-                        next[index].description = e.target.value;
-                        return { ...prev, cards: next };
-                      })}
+                      onChange={(e) =>
+                        setForm((prev) => {
+                          const next = [...prev.cards];
+                          next[index].description = e.target.value;
+                          return { ...prev, cards: next };
+                        })
+                      }
                       placeholder="Description"
                       className="h-8 text-xs"
                     />
                   </div>
                   <button
                     type="button"
-                    onClick={() => setForm(prev => ({ ...prev, cards: prev.cards.filter((_, i) => i !== index) }))}
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        cards: prev.cards.filter((_, i) => i !== index),
+                      }))
+                    }
                     className="flex h-8 w-8 items-center justify-center rounded-lg text-red-500 hover:bg-red-500/10 transition-colors"
                   >
                     <Trash2 size={14} />

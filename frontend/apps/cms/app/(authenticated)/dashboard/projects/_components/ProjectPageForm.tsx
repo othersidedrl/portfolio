@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Settings } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import axios from "~lib/axios";
+import { Button } from "~/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Input } from "~/components/ui/Input";
 import { Textarea } from "~/components/ui/Textarea";
-import { Button } from "~/components/ui/Button";
-import { Settings } from "lucide-react";
+import axios from "~lib/axios";
 
 interface ProjectPage {
   title: string;
@@ -23,10 +23,7 @@ const ProjectForm = () => {
     description: "",
   });
 
-  const {
-    data: project,
-    isLoading,
-  } = useQuery<ProjectPage>({
+  const { data: project, isLoading } = useQuery<ProjectPage>({
     queryKey: ["project"],
     queryFn: async () => {
       const res = await axios.get("/admin/project");
@@ -52,9 +49,7 @@ const ProjectForm = () => {
     }
   }, [project]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -81,7 +76,9 @@ const ProjectForm = () => {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Title</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              Section Title
+            </label>
             <Input
               name="title"
               value={form.title}
@@ -92,7 +89,9 @@ const ProjectForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Description</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
+              Section Description
+            </label>
             <Textarea
               name="description"
               value={form.description}

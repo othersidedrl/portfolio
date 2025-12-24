@@ -1,10 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import axios from "~lib/axios";
-import HeroSection from "./components/hero/Hero";
 import AboutSection from "./components/about/About";
+import HeroSection from "./components/hero/Hero";
+import ProjectSection from "./components/project/Project";
 import TestimonySection from "./components/testimony/Testimony";
 import { getQueryClient } from "./get-query-client";
-import ProjectSection from "./components/project/Project";
 
 export default async function Portfolio() {
   const queryClient = getQueryClient();
