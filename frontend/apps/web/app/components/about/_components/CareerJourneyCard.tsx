@@ -1,24 +1,10 @@
-import { GraduationCap, Info, Laptop } from "lucide-react";
+import { GraduationCap, Laptop } from "lucide-react";
 import type { FC } from "react";
 import type { Careers } from "../types";
 
 interface CareerJourneyCardProps extends Careers {
   isLast?: boolean;
 }
-
-const getOrdinalSuffix = (day: number) => {
-  if (day >= 11 && day <= 13) return "th";
-  switch (day % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
-};
 
 const formatDate = (value: string) => {
   if (!value) return "";
@@ -28,11 +14,10 @@ const formatDate = (value: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
 
-  const day = date.getDate();
-  const month = date.toLocaleString("en-US", { month: "long" });
+  const month = date.toLocaleString("en-US", { month: "short" });
   const year = date.getFullYear();
 
-  return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+  return `${month} ${year}`;
 };
 
 const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
@@ -48,56 +33,52 @@ const CareerJourneyCard: FC<CareerJourneyCardProps> = ({
   const Icon = type === "Education" ? GraduationCap : Laptop;
 
   return (
-    <article className="group flex min-h-[150px] cursor-pointer gap-4">
+    <article className="group flex gap-4 transition-all duration-500">
+      {/* Timeline Section */}
       <div className="flex flex-col items-center">
-        <div className="flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--border-color)] bg-[var(--bg-light)] text-[var(--text-strong)] transition-all duration-300 ease-out group-hover:border-[var(--color-primary)] group-hover:text-[var(--color-primary)] group-hover:translate-y-2">
-          <Icon size={20} />
+        <div
+          className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)]/60 text-[var(--text-strong)] shadow-sm backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:border-[var(--color-primary)]/50 group-hover:text-[var(--color-primary)]"
+        >
+          <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)]/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <Icon size={18} className="relative z-10 transition-transform duration-500 group-hover:scale-110" />
         </div>
+
         {!isLast && (
-          <div className="mt-2 h-full w-px bg-gradient-to-b from-[var(--border-color)]/70 via-[var(--border-color)]/30 to-transparent" />
+          <div className="mt-3 flex-1 w-px bg-gradient-to-b from-[var(--border-color)]/60 via-[var(--border-color)]/20 to-transparent" />
         )}
       </div>
 
+      {/* Card Content */}
       <div
-        className="flex flex-1 flex-col gap-3 rounded-2xl border bg-[var(--bg-mid)] px-5 py-4 shadow-sm backdrop-blur transition-all duration-300 ease-out hover:border-[var(--color-primary)]/35 hover:bg-[var(--bg-light)] hover:shadow-md"
-        style={{ borderColor: "var(--border-color)" }}
+        className="relative flex-1 flex flex-col gap-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-mid)]/40 p-4 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[var(--color-primary)]/30 hover:bg-[var(--bg-mid)]/70 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden"
       >
-        <div className="flex flex-wrap items-center justify-between text-sm text-[var(--text-normal)]">
-          <p className="text-sm font-semibold">
-            {formatDate(started_at)} - {formatDate(ended_at)}
-          </p>
-          <p className="text-sm text-[var(--text-muted)]">{location}</p>
+        {/* Shine Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+
+        {/* Header: Date & Location */}
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[var(--color-primary)]">
+            {formatDate(started_at)} — {formatDate(ended_at)}
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] opacity-60">
+            {location}
+          </span>
         </div>
 
-        <div>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-semibold text-[var(--color-primary)]">
-                {title}
-              </h3>
-              <p className="text-sm text-[var(--text-muted)]">{affiliation}</p>
-            </div>
-
-            <div className="group/tooltip relative flex items-center justify-end">
-              <button
-                type="button"
-                className="rounded-full border border-[var(--border-color)] bg-[var(--bg-light)]/70 p-2 text-[var(--text-normal)]/70 transition hover:text-[var(--color-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
-                aria-label="Show role details"
-              >
-                <Info size={16} />
-              </button>
-              <div className="pointer-events-none absolute right-full top-1/2 z-10 w-64 -translate-y-1/2 translate-x-3 opacity-0 transition-all duration-200 ease-out group-hover/tooltip:-translate-x-1 group-hover/tooltip:opacity-100 group-focus-within/tooltip:-translate-x-2 group-focus-within/tooltip:opacity-100">
-                <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-light)] p-4 text-xs text-[var(--text-normal)] shadow-[0_10px_25px_var(--shadow-color)] backdrop-blur">
-                  {description}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-2 max-h-[72px] overflow-hidden text-sm text-[var(--text-muted)]">
-            {description}
+        {/* Body: Title & Affiliation */}
+        <div className="space-y-0.5">
+          <h3 className="text-base font-black tracking-tight text-[var(--text-strong)] group-hover:text-[var(--color-primary)] transition-colors duration-300">
+            {title}
+          </h3>
+          <p className="text-xs font-bold text-[var(--text-muted)] tracking-wide">
+            {affiliation}
           </p>
         </div>
+
+        {/* Description */}
+        <p className="text-xs font-medium leading-relaxed text-[var(--text-normal)] opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+          {description}
+        </p>
       </div>
     </article>
   );

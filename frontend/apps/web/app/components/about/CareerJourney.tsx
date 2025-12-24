@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "~lib/axios";
 import { CareersRepsonse } from "./types";
 
-const HIGHLIGHT_SIZE = 3;
+const DEFAULT_HIGHLIGHT_SIZE = 3;
 
 export const CareerJourney = () => {
   const { data: CareerData } = useQuery({
@@ -27,29 +27,33 @@ export const CareerJourney = () => {
   );
 
   const dotRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const highlightRef = useRef<HTMLSpanElement | null>(null);
+  const highlightRef = useRef<HTMLDivElement | null>(null);
   const [activeStart, setActiveStart] = useState(0);
 
-  const maxStart = Math.max(0, sortedJourney.length - HIGHLIGHT_SIZE);
+  // If we have 4 or fewer items, show them all, otherwise show the highlight size
+  const highlightSize = sortedJourney.length <= 3 ? sortedJourney.length : DEFAULT_HIGHLIGHT_SIZE;
+  const isScrollable = sortedJourney.length > 3;
+  const maxStart = Math.max(0, sortedJourney.length - highlightSize);
 
   const goToStart = useCallback(
     (nextStart: number) => {
-      setActiveStart((prev) => {
-        const clamped = Math.max(0, Math.min(nextStart, maxStart));
-        return clamped === prev ? prev : clamped;
-      });
+      if (!isScrollable) return;
+      const clamped = Math.max(0, Math.min(nextStart, maxStart));
+      setActiveStart(clamped);
     },
-    [maxStart]
+    [maxStart, isScrollable]
   );
 
   const updateHighlight = useCallback(
     (startValue: number) => {
+      if (!isScrollable) return;
+
       const highlight = highlightRef.current;
       if (!highlight) return;
 
       const startIdx = startValue;
       const endIdx = Math.min(
-        startValue + HIGHLIGHT_SIZE - 1,
+        startValue + highlightSize - 1,
         sortedJourney.length - 1
       );
 
@@ -59,26 +63,32 @@ export const CareerJourney = () => {
       if (!startBtn || !endBtn) return;
 
       const top = startBtn.offsetTop;
-      const bottom = endBtn.offsetTop + endBtn.offsetHeight;
+      const height = (endBtn.offsetTop + endBtn.offsetHeight) - top;
 
-      highlight.style.top = `${top - 4}px`;
-      highlight.style.height = `${bottom - top + 8}px`;
+      highlight.style.transform = `translateY(${top - 4}px)`;
+      highlight.style.height = `${height + 8}px`;
       highlight.style.opacity = "1";
     },
-    [sortedJourney.length]
+    [sortedJourney.length, highlightSize, isScrollable]
   );
 
   useEffect(() => {
     updateHighlight(activeStart);
   }, [activeStart, updateHighlight]);
 
-  const visibleJourney = sortedJourney.slice(
-    activeStart,
-    activeStart + HIGHLIGHT_SIZE
-  );
+  const visibleJourney = isScrollable
+    ? sortedJourney.slice(activeStart, activeStart + highlightSize)
+    : sortedJourney;
 
   const canGoUp = activeStart > 0;
   const canGoDown = activeStart < maxStart;
+
+  const formatTooltipDate = (value: string) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (isNaN(date.getTime())) return value;
+    return `${date.toLocaleString("en-US", { month: "short" })} ${date.getFullYear()}`;
+  };
 
   if (!sortedJourney || sortedJourney.length === 0) {
     return (
@@ -96,74 +106,94 @@ export const CareerJourney = () => {
   }
 
   return (
-    <section className="flex gap-6">
+    <section className="flex gap-8 group/section">
+      {/* Cards List */}
       <div
         key={activeStart}
-        className="career-journey-fade flex-1 space-y-6 pr-4 md:pr-6"
+        className="career-journey-fade flex-1 space-y-4 pr-4 md:pr-6"
       >
         {visibleJourney.map((item, index) => (
           <CareerJourneyCard
             key={`${item.title}-${item.started_at}`}
             {...item}
-            isLast={activeStart + index === sortedJourney.length - 1}
+            isLast={isScrollable
+              ? (activeStart + index === sortedJourney.length - 1)
+              : (index === sortedJourney.length - 1)
+            }
           />
         ))}
       </div>
 
-      <div className="hidden flex-col items-center gap-4 md:flex">
-        <button
-          type="button"
-          onClick={() => goToStart(activeStart - 1)}
-          disabled={!canGoUp}
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-normal)] transition hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-40"
-          aria-label="Show previous experiences"
-        >
-          <ChevronUp size={18} />
-        </button>
-        <div className="relative flex flex-col items-center gap-3">
-          <span
-            ref={highlightRef}
-            className="pointer-events-none absolute left-1/2 w-10 -translate-x-1/2 rounded-full bg-[var(--color-primary)]/12 opacity-0 transition-all duration-300 ease-out"
-          />
-          {sortedJourney.map((item, idx) => {
-            const inWindow =
-              idx >= activeStart &&
-              idx <= Math.min(
-                activeStart + HIGHLIGHT_SIZE - 1,
-                sortedJourney.length - 1
-              );
-            return (
-              <button
-                key={`${item.title}-${idx}-dot`}
-                type="button"
-                ref={(el) => {
-                  dotRefs.current[idx] = el;
-                }}
-                onClick={() => goToStart(idx)}
-                className={`relative flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300 ${inWindow
-                  ? "text-[var(--color-primary)]"
-                  : "text-[var(--text-muted)]"
-                  }`}
-                aria-label={`Go to ${item.title}`}
-              >
-                <span
-                  className={`block h-2.5 w-2.5 rounded-full border border-current transition-colors duration-300 ease-out ${inWindow ? "bg-current" : "bg-transparent"
-                    }`}
-                />
-              </button>
-            );
-          })}
+      {/* Premium Vertical Slider - Only show if more than 4 items */}
+      {isScrollable && (
+        <div className="hidden flex-col items-center gap-6 md:flex pt-2">
+          {/* Navigation Up */}
+          <button
+            type="button"
+            onClick={() => goToStart(activeStart - 1)}
+            disabled={!canGoUp}
+            className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)]/50 text-[var(--text-normal)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[var(--color-primary)]/40 hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] hover:shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)] disabled:cursor-not-allowed disabled:opacity-20"
+            aria-label="Show previous experiences"
+          >
+            <ChevronUp size={20} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+          </button>
+
+          {/* Track & Dots */}
+          <div className="relative flex flex-col items-center py-2 px-1">
+            <div className="absolute top-0 bottom-0 w-[2px] bg-[var(--border-color)]/20 rounded-full" />
+
+            {/* Sliding Glass Capsule Highlight */}
+            <div
+              ref={highlightRef}
+              className="absolute left-1/2 w-8 -translate-x-1/2 rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5 opacity-0 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.05)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] backdrop-blur-[2px]"
+            />
+
+            {/* Dots */}
+            <div className="relative flex flex-col items-center gap-4">
+              {sortedJourney.map((item, idx) => {
+                const inWindow = idx >= activeStart && idx < activeStart + highlightSize;
+
+                return (
+                  <button
+                    key={`${item.title}-${idx}-dot`}
+                    type="button"
+                    ref={(el) => { dotRefs.current[idx] = el; }}
+                    onClick={() => goToStart(idx - 1)}
+                    className={`group relative flex h-4 w-4 items-center justify-center transition-all duration-500`}
+                    aria-label={`Go to ${item.title}`}
+                  >
+                    <span
+                      className={`block h-1.5 w-1.5 rounded-full transition-all duration-500 ease-out shadow-sm ${inWindow
+                        ? "bg-[var(--color-primary)] scale-[1.3] ring-4 ring-[var(--color-primary)]/10"
+                        : "bg-[var(--text-muted)] opacity-30 group-hover:opacity-100 group-hover:scale-110"
+                        }`}
+                    />
+
+                    <div className="absolute right-full mr-4 px-2 py-1 rounded-lg border border-[var(--border-color)] bg-[var(--bg-mid)] text-[10px] font-bold text-[var(--text-muted)] whitespace-nowrap opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 pointer-events-none uppercase tracking-widest backdrop-blur-md">
+                      {formatTooltipDate(item.started_at)}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Navigation Down */}
+          <button
+            type="button"
+            onClick={() => goToStart(activeStart + 1)}
+            disabled={!canGoDown}
+            className="group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-color)] bg-[var(--bg-mid)]/50 text-[var(--text-normal)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-[var(--color-primary)]/40 hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] hover:shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)] disabled:cursor-not-allowed disabled:opacity-20"
+            aria-label="Show next experiences"
+          >
+            <ChevronDown size={20} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+          </button>
+
+          <div className="mt-2 text-[10px] font-black tracking-[0.2em] text-[var(--text-muted)] opacity-40 uppercase">
+            {Math.min(activeStart + highlightSize, sortedJourney.length)} / {sortedJourney.length}
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={() => goToStart(activeStart + 1)}
-          disabled={!canGoDown}
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-normal)] transition hover:-translate-y-0.5 hover:border-[var(--color-primary)] hover:bg-[var(--bg-light)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-40"
-          aria-label="Show next experiences"
-        >
-          <ChevronDown size={18} />
-        </button>
-      </div>
+      )}
     </section>
   );
 };
