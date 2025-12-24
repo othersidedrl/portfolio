@@ -89,8 +89,8 @@ const Extras: FC<ExtrasProps> = ({ hobbies = [] }) => {
 
       {/* Right section: Hobbies */}
       <div className="flex-1 flex items-center w-full overflow-hidden min-h-[44px]">
-        <div className="flex items-center gap-3 text-base md:text-lg font-medium text-[var(--text-normal)]">
-          <span className="whitespace-nowrap text-[var(--text-muted)]">Currently into:</span>
+        <div className="flex items-center gap-3 text-base md:text-lg font-medium text-[var(--text-normal)] ">
+          <span className="whitespace-nowrap text-[var(--text-muted)]">I'm into:</span>
 
           <div className="relative h-8 flex-1 min-w-[200px]">
             {hobbies.length > 0 && (
