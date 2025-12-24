@@ -40,7 +40,7 @@ export default function TestimonySection() {
     };
 
     return (
-        <section className="w-full text-[var(--text-normal)] py-12">
+        <section className="w-full text-[var(--text-normal)] pt-12">
             <TestimonyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
             <div className="mx-auto flex flex-col items-center gap-6 text-center mb-12">
