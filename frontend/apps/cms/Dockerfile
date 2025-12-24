@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Copy the monorepo files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/cms/package.json ./apps/cms/
+COPY frontend/apps/cms/package.json ./apps/cms/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
