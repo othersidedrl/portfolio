@@ -1,14 +1,14 @@
-# Build stage
+# Build# Stage 1: Build
 FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-# Copy dependency files
-COPY go.mod go.sum ./
+# Copy the go mod files from the backend directory
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
-# Copy source code
-COPY . .
+# Copy the rest of the backend source code
+COPY backend/ .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api/main.go

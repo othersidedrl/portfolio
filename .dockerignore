@@ -9,4 +9,4 @@ build
 .env
 .env.*
 *.log
-pnpm-lock.yaml
+# Do NOT ignore pnpm-lock.yaml, it is needed for the build
