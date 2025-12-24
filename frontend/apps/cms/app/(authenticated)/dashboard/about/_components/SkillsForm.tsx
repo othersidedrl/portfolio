@@ -5,8 +5,23 @@ import Dropdown from "~/components/ui/Dropdown";
 import { toast } from "sonner";
 import axios from "~lib/axios";
 import { useState } from "react";
-import { BiTrash, BiPencil, BiX } from "react-icons/bi";
+import {
+  Trash2,
+  Pencil,
+  Plus,
+  X,
+  Search,
+  Code2,
+  Sparkles,
+  Clock,
+  Layers
+} from "lucide-react";
 import * as Ariakit from "@ariakit/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import { Button } from "~/components/ui/Button";
+import { Input } from "~/components/ui/Input";
+import { Textarea } from "~/components/ui/Textarea";
+import { cn } from "~/lib/utils";
 
 interface TechnicalSkill {
   id: string;
@@ -29,7 +44,6 @@ const categories = ["All", "Backend", "Frontend", "Other"] as const;
 const SkillsForm = () => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-
   const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>("All");
   const [editId, setEditId] = useState<string | null>(null);
 
@@ -55,9 +69,7 @@ const SkillsForm = () => {
     setOpen(false);
   };
 
-  const {
-    data: skills,
-  } = useQuery<SkillResponse>({
+  const { data: skills, isLoading } = useQuery<SkillResponse>({
     queryKey: ["skills"],
     queryFn: async () => {
       const res = await axios.get("admin/about/skills");
@@ -72,11 +84,11 @@ const SkillsForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["skills"] });
-      toast.success("Skill created!");
+      toast.success("Skill added successfully!");
       resetForm();
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.error || "Create failed.");
+      toast.error(err?.response?.data?.error || "Failed to add skill.");
     },
   });
 
@@ -87,11 +99,11 @@ const SkillsForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["skills"] });
-      toast.success("Skill updated!");
+      toast.success("Skill updated successfully!");
       resetForm();
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.error || "Update failed.");
+      toast.error(err?.response?.data?.error || "Failed to update skill.");
     },
   });
 
@@ -105,7 +117,7 @@ const SkillsForm = () => {
       toast.success("Skill deleted.");
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.error || "Delete failed.");
+      toast.error(err?.response?.data?.error || "Failed to delete skill.");
     },
   });
 
@@ -122,54 +134,65 @@ const SkillsForm = () => {
     activeCategory === "All" ? true : s.category === activeCategory
   );
 
-  return (
-    <div className="w-full p-4 md:p-8 space-y-8 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl shadow-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-[var(--text-strong)]">Technical Skills</h2>
-        <button
-          type="button"
-          onClick={() => {
-            resetForm();
-            setOpen(true);
-          }}
-          className="bg-[var(--color-primary)] text-[var(--color-on-primary)] px-4 py-1.5 rounded hover:opacity-90 transition"
-        >
-          + Add Skill
-        </button>
-      </div>
+  if (isLoading) return <div className="h-64 animate-pulse rounded-xl bg-[var(--bg-mid)]" />;
 
-      {/* Skill Cards */}
-      <div className="space-y-4">
-        <div className="flex gap-2 border-b border-[var(--border-color)] pb-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setActiveCategory(cat)}
-              className={`text-sm px-4 py-1 rounded-full ${activeCategory === cat
-                ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                : "bg-transparent text-[var(--text-muted)] hover:text-[var(--text-strong)]"
-                }`}
-            >
-              {cat}
-            </button>
-          ))}
+  return (
+    <Card className="shadow-lg">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <div>
+          <CardTitle>Technical Skills</CardTitle>
+          <CardDescription>Manage your stack and expertise levels.</CardDescription>
+        </div>
+        <Button onClick={() => { resetForm(); setOpen(true); }} size="sm" className="font-bold">
+          <Plus size={16} className="mr-2" /> Add Skill
+        </Button>
+      </CardHeader>
+
+      <CardContent className="pt-6 space-y-6">
+        <div className="flex flex-wrap gap-2 p-1 rounded-xl bg-[var(--bg-light)]/40 border border-[var(--border-color)]">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={cn(
+                  "flex-1 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all",
+                  isActive
+                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md translate-y-[-1px]"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--bg-light)]"
+                )}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
-        {filteredSkills && filteredSkills.length > 0 ? (
-          filteredSkills.map((skill) => (
-            <div
-              key={skill.id}
-              className="flex flex-col gap-1 p-4 bg-[var(--bg-light)] rounded shadow-sm border border-[var(--border-color)]"
-            >
-              <div className="flex justify-between items-center">
-                <p className="font-semibold">
-                  {skill.name} ({skill.level}) - {skill.year_of_experience} yrs
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+          {filteredSkills && filteredSkills.length > 0 ? (
+            filteredSkills.map((skill) => (
+              <div
+                key={skill.id}
+                className="group relative flex flex-col gap-3 p-4 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-dark)]/40 transition-all hover:bg-[var(--bg-mid)] hover:shadow-md"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg-light)] border border-[var(--border-color)] text-[var(--color-primary)] shadow-sm">
+                      <Code2 size={20} />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-[var(--text-strong)] group-hover:text-[var(--color-primary)] transition-colors">
+                        {skill.name}
+                      </h4>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)]">
+                        {skill.level} • {skill.year_of_experience}y Exp
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => {
                       setEditId(skill.id);
                       setForm({
                         name: skill.name,
@@ -180,157 +203,172 @@ const SkillsForm = () => {
                         year_of_experience: skill.year_of_experience,
                       });
                       setOpen(true);
-                    }}
-                    className="text-blue-500 hover:text-blue-600"
-                  >
-                    <BiPencil size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => deleteSkillMutation.mutate(skill.id)}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    <BiTrash size={18} />
-                  </button>
+                    }}>
+                      <Pencil size={12} />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-500/10" onClick={() => deleteSkillMutation.mutate(skill.id)}>
+                      <Trash2 size={12} />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <p className="text-sm text-[var(--text-muted)]">{skill.description}</p>
-              {skill.specialities.length > 0 && (
-                <ul className="list-disc list-inside text-sm text-[var(--text-normal)] mt-1">
-                  {skill.specialities.map((spec, j) => (
-                    <li key={j}>{spec}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))
-        ) : (
-          <div className="p-4 text-center text-[var(--text-muted)] bg-[var(--bg-mid)] rounded border border-[var(--border-color)]">
-            No items in {activeCategory}
-          </div>
-        )}
-      </div>
 
-      {/* Modal */}
+                <p className="text-xs font-medium text-[var(--text-muted)] line-clamp-2">
+                  {skill.description}
+                </p>
+
+                {skill.specialities.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-auto pt-2 border-t border-[var(--border-color)]/20">
+                    {skill.specialities.map((spec, j) => (
+                      <span key={j} className="px-2 py-0.5 rounded-md bg-[var(--bg-light)] text-[9px] font-bold text-[var(--text-muted)] border border-[var(--border-color)]/50">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full flex h-32 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[var(--border-color)] bg-[var(--bg-light)]/20 text-[var(--text-muted)] text-center px-6">
+              <p className="text-sm font-bold">No skills found in this category.</p>
+              <p className="text-xs">Click 'Add Skill' to populate your library.</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+
       <Ariakit.Dialog
         open={open}
-        onClose={() => {
-          setOpen(false);
-          resetForm();
-        }}
-        className="dialog fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        onClose={resetForm}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in transition-all"
       >
-        <div className="max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl">
-          <div className="flex justify-between items-center p-6 border-b border-[var(--border-color)]">
-            <Ariakit.DialogHeading className="text-xl font-bold text-[var(--text-strong)]">
-              {editId ? "Edit Skill" : "Add Skill"}
-            </Ariakit.DialogHeading>
-            <Ariakit.DialogDismiss className="text-[var(--text-muted)] hover:text-[var(--text-strong)]">
-              <BiX size={24} />
-            </Ariakit.DialogDismiss>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6 p-6">
-            <input
-              placeholder="Skill Name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="input"
-              required
-            />
-
-            <textarea
-              placeholder="Skill Description"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="input"
-            />
-
-            <div className="flex gap-2">
-              <label>Years of Experience</label>
-              <input
-                type="number"
-                placeholder="Years of Experience"
-                value={form.year_of_experience}
-                onChange={(e) => setForm({ ...form, year_of_experience: parseInt(e.target.value) || 0 })}
-                className="input"
-                required
-              />
+        <Card className="w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-200">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>{editId ? "Edit Skill" : "Add Skill"}</CardTitle>
+              <CardDescription>Define the technical expertise details.</CardDescription>
             </div>
+            <Button variant="ghost" size="icon" onClick={resetForm}>
+              <X size={20} />
+            </Button>
+          </CardHeader>
 
-            <Dropdown
-              label="Skill Level"
-              value={form.level}
-              onChange={(val) => setForm({ ...form, level: val as TechnicalSkill["level"] })}
-              options={[...levels]}
-              placeholder="Select level"
-            />
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-6 pt-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Skill Name</label>
+                <Input
+                  placeholder="e.g. Golang, React, Docker"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                />
+              </div>
 
-            <Dropdown
-              label="Category"
-              value={form.category}
-              onChange={(val) => setForm({ ...form, category: val as TechnicalSkill["category"] })}
-              options={["Backend", "Frontend", "Other"]}
-              placeholder="Select category"
-            />
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Description</label>
+                <Textarea
+                  placeholder="What makes you proficient in this skill?"
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                />
+              </div>
 
-            <div className="space-y-2">
-              {form.specialities.map((spec, i) => (
-                <div key={i} className="flex gap-2">
-                  <input
-                    value={spec}
-                    onChange={(e) => {
-                      const updated = [...form.specialities];
-                      updated[i] = e.target.value;
-                      setForm({ ...form, specialities: updated });
-                    }}
-                    placeholder={`Speciality ${i + 1}`}
-                    className="input flex-1"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Dropdown
+                    label="Skill Level"
+                    value={form.level}
+                    onChange={(val) => setForm({ ...form, level: val as TechnicalSkill["level"] })}
+                    options={[...levels]}
+                    placeholder="Select level"
                   />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((prev) => ({
-                        ...prev,
-                        specialities: prev.specialities.filter((_, j) => j !== i),
-                      }))
-                    }
-                    className="text-sm text-red-500 hover:underline"
-                  >
-                    <BiTrash size={16} />
-                  </button>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={() =>
-                  setForm((prev) => ({ ...prev, specialities: [...prev.specialities, ""] }))
-                }
-                className="text-sm text-[var(--color-accent)] hover:underline"
-              >
-                + Add Speciality
-              </button>
-            </div>
+                <div className="space-y-2">
+                  <Dropdown
+                    label="Category"
+                    value={form.category}
+                    onChange={(val) => setForm({ ...form, category: val as TechnicalSkill["category"] })}
+                    options={["Backend", "Frontend", "Other"]}
+                    placeholder="Select category"
+                  />
+                </div>
+              </div>
 
-            <div className="flex gap-2 pt-4">
-              <button
-                type="submit"
-                className="flex-1 py-2 px-4 bg-[var(--color-primary)] text-[var(--color-on-primary)] font-semibold rounded hover:opacity-90 transition"
-              >
-                {editId ? "Update Skill" : "Save Skill"}
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="flex-1 py-2 px-4 border border-[var(--border-color)] rounded hover:bg-[var(--bg-light)] transition text-[var(--text-normal)]"
-              >
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Years of Experience</label>
+                <div className="flex items-center gap-4">
+                  <Input
+                    type="number"
+                    value={form.year_of_experience}
+                    onChange={(e) => setForm({ ...form, year_of_experience: parseInt(e.target.value) || 0 })}
+                    className="max-w-[120px]"
+                    required
+                  />
+                  <div className="flex-1 h-2 rounded-full bg-[var(--bg-light)] overflow-hidden">
+                    <div
+                      className="h-full bg-[var(--color-primary)] transition-all duration-500"
+                      style={{ width: `${Math.min((form.year_of_experience / 10) * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-[var(--border-color)]/30">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] flex items-center gap-2">
+                    <Sparkles size={14} /> Specialties
+                  </label>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setForm(prev => ({ ...prev, specialities: [...prev.specialities, ""] }))}
+                  >
+                    <Plus size={14} className="mr-2" /> Add Specialty
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2">
+                  {form.specialities.map((spec, i) => (
+                    <div key={i} className="group flex items-center gap-2 animate-in slide-in-from-left-2 duration-200">
+                      <Input
+                        value={spec}
+                        onChange={(e) => {
+                          const updated = [...form.specialities];
+                          updated[i] = e.target.value;
+                          setForm({ ...form, specialities: updated });
+                        }}
+                        placeholder={`Specialty #${i + 1}`}
+                        className="flex-1 h-9 text-xs"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setForm(prev => ({ ...prev, specialities: prev.specialities.filter((_, j) => j !== i) }))}
+                        className="flex h-9 w-9 items-center justify-center rounded-xl text-red-500 opacity-40 hover:opacity-100 hover:bg-red-500/10 transition-all"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {form.specialities.length === 0 && (
+                    <p className="text-[10px] text-center text-[var(--text-muted)] italic py-2">No specialties added. These help define your niche.</p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+
+            <div className="flex gap-3 p-6 border-t border-[var(--border-color)]/30 bg-[var(--bg-light)]/20">
+              <Button type="button" variant="secondary" onClick={resetForm} className="flex-1 font-bold">
                 Cancel
-              </button>
+              </Button>
+              <Button type="submit" className="flex-1 font-bold" disabled={createSkillMutation.isPending || updateSkillMutation.isPending}>
+                {editId ? "Update Skill" : "Save Skill"}
+              </Button>
             </div>
           </form>
-        </div>
+        </Card>
       </Ariakit.Dialog>
-    </div>
+    </Card>
   );
 };
 

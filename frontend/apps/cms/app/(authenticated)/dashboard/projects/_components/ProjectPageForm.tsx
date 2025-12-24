@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "~lib/axios";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/Card";
+import { Input } from "~/components/ui/Input";
+import { Textarea } from "~/components/ui/Textarea";
+import { Button } from "~/components/ui/Button";
+import { Settings } from "lucide-react";
 
 interface ProjectPage {
   title: string;
@@ -21,7 +26,6 @@ const ProjectForm = () => {
   const {
     data: project,
     isLoading,
-    isError,
   } = useQuery<ProjectPage>({
     queryKey: ["project"],
     queryFn: async () => {
@@ -37,9 +41,9 @@ const ProjectForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["project"] });
-      toast.success("Project page updated!");
+      toast.success("Project settings updated!");
     },
-    onError: () => toast.error("Failed to update Project page."),
+    onError: () => toast.error("Failed to update project settings."),
   });
 
   useEffect(() => {
@@ -60,60 +64,51 @@ const ProjectForm = () => {
     updateProjectMutation.mutate(form);
   };
 
+  if (isLoading) return <div className="h-48 animate-pulse rounded-xl bg-[var(--bg-mid)]" />;
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full p-4 md:p-8 space-y-8 bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-xl shadow-sm"
-    >
-      <h2 className="text-2xl font-bold text-[var(--text-strong)]">Project Page Settings</h2>
+    <Card className="shadow-lg border-2 border-[var(--color-primary)]/5">
+      <CardHeader className="flex flex-row items-center gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
+          <Settings size={20} />
+        </div>
+        <div>
+          <CardTitle>Page Metadata</CardTitle>
+          <CardDescription>Section title and global description.</CardDescription>
+        </div>
+      </CardHeader>
 
-      {/* Title */}
-      <div className="flex flex-col">
-        <label
-          htmlFor="title"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
-          Section Title
-        </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Enter section title"
-          className="input w-full"
-          required
-        />
-      </div>
+      <CardContent className="pt-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Title</label>
+            <Input
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="e.g. Featured Projects"
+              required
+            />
+          </div>
 
-      {/* Description */}
-      <div className="flex flex-col">
-        <label
-          htmlFor="description"
-          className="mb-1 text-sm font-medium text-[var(--text-muted)]"
-        >
-          Section Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          placeholder="Describe this section..."
-          className="input w-full"
-          required
-        />
-      </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Section Description</label>
+            <Textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Describe what your projects represent..."
+              className="min-h-[100px]"
+              required
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={updateProjectMutation.isPending}
-        className="w-full py-2 bg-[var(--color-primary)] text-[var(--color-on-primary)] font-semibold rounded hover:opacity-90 transition"
-      >
-        {updateProjectMutation.isPending ? "Saving..." : "Save Changes"}
-      </button>
-    </form>
+          <Button type="submit" className="w-full" disabled={updateProjectMutation.isPending}>
+            {updateProjectMutation.isPending ? "Saving..." : "Update Settings"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
