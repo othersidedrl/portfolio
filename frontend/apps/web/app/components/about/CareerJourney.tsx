@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Rocket } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CareerJourneyCard from "./_components/CareerJourneyCard";
 import { useQuery } from "@tanstack/react-query";
@@ -79,6 +79,21 @@ export const CareerJourney = () => {
 
   const canGoUp = activeStart > 0;
   const canGoDown = activeStart < maxStart;
+
+  if (!sortedJourney || sortedJourney.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-8 rounded-3xl border-2 border-dashed border-[var(--border-color)] bg-[var(--bg-mid)]/30 backdrop-blur-sm group transition-all duration-500 w-full mb-12">
+        <div className="relative mb-6">
+          <div className="absolute -inset-4 bg-gradient-to-tr from-orange-400/20 to-red-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500" />
+          <Rocket size={48} className="text-[var(--text-muted)] group-hover:text-orange-500 group-hover:-translate-y-2 transition-all duration-500 ease-out" />
+        </div>
+        <h3 className="text-2xl font-bold text-[var(--text-strong)] mb-2">The Mission Begins</h3>
+        <p className="text-[var(--text-muted)] text-center max-w-sm leading-relaxed">
+          {"My professional adventure is just starting! Stay tuned as I launch new chapters and hit exciting milestones."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="flex gap-6">

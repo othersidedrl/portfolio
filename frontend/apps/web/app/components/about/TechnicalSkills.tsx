@@ -131,20 +131,35 @@ export const TechnicalSkills = () => {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {visibleSkills?.map((skill) => (
-          <TechnicalSkillsCard
-            key={skill.id}
-            name={skill.name}
-            description={skill.description}
-            level={skill.level}
-            levelStyle={LevelColors[skill.level as SkillLevel]}
-            yearOfExperience={skill.year_of_experience}
-            specialities={skill.specialities}
-          />
-        ))}
+        {visibleSkills && visibleSkills.length > 0 ? (
+          visibleSkills.map((skill) => (
+            <TechnicalSkillsCard
+              key={skill.id}
+              name={skill.name}
+              description={skill.description}
+              level={skill.level}
+              levelStyle={LevelColors[skill.level as SkillLevel]}
+              yearOfExperience={skill.year_of_experience}
+              specialities={skill.specialities}
+            />
+          ))
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center py-16 px-8 rounded-3xl border-2 border-dashed border-[var(--border-color)] bg-[var(--bg-mid)]/30 backdrop-blur-sm group transition-all duration-500">
+            <div className="relative mb-6">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-blue-400/20 to-purple-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500" />
+              <div className="relative animate-[spin_4s_linear_infinite]">
+                <SettingsIcon size={48} className="text-[var(--text-muted)] group-hover:text-[var(--color-primary)] transition-colors duration-500" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-[var(--text-strong)] mb-2">Downloading Knowledge...</h3>
+            <p className="text-[var(--text-muted)] text-center max-w-sm leading-relaxed">
+              {"My brain is currently downloading more technical skills. Check back soon to see the latest tools in my arsenal!"}
+            </p>
+          </div>
+        )}
       </div>
 
-      {filteredSkills?.length && filteredSkills?.length > PAGE_SIZE && (
+      {filteredSkills && filteredSkills.length > PAGE_SIZE && (
         <div className="mt-2 flex items-center justify-end gap-3">
           <button
             type="button"
