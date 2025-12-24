@@ -1,37 +1,44 @@
-name: Biome CI
-
+name: Biome
 on:
   push:
-    paths:
-      - 'frontend/**'
+    branches: [main]
   pull_request:
-    paths:
-      - 'frontend/**'
+  workflow_dispatch:
+
+concurrency:
+  group: biome-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Biome Check
+  biome:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: web
+            path: frontend/apps/web
+          - name: cms
+            path: frontend/apps/cms
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
-          version: 10.8.1
+          version: 9
+          run_install: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          node-version: '20'
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install Dependencies
+      - name: Install dependencies
+        working-directory: frontend
         run: pnpm install --frozen-lockfile
-        working-directory: ./frontend
 
       - name: Run Biome
-        run: pnpm run lint:biome
-        working-directory: ./frontend
+        working-directory: ${{ matrix.path }}
+        run: pnpm exec biome check --reporter=github --error-on-warnings .
