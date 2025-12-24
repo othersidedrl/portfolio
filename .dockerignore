@@ -1,0 +1,12 @@
+node_modules
+**/node_modules
+.git
+.github
+**/.next
+tmp
+dist
+build
+.env
+.env.*
+*.log
+pnpm-lock.yaml

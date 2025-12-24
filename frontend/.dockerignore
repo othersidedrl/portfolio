@@ -1,0 +1,20 @@
+# Ignore all node_modules everywhere
+**/node_modules
+# Ignore all build artifacts
+**/.next
+**/out
+**/build
+**/dist
+# Ignore env files
+.env
+.env.*
+# Ignore git and other metadata
+.git
+.github
+.vscode
+.idea
+*.log
+# Ignore Docker-related files inside the context
+.dockerignore
+Dockerfile
+docker-compose.yml

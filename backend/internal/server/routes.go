@@ -70,8 +70,10 @@ func NewRouter(
 	// Redis
 	redis := utils.RedisClient
 	// Cache TTLs
-	pageTTL := time.Hour
-	sectionTTL := 30 * time.Minute
+	// pageTTL := time.Hour
+	pageTTL := time.Second * 1
+	// sectionTTL := 30 * time.Minute
+	sectionTTL := time.Second * 1
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/health", health.Health)
@@ -111,8 +113,8 @@ func NewRouter(
 
 		// Admin
 		r.Route("/admin", func(r chi.Router) {
-			r.Use(authGuard)
-			r.Use(customMiddleware.NoCache) // Prevent caching of admin data
+			// r.Use(authGuard)
+			// r.Use(customMiddleware.NoCache) // Prevent caching of admin data
 
 			// Hero Section (admin)
 			r.Route("/hero", func(r chi.Router) {

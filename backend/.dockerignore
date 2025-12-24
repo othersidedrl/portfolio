@@ -1,0 +1,17 @@
+# Ignore node_modules
+**/node_modules
+# Ignore build/temp folders
+tmp/
+bin/
+# Ignore env files
+.env
+.env.*
+# Metadata
+.git
+.github
+.vscode
+.idea
+*.log
+.dockerignore
+Dockerfile
+docker-compose.yml

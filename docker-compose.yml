@@ -1,0 +1,75 @@
+services:
+  # 1. Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: portfolio_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - web
+      - cms
+
+  # 2. Go Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: portfolio_backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+
+  # 3. Next.js Web Frontend
+  web:
+    build:
+      context: ./frontend
+      dockerfile: apps/web/Dockerfile
+    container_name: portfolio_web
+    restart: always
+    env_file:
+      - ./frontend/apps/web/.env
+    depends_on:
+      - backend
+
+  # 4. Next.js CMS Frontend
+  cms:
+    build:
+      context: ./frontend
+      dockerfile: apps/cms/Dockerfile
+    container_name: portfolio_cms
+    restart: always
+    env_file:
+      - ./frontend/apps/cms/.env
+    depends_on:
+      - backend
+
+  # 5. Database (Postgres)
+  db:
+    image: postgres:alpine
+    container_name: portfolio_postgres
+    restart: always
+    env_file:
+      - ./backend/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # 6. Redis
+  redis:
+    image: redis:alpine
+    container_name: portfolio_redis
+    restart: always
+    env_file:
+      - ./backend/.env
+
+volumes:
+  pgdata:
