@@ -163,14 +163,16 @@ const AboutForm = () => {
           <div className="space-y-4 pt-4 border-t border-[var(--border-color)]/30">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-black uppercase tracking-widest text-[var(--text-strong)]">Highlight Cards</h4>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() => setForm(prev => ({ ...prev, cards: [...prev.cards, { title: "", description: "" }] }))}
-              >
-                <Plus size={14} className="mr-2" /> Add Card
-              </Button>
+              {form.cards.length < 4 && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setForm(prev => ({ ...prev, cards: [...prev.cards, { title: "", description: "" }] }))}
+                >
+                  <Plus size={14} className="mr-2" /> Add Card
+                </Button>
+              )}
             </div>
 
             <div className="space-y-3">
