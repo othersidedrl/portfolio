@@ -3,65 +3,94 @@
 import Image from "next/image";
 import ThemeToggle from "./ui/ThemeToggle";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = ["Home", "About", "Testimonials", "Project"];
 
   return (
-    <header className="relative z-50">
-      <div className="h-[80px] flex items-center justify-between shadow-[var(--shadow)] bg-[var(--background)] text-[var(--text)] font-poppins transition-shadow duration-300 mx-auto px-4 sm:px-6 lg:px-12 xl:px-[130px]">
-        {/* Logo and Title */}
-        <div className="flex items-center gap-2">
-          <Image src="/icons/logo.svg" alt="Darel Logo" width={40} height={40} />
-          <span className="text-[20px] font-bold leading-none tracking-[3px] transition-all duration-300 [text-shadow:0px_2px_4px_rgba(0,0,0,0.25)] dark:[text-shadow:0px_2px_4px_rgba(255,255,255,0.1)]">
-            DAREL
-          </span>
+    <header
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 transition-timing-function-[cubic-bezier(0.23,1,0.32,1)] ${scrolled ? "pt-4" : "pt-6"
+        }`}
+    >
+      <nav
+        className={`mx-auto transition-all duration-500 ease-out border shadow-lg ${scrolled
+            ? "max-w-[90%] md:max-w-[1100px] bg-[var(--background)]/80 backdrop-blur-xl border-[var(--border-color)] rounded-2xl py-3 px-6 shadow-xl"
+            : "max-w-full md:max-w-[1240px] bg-transparent border-transparent py-4 px-8 shadow-none"
+          }`}
+      >
+        <div className="flex items-center justify-between">
+          {/* Logo and Title */}
+          <div className="flex items-center gap-2 group cursor-pointer transition-transform active:scale-95">
+            <div className={`relative transition-all duration-500 ${scrolled ? "scale-90" : "scale-100"}`}>
+              <Image src="/icons/logo.svg" alt="Darel Logo" width={32} height={32} />
+              <div className="absolute inset-0 bg-[var(--color-primary)]/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <span className={`font-black tracking-[4px] transition-all duration-500 ${scrolled ? "text-lg" : "text-xl"
+              } text-[var(--text-strong)] group-hover:text-[var(--color-primary)]`}>
+              DAREL<span className="text-[var(--color-primary)]">.</span>
+            </span>
+          </div>
+
+          {/* Desktop Nav Links */}
+          <ul className="hidden md:flex items-center gap-8">
+            {navItems.map((text) => (
+              <li
+                key={text}
+                className="relative group/nav py-1 text-sm font-bold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-strong)] transition-all duration-300 cursor-pointer"
+              >
+                {text}
+                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/nav:w-full shadow-[0_0_8px_var(--color-primary-light)]" />
+              </li>
+            ))}
+          </ul>
+
+          {/* Right Side: Theme Toggle + Hamburger */}
+          <div className="flex items-center gap-6">
+            <ThemeToggle />
+
+            {/* Hamburger (Mobile only) */}
+            <button
+              className="md:hidden relative p-2 rounded-xl bg-[var(--bg-mid)] border border-[var(--border-color)] text-[var(--text-strong)] transition-all active:scale-90"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
-        {/* Desktop Nav Links */}
-        <ul className="hidden md:flex items-center gap-6 text-[20px] font-[400]">
-          {navItems.map((text) => (
-            <li
-              key={text}
-              className="hover:text-[var(--secondary)] hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-            >
-              {text}
-            </li>
-          ))}
-        </ul>
-
-        {/* Right Side: Theme Toggle + Hamburger */}
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-
-          {/* Hamburger (Mobile only) */}
-          <button
-            className="md:hidden"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+        {/* Mobile Menu Dropdown */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${menuOpen ? "max-h-[300px] mt-4 opacity-100" : "max-h-0 opacity-0"
+            }`}
+        >
+          <ul className="flex flex-col gap-2 pb-2">
+            {navItems.map((text, i) => (
+              <li
+                key={text}
+                style={{ transitionDelay: `${i * 50}ms` }}
+                className={`px-4 py-3 rounded-xl hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] font-bold text-sm uppercase tracking-widest transition-all duration-300 cursor-pointer ${menuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
+                  }`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {text}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-
-      {/* Mobile Menu Dropdown */}
-      {menuOpen && (
-        <ul className="md:hidden absolute top-[80px] left-0 w-full bg-[var(--background)] px-6 py-4 flex flex-col gap-4 text-[18px] font-medium shadow-[0_4px_8px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_8px_rgba(255,255,255,0.05)]">
-          {navItems.map((text) => (
-            <li
-              key={text}
-              className="hover:text-[var(--secondary)] transition-colors cursor-pointer"
-              onClick={() => setMenuOpen(false)} // close on click
-            >
-              {text}
-            </li>
-          ))}
-        </ul>
-      )}
+      </nav>
     </header>
   );
 }
