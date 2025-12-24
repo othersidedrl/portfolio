@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from "@tanstack/react-query";
-import StatusChip from "../ui/StatusChip";
 import Extras from "./Extras";
 import ImageGrid from "./ImageGrid";
 import Information from "./Information";
@@ -20,7 +19,7 @@ type HeroResponse = {
   image_url_4: string;
   hobbies: string[];
 };
- 
+
 export default function HeroSection() {
 
   const { data: HeroData } = useQuery({
@@ -40,29 +39,24 @@ export default function HeroSection() {
       }}
     >
       <div className="flex flex-col py-16 space-y-12">
-        {/* Top Centered Status Chip */}
-        <div className="flex justify-center">
-          <StatusChip />
-        </div>
-
         {/* Centered Responsive Grid */}
         <div className="flex justify-center w-full">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start w-full px-4">
             {/* Left (Info) */}
             <div className="col-span-1 lg:col-span-2">
-              <Information 
-                name={HeroData?.name} 
-                rank={HeroData?.rank} 
-                title={HeroData?.title} 
-                subtitle={HeroData?.subtitle} 
-                resume_link={HeroData?.resume_link} 
-                contact_link={HeroData?.contact_link} 
+              <Information
+                name={HeroData?.name}
+                rank={HeroData?.rank}
+                title={HeroData?.title}
+                subtitle={HeroData?.subtitle}
+                resume_link={HeroData?.resume_link}
+                contact_link={HeroData?.contact_link}
               />
             </div>
 
             {/* Right (Image Grid) */}
             <div className="col-span-1 lg:col-span-3 py-12">
-              <ImageGrid 
+              <ImageGrid
                 TopLeft={HeroData?.image_url_1}
                 TopRight={HeroData?.image_url_2}
                 BottomLeft={HeroData?.image_url_3}
