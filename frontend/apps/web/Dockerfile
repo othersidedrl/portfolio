@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Copy the monorepo files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/web/package.json ./apps/web/
+COPY frontend/apps/web/package.json ./apps/web/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
