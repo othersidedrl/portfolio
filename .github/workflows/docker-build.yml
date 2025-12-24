@@ -1,4 +1,4 @@
-name: Build & Push Docker Image
+name: Build & Push Docker Images
 
 on:
   push:
@@ -6,12 +6,32 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-push:
+    name: Build & push images
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: backend
+            context: ./backend
+            file: ./backend/Dockerfile
+            image_base: portfolio-backend
+          - name: cms
+            context: ./frontend/apps/cms
+            file: ./frontend/apps/cms/Dockerfile
+            image_base: portfolio-cms
+          - name: web
+            context: ./frontend/apps/web
+            file: ./frontend/apps/web/Dockerfile
+            image_base: portfolio-web
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up QEMU (for multi-arch, optional but safe)
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -22,10 +42,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push (${{ matrix.name }})
         uses: docker/build-push-action@v5
         with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
           push: true
           tags: |
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/portfolio:latest
-            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/portfolio:${{ github.sha }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:latest
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:${{ github.sha }}
