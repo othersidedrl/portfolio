@@ -38,7 +38,7 @@ export default function AboutSection() {
                     <Card title={AboutData?.cards[3].title || ""} description={AboutData?.cards[3].description || ""} />
                 )}
             </div>
-            <div className="grid grid-cols-2 gap-6 mt-12 mx-auto">
+            <div className="grid lg:grid-cols-2 gap-6 mt-12 mx-auto">
                 <div>
                     <h1 className="mb-4 text-[27px] font-bold text-[var(--text-strong)]">Technical Skills</h1>
                     <TechnicalSkills />
