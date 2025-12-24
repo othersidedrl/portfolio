@@ -10,15 +10,15 @@ FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy the monorepo files
-COPY frontend/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# Copy the monorepo files from the frontend directory
+COPY frontend/package.json frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml ./
 COPY frontend/apps/web/package.json ./apps/web/
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy the rest of the code
-COPY . .
+# Copy the rest of the frontend code
+COPY frontend/ .
 
 # Build the project
 RUN pnpm --filter web build

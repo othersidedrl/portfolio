@@ -14,15 +14,15 @@ jobs:
       matrix:
         include:
           - name: backend
-            context: ./backend
+            context: .
             file: ./backend/Dockerfile
             image_base: portfolio-backend
           - name: cms
-            context: ./frontend/apps/cms
+            context: .
             file: ./frontend/apps/cms/Dockerfile
             image_base: portfolio-cms
           - name: web
-            context: ./frontend/apps/web
+            context: .
             file: ./frontend/apps/web/Dockerfile
             image_base: portfolio-web
 

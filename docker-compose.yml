@@ -16,8 +16,8 @@ services:
   # 2. Go Backend
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: portfolio_backend
     restart: always
     env_file:
@@ -32,8 +32,8 @@ services:
   # 3. Next.js Web Frontend
   web:
     build:
-      context: ./frontend
-      dockerfile: apps/web/Dockerfile
+      context: .
+      dockerfile: frontend/apps/web/Dockerfile
     container_name: portfolio_web
     restart: always
     env_file:
@@ -44,8 +44,8 @@ services:
   # 4. Next.js CMS Frontend
   cms:
     build:
-      context: ./frontend
-      dockerfile: apps/cms/Dockerfile
+      context: .
+      dockerfile: frontend/apps/cms/Dockerfile
     container_name: portfolio_cms
     restart: always
     env_file:
