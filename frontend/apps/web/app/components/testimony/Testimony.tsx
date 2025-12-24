@@ -18,7 +18,7 @@ export default function TestimonySection() {
         },
     });
 
-    const { data: TestimonyItems } = useQuery({
+    const { data: TestimonyItems, isLoading: itemsLoading } = useQuery({
         queryKey: ["testimony-items"],
         queryFn: async () => {
             const response = await axios.get("/testimony/items/approved");
@@ -28,8 +28,6 @@ export default function TestimonySection() {
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-
 
     const handleNext = () => {
         if (!TestimonyItems?.data?.length) return;
@@ -52,46 +50,66 @@ export default function TestimonySection() {
             </div>
 
             <div className="mx-auto max-w-6xl px-4">
-                {/* Card Container */}
-                {TestimonyItems?.data && TestimonyItems.data.length > 0 && (
-                    <TestimonyCard
-                        id={TestimonyItems.data[currentIndex].id}
-                        name={TestimonyItems.data[currentIndex].name}
-                        profile_url={TestimonyItems.data[currentIndex].profile_url}
-                        affiliation={TestimonyItems.data[currentIndex].affiliation}
-                        rating={TestimonyItems.data[currentIndex].rating}
-                        description={TestimonyItems.data[currentIndex].description}
-                        ai_summary={TestimonyItems.data[currentIndex].ai_summary}
-                    />
+                {itemsLoading ? (
+                    <div className="h-[300px] w-full bg-[var(--bg-mid)] border border-[var(--border-color)] rounded-2xl animate-pulse flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-4">
+                            <Sparkles size={48} className="text-[var(--text-muted)] opacity-20" />
+                            <div className="h-4 w-48 bg-[var(--border-color)] rounded" />
+                        </div>
+                    </div>
+                ) : TestimonyItems?.data && TestimonyItems.data.length > 0 ? (
+                    <>
+                        {/* Card Container */}
+                        <TestimonyCard
+                            id={TestimonyItems.data[currentIndex].id}
+                            name={TestimonyItems.data[currentIndex].name}
+                            profile_url={TestimonyItems.data[currentIndex].profile_url}
+                            affiliation={TestimonyItems.data[currentIndex].affiliation}
+                            rating={TestimonyItems.data[currentIndex].rating}
+                            description={TestimonyItems.data[currentIndex].description}
+                            ai_summary={TestimonyItems.data[currentIndex].ai_summary}
+                        />
+                        {/* Navigation & Pagination */}
+                        <div className="flex items-center justify-between px-4 mt-8">
+                            <button
+                                onClick={handlePrev}
+                                className="p-3 rounded-full bg-[var(--bg-mid)] border border-[var(--border-color)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:scale-105 active:scale-95"
+                            >
+                                <ChevronLeft size={24} className="text-[var(--text-muted)]" />
+                            </button>
+
+                            <div className="flex gap-2">
+                                {TestimonyItems?.data?.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentIndex(index)}
+                                        className={`w-3 h-3 rounded-full transition-colors duration-300 ${index === currentIndex ? "bg-[var(--text-strong)]" : "bg-[var(--border-color)] hover:bg-[var(--text-muted)]"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={handleNext}
+                                className="p-3 rounded-full bg-[var(--bg-mid)] border border-[var(--border-color)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:scale-105 active:scale-95"
+                            >
+                                <ChevronRight size={24} className="text-[var(--text-muted)]" />
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-16 px-8 rounded-3xl border-2 border-dashed border-[var(--border-color)] bg-[var(--bg-mid)]/50 backdrop-blur-sm group hover:border-[var(--text-muted)] transition-colors duration-500">
+                        <div className="relative mb-6">
+                            <div className="absolute -inset-4 bg-gradient-to-tr from-yellow-400/20 to-orange-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500" />
+                            <Star size={48} className="text-yellow-500 relative animate-bounce" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-[var(--text-strong)] mb-2">No testimonials yet</h3>
+                        <p className="text-[var(--text-muted)] text-center max-w-md leading-relaxed">
+                            {"We haven't received a testimony yet. Send one to say how is it working with me!"}
+                        </p>
+                    </div>
                 )}
 
-                {/* Navigation & Pagination */}
-                <div className="flex items-center justify-between px-4">
-                    <button
-                        onClick={handlePrev}
-                        className="p-3 rounded-full bg-[var(--bg-mid)] border border-[var(--border-color)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:scale-105 active:scale-95"
-                    >
-                        <ChevronLeft size={24} className="text-[var(--text-muted)]" />
-                    </button>
-
-                    <div className="flex gap-2">
-                        {TestimonyItems?.data?.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentIndex(index)}
-                                className={`w-3 h-3 rounded-full transition-colors duration-300 ${index === currentIndex ? "bg-[var(--text-strong)]" : "bg-[var(--border-color)] hover:bg-[var(--text-muted)]"
-                                    }`}
-                            />
-                        ))}
-                    </div>
-
-                    <button
-                        onClick={handleNext}
-                        className="p-3 rounded-full bg-[var(--bg-mid)] border border-[var(--border-color)] shadow-sm hover:bg-[var(--bg-light)] transition cursor-pointer hover:scale-105 active:scale-95"
-                    >
-                        <ChevronRight size={24} className="text-[var(--text-muted)]" />
-                    </button>
-                </div>
 
                 {/* Send Testimony Button */}
                 <div className="mt-12 flex justify-center">
