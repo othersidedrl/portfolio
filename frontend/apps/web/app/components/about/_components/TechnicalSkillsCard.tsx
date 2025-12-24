@@ -1,5 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { FC, KeyboardEvent, ReactNode } from "react";
+import { FileCode } from "lucide-react";
+import { iconMap } from "./IconMap";
 
 type LevelStyle = {
   background: string;
@@ -16,6 +18,19 @@ export type TechnicalSkillsCardProps = {
   specialities?: string[];
 };
 
+const getSkillIcon = (name: string): ReactNode => {
+  const lowerName = name.toLowerCase();
+
+  for (const mapping of iconMap) {
+    if (mapping.keywords.some(keyword => lowerName.includes(keyword))) {
+      const Icon = mapping.icon;
+      return <Icon size={20} className="text-[var(--color-primary)]" />;
+    }
+  }
+
+  return <FileCode size={20} className="text-[var(--color-primary)] opacity-60" />;
+};
+
 const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
   name,
   description,
@@ -27,6 +42,8 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const hasDetails = (yearOfExperience && yearOfExperience > 0) || (specialities && specialities.length > 0);
+
+  const skillIcon = icon || getSkillIcon(name);
 
   const toggleExpanded = () => setExpanded((prev) => !prev);
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
@@ -52,9 +69,9 @@ const TechnicalSkillsCard: FC<TechnicalSkillsCardProps> = ({
       <div className={`flex flex-col gap-3 transition-all duration-500 ${expanded ? "items-start text-left" : "items-center text-center"}`}>
         <div className={`flex w-full items-center gap-3 ${expanded ? "justify-between" : "justify-center"}`}>
           <div className="flex items-center gap-2.5 transition-colors duration-300 group-hover:text-[var(--color-primary)]">
-            {icon && (
-              <span className="text-xl transition-transform duration-500 group-hover:scale-110">
-                {icon}
+            {skillIcon && (
+              <span className="transition-transform duration-500 group-hover:scale-110">
+                {skillIcon}
               </span>
             )}
             <h4 className="text-lg font-black tracking-tight">{name}</h4>
