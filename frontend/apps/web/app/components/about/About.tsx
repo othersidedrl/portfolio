@@ -18,13 +18,13 @@ export default function AboutSection() {
     });
 
     return (
-        <section className="w-full text-[var(--text-normal)]">
+        <section className="w-full text-[var(--text-normal)] px-4 md:px-6 lg:px-12 xl:px-[130px]">
             <div className="mx-auto flex flex-col items-center gap-6 text-center">
                 <h1 className="text-[36px] font-semibold text-[var(--text-strong)]">About</h1>
                 <div className="h-[2px] w-[80px] rounded-full bg-[var(--border-color)]" />
                 <p className="w-[80%] text-[20px] text-[var(--text-muted)]">{AboutData?.description || ""}</p>
             </div>
-            <div className="flex flex-wrap justify-center gap-6 mt-12 mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12 mx-auto max-w-6xl">
                 {AboutData?.cards[0].title && (
                     <Card title={AboutData?.cards[0].title || ""} description={AboutData?.cards[0].description || ""} />
                 )}
