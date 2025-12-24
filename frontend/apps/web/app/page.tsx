@@ -45,12 +45,8 @@ export default async function Portfolio() {
       <main className="flex flex-col">
         <HeroSection />
         <AboutSection />
-        <div className="mt-12">
-          <TestimonySection />
-        </div>
-        <div className="mt-12">
-          <ProjectSection />
-        </div>
+        <TestimonySection />
+        <ProjectSection />
       </main>
     </HydrationBoundary>
   );
