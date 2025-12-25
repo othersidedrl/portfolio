@@ -133,7 +133,8 @@ const TestimonyItems = () => {
                           `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(item.name)}`
                         }
                         alt={item.name}
-                        className="h-full w-full rounded-full object-cover border-2 border-[var(--border-color)] group-hover:border-[var(--color-primary)] transition-colors"
+                        fill
+                        className="rounded-full object-cover border-2 border-[var(--border-color)] group-hover:border-[var(--color-primary)] transition-colors"
                       />
                       {item.approved && (
                         <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-white border-2 border-[var(--bg-mid)]">

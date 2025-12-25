@@ -250,7 +250,8 @@ const ProjectItems = () => {
                 <Image
                   src={item.imageUrls[0]}
                   alt={item.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-[var(--text-muted)] opacity-20">
@@ -461,7 +462,8 @@ const ProjectItems = () => {
                         <Image
                           src={form.imageUrls[0]}
                           alt="Preview"
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                         <button
                           type="button"

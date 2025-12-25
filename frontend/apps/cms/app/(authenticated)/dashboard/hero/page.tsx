@@ -330,7 +330,8 @@ export default function HeroForm() {
                         <Image
                           src={url}
                           alt={`Showcase ${i + 1}`}
-                          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <label className="cursor-pointer p-2 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors">
