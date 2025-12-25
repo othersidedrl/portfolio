@@ -149,6 +149,8 @@ func (s *Service) generateAISummary(ctx context.Context, description string) (st
 	summary := responseBody.Choices[0].Message.Content
 	summary = strings.ReplaceAll(summary, "<s>", "")
 	summary = strings.ReplaceAll(summary, "</s>", "")
+	summary = strings.ReplaceAll(summary, "[s]", "")
+	summary = strings.ReplaceAll(summary, "[/s]", "")
 	summary = strings.ReplaceAll(summary, "[OUT]", "")
 	summary = strings.ReplaceAll(summary, "[/OUT]", "")
 	summary = strings.ReplaceAll(summary, "[INST]", "")
