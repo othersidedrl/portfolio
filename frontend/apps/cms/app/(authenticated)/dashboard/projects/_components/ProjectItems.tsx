@@ -279,7 +279,14 @@ const ProjectItems = () => {
                 <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-primary)] text-[10px] font-black uppercase tracking-widest text-[var(--color-on-primary)] shadow-lg">
                   {getTypeIcon(item.type)} {item.type}
                 </span>
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">
+                <span
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1 rounded-full backdrop-blur-md border text-[10px] font-black uppercase tracking-widest text-white shadow-lg",
+                    item.contribution === "Team"
+                      ? "bg-emerald-500/80 border-emerald-400/20"
+                      : "bg-purple-500/80 border-purple-400/20",
+                  )}
+                >
                   {item.contribution}
                 </span>
               </div>
@@ -307,28 +314,30 @@ const ProjectItems = () => {
                 ))}
               </div>
 
-              <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-color)]/20">
-                {item.githubLink && (
-                  <a
-                    href={item.githubLink}
-                    target="_blank"
-                    rel="noopener"
-                    className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-strong)] transition-colors"
-                  >
-                    <Github size={14} /> GitHub
-                  </a>
-                )}
-                {item.projectLink && (
-                  <a
-                    href={item.projectLink}
-                    target="_blank"
-                    rel="noopener"
-                    className="flex items-center gap-2 text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
-                  >
-                    <ExternalLink size={14} /> Live Demo
-                  </a>
-                )}
-              </div>
+              {(item.githubLink || item.projectLink) && (
+                <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-color)]/20">
+                  {item.githubLink && (
+                    <a
+                      href={item.githubLink}
+                      target="_blank"
+                      rel="noopener"
+                      className="flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-strong)] transition-colors"
+                    >
+                      <Github size={14} /> GitHub
+                    </a>
+                  )}
+                  {item.projectLink && (
+                    <a
+                      href={item.projectLink}
+                      target="_blank"
+                      rel="noopener"
+                      className="flex items-center gap-2 text-xs font-bold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
+                    >
+                      <ExternalLink size={14} /> Live Demo
+                    </a>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
