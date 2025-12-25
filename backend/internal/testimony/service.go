@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 
+	"strings"
+
 	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
 
@@ -43,6 +45,42 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 		data.ProfileUrl = fmt.Sprintf("https://api.dicebear.com/7.x/adventurer/svg?seed=%s", url.QueryEscape(data.Name))
 	}
 
+	// AI Summary is deferred to the approval stage to prevent spam
+	data.AISummary = ""
+
+	return s.repo.CreateTestimony(ctx, data)
+}
+
+func (s *Service) UpdateTestimony(ctx context.Context, data *TestimonyItemDto, id uint) error {
+	return s.repo.UpdateTestimony(ctx, data, id)
+}
+
+func (s *Service) ApproveTestimony(ctx context.Context, data *ApproveTestimonyDto, id uint) error {
+	// If approving, generate AI summary if it doesn't exist
+	if data.Approved {
+		existing, err := s.repo.GetTestimonyByID(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		if existing.AISummary == "" {
+			summary, err := s.generateAISummary(ctx, existing.Description)
+			if err != nil {
+				// Log error but proceed? Or fail? Let's fail for now so admin sees it.
+				return fmt.Errorf("failed to generate AI summary: %w", err)
+			}
+			existing.AISummary = summary
+		}
+
+		existing.Approved = true
+		// We use UpdateTestimony to save the summary + approval status
+		return s.repo.UpdateTestimony(ctx, existing, id)
+	}
+
+	return s.repo.ApproveTestimony(ctx, data, id)
+}
+
+func (s *Service) generateAISummary(ctx context.Context, description string) (string, error) {
 	prompt := fmt.Sprintf(
 		`Summarize this testimonial for a developer portfolio in exactly one sentence (max 20 words).
 
@@ -57,10 +95,9 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 		Example output: A reliable developer who delivers quality solutions and provides excellent technical support.
 
 		Testimonial to summarize: "%s"`,
-		data.Description,
+		description,
 	)
 
-	// Step 2: Prepare the request payload
 	reqBody := OpenRouterRequest{
 		Model: "mistralai/mistral-7b-instruct:free",
 		Messages: []Message{
@@ -70,13 +107,12 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 
 	jsonBody, err := json.Marshal(reqBody)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	// Step 3: Send the HTTP request
 	req, err := http.NewRequestWithContext(ctx, "POST", "https://openrouter.ai/api/v1/chat/completions", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	req.Header.Set("Authorization", "Bearer "+s.cfg.OpenRouterAPIKey)
@@ -85,16 +121,15 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("OpenRouter error: %s", string(bodyBytes))
+		return "", fmt.Errorf("OpenRouter error: %s", string(bodyBytes))
 	}
 
-	// Step 4: Parse the response
 	var responseBody struct {
 		Choices []struct {
 			Message Message `json:"message"`
@@ -102,24 +137,23 @@ func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) e
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&responseBody); err != nil {
-		return err
+		return "", err
 	}
 
 	if len(responseBody.Choices) == 0 {
-		return fmt.Errorf("no AI summary returned")
+		return "", fmt.Errorf("no AI summary returned")
 	}
 
-	data.AISummary = responseBody.Choices[0].Message.Content
+	summary := responseBody.Choices[0].Message.Content
+	summary = strings.ReplaceAll(summary, "<s>", "")
+	summary = strings.ReplaceAll(summary, "</s>", "")
+	summary = strings.ReplaceAll(summary, "[OUT]", "")
+	summary = strings.ReplaceAll(summary, "[INST]", "")
+	summary = strings.ReplaceAll(summary, "[/INST]", "")
+	summary = strings.ReplaceAll(summary, "\"", "")
+	summary = strings.TrimSpace(summary)
 
-	return s.repo.CreateTestimony(ctx, data)
-}
-
-func (s *Service) UpdateTestimony(ctx context.Context, data *TestimonyItemDto, id uint) error {
-	return s.repo.UpdateTestimony(ctx, data, id)
-}
-
-func (s *Service) ApproveTestimony(ctx context.Context, data *ApproveTestimonyDto, id uint) error {
-	return s.repo.ApproveTestimony(ctx, data, id)
+	return summary, nil
 }
 
 func (s *Service) DeleteTestimony(ctx context.Context, id uint) error {

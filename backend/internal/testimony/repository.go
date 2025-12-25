@@ -17,6 +17,7 @@ type TestimonyRepository interface {
 	UpdateTestimony(ctx context.Context, data *TestimonyItemDto, id uint) error
 	ApproveTestimony(ctx context.Context, data *ApproveTestimonyDto, id uint) error
 	DeleteTestimony(ctx context.Context, id uint) error
+	GetTestimonyByID(ctx context.Context, id uint) (*TestimonyItemDto, error)
 }
 
 type GormTestimonyRepository struct {
@@ -127,4 +128,21 @@ func (r *GormTestimonyRepository) ApproveTestimony(ctx context.Context, data *Ap
 
 func (r *GormTestimonyRepository) DeleteTestimony(ctx context.Context, id uint) error {
 	return r.db.WithContext(ctx).Where("id = ?", id).Unscoped().Delete(&models.Testimony{}).Error
+}
+
+func (r *GormTestimonyRepository) GetTestimonyByID(ctx context.Context, id uint) (*TestimonyItemDto, error) {
+	var t models.Testimony
+	if err := r.db.WithContext(ctx).First(&t, id).Error; err != nil {
+		return nil, err
+	}
+	return &TestimonyItemDto{
+		ID:          int(t.ID),
+		Name:        t.Name,
+		ProfileUrl:  t.ProfileUrl,
+		Affiliation: t.Affiliation,
+		Rating:      t.Rating,
+		Description: t.Description,
+		AISummary:   t.AISummary,
+		Approved:    t.Approved,
+	}, nil
 }
