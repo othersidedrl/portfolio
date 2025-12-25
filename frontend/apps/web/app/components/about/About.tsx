@@ -18,7 +18,7 @@ export default function AboutSection() {
   });
 
   return (
-    <section className="w-full text-[var(--text-normal)] px-4 md:px-6 lg:px-12 xl:px-[130px]">
+    <section id="about" className="w-full text-[var(--text-normal)] px-4 md:px-6 lg:px-12 xl:px-[130px]">
       <div className="mx-auto flex flex-col items-center gap-6 text-center">
         <h1 className="text-[36px] font-semibold text-[var(--text-strong)]">About</h1>
         <div className="h-[2px] w-[80px] rounded-full bg-[var(--border-color)]" />

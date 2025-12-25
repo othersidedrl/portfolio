@@ -41,7 +41,7 @@ export default function TestimonySection() {
   };
 
   return (
-    <section className="w-full text-[var(--text-normal)] pt-12">
+    <section id="testimonials" className="w-full text-[var(--text-normal)] pt-12">
       <TestimonyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       <div className="mx-auto flex flex-col items-center gap-6 text-center mb-12">
@@ -90,11 +90,10 @@ export default function TestimonySection() {
                     key={`dot-${TestimonyItems.data[index].id}-${index}`}
                     type="button"
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                      index === currentIndex
+                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${index === currentIndex
                         ? "bg-[var(--text-strong)]"
                         : "bg-[var(--border-color)] hover:bg-[var(--text-muted)]"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>

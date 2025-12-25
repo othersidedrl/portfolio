@@ -25,7 +25,7 @@ export default function ProjectSection() {
 
   if (itemsLoading) {
     return (
-      <section className="w-full text-[var(--text-normal)] py-12">
+      <section id="projects" className="w-full text-[var(--text-normal)] py-12">
         <div className="mx-auto flex flex-col items-center gap-6 text-center mb-12">
           <h1 className="text-[36px] font-semibold text-[var(--text-strong)]">
             {pageData?.title || "Projects"}
@@ -48,7 +48,7 @@ export default function ProjectSection() {
   }
 
   return (
-    <section className="w-full text-[var(--text-normal)] py-12">
+    <section id="projects" className="w-full text-[var(--text-normal)] py-12">
       <div className="mx-auto flex flex-col items-center gap-6 text-center mb-12">
         <h1 className="text-[36px] font-semibold text-[var(--text-strong)]">
           {pageData?.title || "Projects"}

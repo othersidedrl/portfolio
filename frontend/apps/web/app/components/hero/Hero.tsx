@@ -31,6 +31,7 @@ export default function HeroSection() {
 
   return (
     <section
+      id="home"
       className="w-full bg-center bg-no-repeat"
       style={{
         backgroundImage: "url('/hero-bg.svg')",
