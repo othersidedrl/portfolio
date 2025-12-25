@@ -113,8 +113,8 @@ func NewRouter(
 
 		// Admin
 		r.Route("/admin", func(r chi.Router) {
-			// r.Use(authGuard)
-			// r.Use(customMiddleware.NoCache) // Prevent caching of admin data
+			r.Use(authGuard)
+			r.Use(customMiddleware.NoCache) // Prevent caching of admin data
 
 			// Hero Section (admin)
 			r.Route("/hero", func(r chi.Router) {

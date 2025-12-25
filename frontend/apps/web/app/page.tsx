@@ -6,6 +6,8 @@ import ProjectSection from "./components/project/Project";
 import TestimonySection from "./components/testimony/Testimony";
 import { getQueryClient } from "./get-query-client";
 
+export const dynamic = "force-dynamic";
+
 export default async function Portfolio() {
   const queryClient = getQueryClient();
 
