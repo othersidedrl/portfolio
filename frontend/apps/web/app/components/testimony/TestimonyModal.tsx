@@ -197,7 +197,7 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
           <button
             tabIndex={0}
             type="button"
-            className="relative group cursor-pointer"
+            className="relative group cursor-pointer w-full block"
             onClick={() => fileInputRef.current?.click()}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -226,13 +226,13 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-black truncate">{selectedFile?.name}</p>
-                    <p className="text-xs text-gray-500">Click to change</p>
+                    <p className="text-xs text-center text-gray-500">Click to change</p>
                   </div>
                 </div>
               ) : (
                 <>
                   <Download size={32} strokeWidth={1.5} className="mb-2" />
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium text-center">
                     Choose a profile picture{" "}
                     <span className="font-normal opacity-75">or drag it here.</span>
                   </p>
