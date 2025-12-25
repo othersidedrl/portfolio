@@ -20,6 +20,10 @@ RUN pnpm install --frozen-lockfile
 # Copy the rest of the frontend code
 COPY frontend/ .
 
+# Accept the Build Argument
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
 # Build the project
 RUN pnpm --filter web build
 

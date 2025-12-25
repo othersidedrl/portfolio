@@ -48,6 +48,8 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
           tags: |
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:latest
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image_base }}:${{ github.sha }}
