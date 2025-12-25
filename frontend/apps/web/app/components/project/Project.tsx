@@ -19,7 +19,7 @@ export default function ProjectSection() {
     queryKey: ["project-items"],
     queryFn: async () => {
       const response = await axios.get("/project/items");
-      return response.data.data as ProjectItemResponse[];
+      return (response.data.data || []) as ProjectItemResponse[];
     },
   });
 
