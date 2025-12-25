@@ -125,7 +125,7 @@ const ProjectItems = () => {
 
   const updateMutation = useMutation({
     mutationFn: async (payload: ProjectItem) => {
-      const res = await axios.put(`/admin/project/items/${payload.id}`, payload);
+      const res = await axios.patch(`/admin/project/items/${payload.id}`, payload);
       return res.data;
     },
     onSuccess: () => {
