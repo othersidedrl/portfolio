@@ -88,5 +88,8 @@ jobs:
             docker compose pull
             docker compose up -d
             
+            # Restart Nginx to resolve new container IPs (Fixes 502 Stale DNS)
+            docker compose restart nginx
+
             # Cleanup old images to save disk space
             docker image prune -f
