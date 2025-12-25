@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Star, Upload, X } from "lucide-react";
+import { Download, Loader2, Star, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import axios from "~lib/axios";
@@ -95,9 +95,8 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
     <div
       role="dialog"
       aria-modal="true"
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-        isOpen ? "opacity-100" : "opacity-0"
-      }`}
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"
+        }`}
       onClick={onClose}
       onKeyDown={(e) => {
         if (e.key === "Escape") onClose();
@@ -105,9 +104,8 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
       tabIndex={-1}
     >
       <div
-        className={`w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 md:p-8 transform transition-all duration-300 ${
-          isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
-        }`}
+        className={`w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 md:p-8 transform transition-all duration-300 ${isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
+          }`}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         role="document"
@@ -216,11 +214,10 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
               className="hidden"
             />
             <div
-              className={`w-full h-32 rounded-xl flex flex-col items-center justify-center transition-all border-2 border-dashed ${
-                previewUrl
-                  ? "border-black/50 bg-gray-50"
-                  : "bg-[#D0E0E6] text-[#5A7A85] border-transparent hover:border-[#5A7A85]/50"
-              }`}
+              className={`w-full h-32 rounded-xl flex flex-col items-center justify-center transition-all border-2 border-dotted ${previewUrl
+                ? "border-black/50 bg-gray-50"
+                : "bg-[#D0E0E6] text-[#5A7A85] border-[#5A7A85] hover:border-[#5A7A85] hover:bg-[#D0E0E6]/80"
+                }`}
             >
               {previewUrl ? (
                 <div className="flex items-center gap-4 px-4 w-full">
@@ -234,7 +231,7 @@ export function TestimonyModal({ isOpen, onClose }: TestimonyModalProps) {
                 </div>
               ) : (
                 <>
-                  <Upload size={32} strokeWidth={1.5} className="mb-2" />
+                  <Download size={32} strokeWidth={1.5} className="mb-2" />
                   <p className="text-sm font-medium">
                     Choose a profile picture{" "}
                     <span className="font-normal opacity-75">or drag it here.</span>
