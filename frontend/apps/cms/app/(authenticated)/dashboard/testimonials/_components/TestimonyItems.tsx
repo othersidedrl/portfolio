@@ -193,18 +193,19 @@ const TestimonyItems = () => {
                     "{item.description}"
                   </p>
                 </div>
-
-                <div className="relative px-4 py-4 rounded-2xl bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/10 animate-in fade-in zoom-in-95 duration-500">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles size={12} className="text-[var(--color-primary)]" />
-                    <span className="text-[8px] font-black uppercase tracking-widest text-[var(--color-primary)]">
-                      AI Insight
-                    </span>
+                {item.ai_summary && (
+                  <div className="relative px-4 py-4 rounded-2xl bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/10 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles size={12} className="text-[var(--color-primary)]" />
+                      <span className="text-[8px] font-black uppercase tracking-widest text-[var(--color-primary)]">
+                        AI Insight
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-bold text-[var(--text-strong)] leading-relaxed">
+                      {item.ai_summary}
+                    </p>
                   </div>
-                  <p className="text-[11px] font-bold text-[var(--text-strong)] leading-relaxed">
-                    {item.ai_summary}
-                  </p>
-                </div>
+                )}
               </div>
             </Card>
           ))

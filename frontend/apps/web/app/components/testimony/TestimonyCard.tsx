@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import type { Testimonial } from "./types";
 
-interface TestimonyCardProps extends Testimonial { }
+interface TestimonyCardProps extends Testimonial {}
 
 const cleanSummary = (text: string) => {
   if (!text) return "";
