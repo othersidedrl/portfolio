@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import type { Testimonial } from "./types";
 
-interface TestimonyCardProps extends Testimonial {}
+interface TestimonyCardProps extends Testimonial { }
 
 const cleanSummary = (text: string) => {
   if (!text) return "";
@@ -34,6 +34,7 @@ export const TestimonyCard: FC<TestimonyCardProps> = ({
               <Image
                 src={profile_url || `https://api.dicebear.com/7.x/initials/svg?seed=${name}`}
                 alt={name}
+                fill
                 className="w-full h-full object-cover group-hover:grayscale-0 transition-all duration-700"
               />
             </div>
