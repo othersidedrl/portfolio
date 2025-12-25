@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/othersidedrl/portfolio/backend/internal/config"
 )
@@ -37,6 +38,11 @@ func (s *Service) GetApprovedTestimonies(ctx context.Context) (*TestimonyDto, er
 }
 
 func (s *Service) CreateTestimony(ctx context.Context, data *TestimonyItemDto) error {
+	// Step 0: Set default avatar if missing
+	if data.ProfileUrl == "" {
+		data.ProfileUrl = fmt.Sprintf("https://api.dicebear.com/7.x/adventurer/svg?seed=%s", url.QueryEscape(data.Name))
+	}
+
 	prompt := fmt.Sprintf(
 		`Summarize this testimonial for a developer portfolio in exactly one sentence (max 20 words).
 

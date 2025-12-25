@@ -130,7 +130,7 @@ const TestimonyItems = () => {
                       <Image
                         src={
                           item.profile_url ||
-                          `https://api.dicebear.com/7.x/initials/svg?seed=${item.name}`
+                          `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(item.name)}`
                         }
                         alt={item.name}
                         className="h-full w-full rounded-full object-cover border-2 border-[var(--border-color)] group-hover:border-[var(--color-primary)] transition-colors"
