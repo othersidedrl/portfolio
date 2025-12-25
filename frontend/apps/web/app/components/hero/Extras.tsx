@@ -102,8 +102,9 @@ const Extras: FC<ExtrasProps> = ({ hobbies: propHobbies }) => {
             {hobbies.length > 0 && (
               <div
                 key={currentIndex}
-                className={`absolute inset-0 flex items-center animate-in fade-in duration-500 ${isTransitioning ? "slide-out-to-top-4 fade-out" : "slide-in-from-bottom-4"
-                  }`}
+                className={`absolute inset-0 flex items-center animate-in fade-in duration-500 ${
+                  isTransitioning ? "slide-out-to-top-4 fade-out" : "slide-in-from-bottom-4"
+                }`}
               >
                 <span className="px-3 py-1 rounded-lg bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)] font-bold text-sm md:text-base tracking-tight whitespace-nowrap shadow-sm">
                   {hobbies[currentIndex]}
