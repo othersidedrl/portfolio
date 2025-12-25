@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -63,6 +64,7 @@ func (s *Service) ApproveTestimony(ctx context.Context, data *ApproveTestimonyDt
 			return err
 		}
 
+		log.Println(existing.AISummary)
 		if existing.AISummary == "" {
 			summary, err := s.generateAISummary(ctx, existing.Description)
 			if err != nil {
@@ -148,6 +150,7 @@ func (s *Service) generateAISummary(ctx context.Context, description string) (st
 	summary = strings.ReplaceAll(summary, "<s>", "")
 	summary = strings.ReplaceAll(summary, "</s>", "")
 	summary = strings.ReplaceAll(summary, "[OUT]", "")
+	summary = strings.ReplaceAll(summary, "[/OUT]", "")
 	summary = strings.ReplaceAll(summary, "[INST]", "")
 	summary = strings.ReplaceAll(summary, "[/INST]", "")
 	summary = strings.ReplaceAll(summary, "\"", "")
