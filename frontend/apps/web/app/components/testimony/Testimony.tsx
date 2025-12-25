@@ -90,10 +90,11 @@ export default function TestimonySection() {
                     key={`dot-${TestimonyItems.data[index].id}-${index}`}
                     type="button"
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${index === currentIndex
+                    className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                      index === currentIndex
                         ? "bg-[var(--text-strong)]"
                         : "bg-[var(--border-color)] hover:bg-[var(--text-muted)]"
-                      }`}
+                    }`}
                   />
                 ))}
               </div>
